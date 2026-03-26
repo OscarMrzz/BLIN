@@ -1,13 +1,13 @@
 "use client";
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, TileLayer} from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine";
-import { useEffect, useRef } from "react";
-import { puntoGeograficoInterface } from "@/Interfaces/rutas.iterface";
+
 import { RutaMap } from "./RutaMap";
 import { miUbicacionStore } from "@/Store/miUbicacionStore";
 import { LocalizacionUsuario } from "./LocalizacionUsuario";
+import { ParadaBusInterface } from "@/Interfaces/rutas.iterface";
 
 // Fix para iconos
 if (typeof window !== "undefined") {
@@ -24,7 +24,7 @@ if (typeof window !== "undefined") {
 }
 
 type Props = {
-  puntos: puntoGeograficoInterface[];
+  puntos: ParadaBusInterface[];
 
 };
 

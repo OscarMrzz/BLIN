@@ -42,7 +42,7 @@ export default function Page({ params }: Props) {
 
       <div className="rounded-xl overflow-hidden border border-slate-200 shadow-lg w-full">
         {/* 2. Colocación del componente */}
-        <MapComponent puntos={ruta?.paradasRuta || []}  />
+        <MapComponent puntos={ruta?.parada_ruta || []}  />
       </div>
     </div>
   );

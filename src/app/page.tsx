@@ -1,10 +1,6 @@
 "use client";
 import RutaItem from "@/components/Rutas/RutaItem";
-import {
-  ParadaBusInterface,
-  rutaInterface,
-  UbicacionInterface,
-} from "@/Interfaces/rutas.iterface";
+
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { miUbicacionStore } from "@/Store/miUbicacionStore";
@@ -21,7 +17,7 @@ export default function Home() {
   // Queries
   const {
     data: rutasList,
-    isLoading,
+   
     isError,
     error,
   } = useQuery({ queryKey: ["rutas"], queryFn: getAllRutas });
@@ -40,7 +36,7 @@ export default function Home() {
     console.log("finalizamos calculos");
     console.log({
       miUbicacion: miUbicacion.latitud,
-      ruta: rutasList[1].ruta,
+      ruta: rutasList[1].nombre,
       ditancia: miUbicacion.distanciaDesdeOrigen,
       tiempoProximoBus: minutosParaProximoViaje,
     });
@@ -94,8 +90,8 @@ export default function Home() {
             longitud: -87.65120082503267,
           },
           {
-            latitud: rutasList[1].puntoOrigen.latitud,
-            longitud: rutasList[1].puntoOrigen.longitud,
+            latitud: rutasList[1].punto_origen.latitud,
+            longitud: rutasList[1].punto_origen.longitud,
           },
         );
 
@@ -203,7 +199,7 @@ export default function Home() {
       </div> 
       <div className="flex flex-col w-full h-120 min-h-120 overflow-y-auto gap-2 pb-48 px-2 lg:px-8 ">
         {rutasList?.map((ruta) => (
-          <RutaItem key={ruta.idRuta} ruta={ruta} />
+          <RutaItem key={ruta.id_rutas} ruta={ruta} />
         ))}
       </div>
         </section>

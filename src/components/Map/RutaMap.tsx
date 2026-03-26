@@ -8,7 +8,7 @@ import "leaflet-routing-machine";
 // Importar el CSS es vital para que la línea y marcadores se vean bien
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
-import { puntoGeograficoInterface } from "@/Interfaces/rutas.iterface";
+import { ParadaBusInterface } from "@/Interfaces/rutas.iterface";
 
 // Aplicar parche global una sola vez para prevenir el error
 if (typeof window !== "undefined") {
@@ -52,7 +52,7 @@ if (typeof window !== "undefined") {
 }
 
 type Props = {
-  puntos: puntoGeograficoInterface[];
+  puntos: ParadaBusInterface[];
 };
 
 export function RutaMap({ puntos }: Props) {

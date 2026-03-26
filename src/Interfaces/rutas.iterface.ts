@@ -1,35 +1,36 @@
-export interface UbicacionInterface{
- 
-    latitud: number;
-    longitud: number;
+export interface UbicacionInterface {
 
-  
- 
+  latitud: number;
+  longitud: number;
+
+
+
 }
-export interface ParadaBusInterface{
- 
-    latitud: number;
-    longitud: number;
-    distanciaDesdeOrigen: number;
-    nombreLugar?: string;
+export interface ParadaBusInterface {
 
-  
- 
+  latitud: number;
+  longitud: number;
+  distanciaDesdeOrigen: number;
+  nombreLugar?: string;
+
+
+
 }
 
 
 
 export interface rutaInterface {
-  idRuta: string;
-  ruta: string;
-  inicioRuta: string;
-  finRuta: string;
-  paradasRuta: ParadaBusInterface[];
-  horariosRuta: number[];
-  velocidadPromedioKmh: number;
-  puntoOrigen: UbicacionInterface;
-  precioRuta: number;
-  tiempoEsperaRuta: number;
+  id_rutas: string;
+  nombre: string;
+  origen: string;
+  destino: string;
+  parada_ruta: ParadaBusInterface[] ;
+  horarios_ruta: number[] ;
+  velocidad: number;
+  punto_origen: UbicacionInterface;
+  precio: number;
+  tiempo_espera: number;
   activo: string;
-  imagenBus: string;
+  imagen_bus?: string;
 }
+
