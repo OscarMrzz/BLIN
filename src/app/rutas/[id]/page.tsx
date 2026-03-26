@@ -1,7 +1,10 @@
 "use client";
 import React from "react";
 import dynamic from "next/dynamic";
-import { PuntoGeograficoInterface } from "@/Interfaces/puntosCordenadas.interface";
+
+import { getRutaById } from "@/services/rutasServices";
+import { useQuery } from "@tanstack/react-query";
+
 
 const MapComponent = dynamic(() => import("@/components/Map/MapComponent"), {
   ssr: false,
@@ -18,17 +21,18 @@ type Props = {
 export default function Page({ params }: Props) {
   const { id } = React.use(params);
 
-  // Datos de prueba (aquí deberías obtener los puntos según el id)
-  const puntosPrueba: PuntoGeograficoInterface = {
-    origen: {
-      lat: 15.50417, // San Pedro Sula
-      lng: -88.025,
-    },
-    destino: {
-      lat: 15.5, // Otro punto cercano
-      lng: -88.0,
-    },
-  };
+    const { data: ruta ,isLoading,isError,error } = useQuery({ queryKey: ['rutaBuscada'], queryFn: () => getRutaById(id) })
+
+
+    if (isLoading) {
+      return <div>Cargando...</div>
+    }
+    
+    if (isError) {
+      return <div>Error</div>
+    }
+    
+      
 
   return (
     <div className="p-4 w-full ">
@@ -38,7 +42,7 @@ export default function Page({ params }: Props) {
 
       <div className="rounded-xl overflow-hidden border border-slate-200 shadow-lg w-full">
         {/* 2. Colocación del componente */}
-        <MapComponent puntos={puntosPrueba} />
+        <MapComponent puntos={ruta?.paradasRuta || []}  />
       </div>
     </div>
   );

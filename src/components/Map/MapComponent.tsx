@@ -5,6 +5,9 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine";
 import { useEffect, useRef } from "react";
 import { puntoGeograficoInterface } from "@/Interfaces/rutas.iterface";
+import { RutaMap } from "./RutaMap";
+import { miUbicacionStore } from "@/Store/miUbicacionStore";
+import { LocalizacionUsuario } from "./LocalizacionUsuario";
 
 // Fix para iconos
 if (typeof window !== "undefined") {
@@ -22,73 +25,14 @@ if (typeof window !== "undefined") {
 
 type Props = {
   puntos: puntoGeograficoInterface[];
+
 };
 
-function Routing({ puntos }: Props) {
-  const map = useMap();
-  const routingRef = useRef<L.Routing.Control | null>(null);
+export default function MapComponent({ puntos}: Props) {
 
-  useEffect(() => {
-    if (!map || !puntos || puntos.length === 0) return;
-
-    // Filtrar puntos válidos
-    const puntosValidos = puntos.filter(
-      (punto) => punto && punto.latitud && punto.longitud,
-    );
-    if (puntosValidos.length === 0) return;
-
-    const puntosClaves = puntosValidos.map((punto) =>
-      L.latLng(punto.latitud, punto.longitud),
-    );
-
-    // Ajustar el mapa para mostrar todos los puntos
-    if (puntosClaves.length > 0) {
-      const bounds = L.latLngBounds(puntosClaves);
-      map.fitBounds(bounds, { padding: [20, 20] });
-    }
-
-    const routingControl = L.Routing.control({
-      waypoints: puntosClaves,
-      routeWhileDragging: false,
-      addWaypoints: false,
-      fitSelectedRoutes: false, // Desactivado porque usamos fitBounds manualmente
-      show: false,
-      containerClassName: "hidden",
-      lineOptions: {
-        extendToWaypoints: true,
-        missingRouteTolerance: 0,
-        // Azul fuerte para resaltar sobre el mapa claro
-        styles: [{ color: "#1d4ed8", weight: 6, opacity: 0.85 }],
-      },
-    });
-
-    try {
-      routingControl.addTo(map);
-      routingRef.current = routingControl;
-    } catch (e) {
-      console.warn("Error en routing:", e);
-    }
-
-    return () => {
-      if (routingRef.current && map) {
-        try {
-          routingRef.current.setWaypoints([]);
-          map.removeControl(routingRef.current);
-        } catch {
-          /* Silenciar error de limpieza */
-        } finally {
-          routingRef.current = null;
-        }
-      }
-    };
-  }, [map, puntos]);
-
-  return null;
-}
-
-export default function MapComponent({ puntos }: Props) {
+   const { miUbicacion} = miUbicacionStore();
   // Validación más robusta
-  if (!puntos || puntos.length === 0 || !puntos[0]) {
+  if (!puntos || puntos.length === 0 || !miUbicacion) {
     return (
       <div
         style={{
@@ -112,7 +56,9 @@ export default function MapComponent({ puntos }: Props) {
     );
   }
 
-  const center: [number, number] = [puntos[0].latitud, puntos[0].longitud];
+
+  ;
+
 
   return (
     <div
@@ -124,7 +70,7 @@ export default function MapComponent({ puntos }: Props) {
       }}
     >
       <MapContainer
-        center={center}
+        center={[miUbicacion.latitud, miUbicacion.longitud]}
         zoom={13}
         scrollWheelZoom={false}
         style={{ height: "100%", width: "100%" }}
@@ -134,7 +80,8 @@ export default function MapComponent({ puntos }: Props) {
           attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>'
           url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
         />
-        <Routing puntos={puntos} />
+     <LocalizacionUsuario />
+     <RutaMap puntos={puntos} />
       </MapContainer>
     </div>
   );

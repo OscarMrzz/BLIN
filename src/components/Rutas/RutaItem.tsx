@@ -27,7 +27,7 @@ export default function RutaItem({ ruta }: Props) {
      
         <div className="flex justify-end gap-8">
           
-          <Link href={`rutas/test`}><MapIcon size={32} /></Link>
+          <Link href={`rutas/${ruta.idRuta}`}><MapIcon size={32} /></Link>
           <BotonGuardarFavorito size={32} estaGuardando={false} />
         </div>
       </div>
