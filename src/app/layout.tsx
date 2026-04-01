@@ -27,7 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={` bg-slate-200 h-screen  w-full   `}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} bg-slate-200 h-screen w-full font-sans`}
+      >
         <Provider>
           <header className=" w-full ">
             <HeadersComponent />

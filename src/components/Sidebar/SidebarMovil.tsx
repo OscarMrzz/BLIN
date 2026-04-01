@@ -1,12 +1,12 @@
-'use client'
-import React, { useEffect, useState } from 'react'
-import { createPortal } from 'react-dom'; // Importante para el Portal
-import BotonHamburguesa from '../UI/Botones/BotonHamburguesa';
-import UserDropdown from './UserDropdown';
-import Link from 'next/link';
-import GuardadoIcon from '@/Icons/GuardadoIcon';
-import CashIcon from '@/Icons/CashIcon';
-import MapIcon from '@/Icons/MapIcon';
+"use client";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom"; // Importante para el Portal
+import BotonHamburguesa from "../ui/Botones/BotonHamburguesa";
+import UserDropdown from "./UserDropdown";
+import Link from "next/link";
+import GuardadoIcon from "@/Icons/GuardadoIcon";
+import CashIcon from "@/Icons/CashIcon";
+import MapIcon from "@/Icons/MapIcon";
 
 export default function SidebarMovil() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,28 +24,34 @@ export default function SidebarMovil() {
 
   // El contenido del menú que queremos "teletransportar"
   const menuContent = (
-    <div 
-      onClick={cerrarSidebar} 
+    <div
+      onClick={cerrarSidebar}
       className="fixed inset-0 h-screen w-full bg-gray-900/90 z-[9999] flex"
     >
-      <div 
-        onClick={(e) => e.stopPropagation()} 
+      <div
+        onClick={(e) => e.stopPropagation()}
         className="overflow-y-auto pb-32 flex flex-col font-bold bg-slate-800 h-screen w-60 py-6 animate-fade-in-right shadow-2xl"
       >
-        <div className='flex justify-center items-center'>
-          <UserDropdown 
-            nombreUsuario='Jose Perez'
-            apellidoUsuario='Perez Garcia'
+        <div className="flex justify-center items-center">
+          <UserDropdown
+            nombreUsuario="Jose Perez"
+            apellidoUsuario="Perez Garcia"
             urlFotoPerfil={null}
             haySesion={true}
             cerrarSesion={() => {}}
             RutaMiPerfil={"/miPerfilPage"}
           />
         </div>
-        <div className='flex flex-col px-4 gap-4 mt-8'>
-          <Link href="#" className='text-slate-300 flex items-center gap-2'><GuardadoIcon size={16}/> Favoritos</Link>
-          <Link href="#" className='text-slate-300 flex items-center gap-2'><CashIcon size={20}/> Recargar</Link>
-          <Link href="#" className='text-slate-300 flex items-center gap-2'><MapIcon size={20}/> Mapa</Link>
+        <div className="flex flex-col px-4 gap-4 mt-8">
+          <Link href="#" className="text-slate-300 flex items-center gap-2">
+            <GuardadoIcon size={16} /> Favoritos
+          </Link>
+          <Link href="#" className="text-slate-300 flex items-center gap-2">
+            <CashIcon size={20} /> Recargar
+          </Link>
+          <Link href="#" className="text-slate-300 flex items-center gap-2">
+            <MapIcon size={20} /> Mapa
+          </Link>
         </div>
       </div>
     </div>
