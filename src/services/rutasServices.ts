@@ -30,6 +30,10 @@ const rutasList: rutaInterface[] = [
       latitud: 15.402234196302475,
       longitud: -87.80691885330488,
     },
+    punto_destino: {
+      latitud: 15.507397295352558,
+      longitud: -88.02121220066151,
+    },
     precio: 0,
     tiempo_espera: 60 * 45,
     activo: "1",
@@ -61,6 +65,10 @@ const rutasList: rutaInterface[] = [
     punto_origen: {
       latitud: 15.603563320676374,
       longitud: -87.66929792025022,
+    },
+    punto_destino: {
+      latitud: 15.402027212485665,
+      longitud: -87.8065947301114,
     },
     precio: 0,
     tiempo_espera: 60 * 30,
@@ -94,6 +102,10 @@ const rutasList: rutaInterface[] = [
       latitud: 15.784339660097425,
       longitud: -87.44925482232273,
     },
+    punto_destino: {
+      latitud: 15.40149026303692,
+      longitud: -87.81089969399692,
+    },
     precio: 0,
     tiempo_espera: 60 * 20,
     activo: "1",
@@ -126,6 +138,10 @@ const rutasList: rutaInterface[] = [
     punto_origen: {
       latitud: 15.784339660097425,
       longitud: -87.44925482232273,
+    },
+    punto_destino: {
+      latitud: 15.505888005310675,
+      longitud: -88.02133628991511,
     },
     precio: 0,
     tiempo_espera: 60 * 20,

@@ -29,7 +29,7 @@ export default function RutaItem({ ruta }: Props) {
           <Link href={`rutas/${ruta.id_rutas}`}>
             <MapIcon size={32} />
           </Link>
-          <Link href={`map-pag/`}>
+          <Link href={`map-pag/${ruta.id_rutas}`}>
             <MapIcon size={32} />
           </Link>
           <BotonGuardarFavorito size={32} estaGuardando={false} />

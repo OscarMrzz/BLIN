@@ -28,6 +28,7 @@ export interface rutaInterface {
   horarios_ruta: number[] ;
   velocidad: number;
   punto_origen: UbicacionInterface;
+  punto_destino: UbicacionInterface;
   precio: number;
   tiempo_espera: number;
   activo: string;
