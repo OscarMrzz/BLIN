@@ -72,7 +72,9 @@ export default function MapComponent({ puntos }: Props) {
         {/* Estilo del mapa*/}
         <TileLayer
           attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>'
-          url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
+
+/*           url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png" */
+url={`https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png?api_key=${process.env.NEXT_PUBLIC_STADIA_API_KEY}`}
         />
         <LocalizacionUsuario />
         <RutaMap puntos={puntos} />
