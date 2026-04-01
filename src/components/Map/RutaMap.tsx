@@ -120,6 +120,21 @@ export function RutaMap({ puntos }: Props) {
         routingControl.addTo(map);
         routingControlRef.current = routingControl;
 
+        // 4. Ocultar las instrucciones de ruta con CSS
+        setTimeout(() => {
+          const routingContainer = map.getContainer();
+          if (routingContainer) {
+            const style = document.createElement("style");
+            style.textContent = `
+              .leaflet-routing-container,
+              .leaflet-routing-error {
+                display: none !important;
+              }
+            `;
+            document.head.appendChild(style);
+          }
+        }, 100);
+
         // Manejar errores del routing
         routingControl.on(
           "routingerror",
@@ -140,7 +155,7 @@ export function RutaMap({ puntos }: Props) {
 
     initializeRouting();
 
-    // 4. Limpieza
+    // 5. Limpieza
     return () => {
       if (routingControlRef.current && map) {
         try {
