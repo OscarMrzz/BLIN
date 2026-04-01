@@ -69,7 +69,13 @@ export function RutaMap({ puntos }: Props) {
     const routingControl = L.Routing.control({
       waypoints: waypoints,
       router: L.Routing.osrmv1({
+        // NUEVA CONFIGURACIÓN: Servidor local en Docker (Honduras)
+        serviceUrl: process.env.NEXT_PUBLIC_OSRM_URL,
+
+        /* CÓDIGO ANTERIOR (SERVIDOR DEMO):
         serviceUrl: "https://router.project-osrm.org/route/v1",
+        */
+
         useHints: false,
         timeout: 5000,
       }),

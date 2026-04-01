@@ -1,5 +1,5 @@
 "use client";
-import { MapContainer, TileLayer} from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine";
@@ -25,12 +25,10 @@ if (typeof window !== "undefined") {
 
 type Props = {
   puntos: ParadaBusInterface[];
-
 };
 
-export default function MapComponent({ puntos}: Props) {
-
-   const { miUbicacion} = miUbicacionStore();
+export default function MapComponent({ puntos }: Props) {
+  const { miUbicacion } = miUbicacionStore();
   // Validación más robusta
   if (!puntos || puntos.length === 0 || !miUbicacion) {
     return (
@@ -56,10 +54,6 @@ export default function MapComponent({ puntos}: Props) {
     );
   }
 
-
-  ;
-
-
   return (
     <div
       style={{
@@ -80,8 +74,8 @@ export default function MapComponent({ puntos}: Props) {
           attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>'
           url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
         />
-     <LocalizacionUsuario />
-     <RutaMap puntos={puntos} />
+        <LocalizacionUsuario />
+        <RutaMap puntos={puntos} />
       </MapContainer>
     </div>
   );

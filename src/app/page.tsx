@@ -17,7 +17,7 @@ export default function Home() {
   // Queries
   const {
     data: rutasList,
-   
+
     isError,
     error,
   } = useQuery({ queryKey: ["rutas"], queryFn: getAllRutas });
@@ -25,21 +25,16 @@ export default function Home() {
   const { setMiUbicacion, miUbicacion } = miUbicacionStore();
   const [tiempoProximoAutoBus, setTiempoProximoAutoBus] = useState<string>("");
   const [horaProximoBus, setHoraProximoBus] = useState<string>("");
+  useEffect(() => {});
 
   useEffect(() => {
-    console.log("iniciando Calculos");
+    console.log("Home renderizado", { rutasList, miUbicacion });
+
     if (!rutasList || rutasList.length < 2 || !miUbicacion) return;
     const minutosParaProximoViaje = obtenerMinutosParaLlegada(
       miUbicacion,
       rutasList[1],
     );
-    console.log("finalizamos calculos");
-    console.log({
-      miUbicacion: miUbicacion.latitud,
-      ruta: rutasList[1].nombre,
-      ditancia: miUbicacion.distanciaDesdeOrigen,
-      tiempoProximoBus: minutosParaProximoViaje,
-    });
 
     if (minutosParaProximoViaje !== null) {
       setTiempoProximoAutoBus(`${minutosParaProximoViaje} minutos`);
@@ -50,8 +45,6 @@ export default function Home() {
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      console.log("Tu navegador no soporta geolocalización");
-
       return;
     }
 
@@ -72,42 +65,32 @@ export default function Home() {
           errorMessage = "Tiempo de espera agotado al obtener la ubicación.";
           break;
       }
-
-      console.warn("Error de geolocalización:", errorMessage);
     };
 
     const obtenerUbicacion = async () => {
-      // Verificar que rutasList esté disponible y tenga al menos 2 elementos
-      if (!rutasList || rutasList.length < 2) {
-        console.warn("Rutas no disponibles para calcular distancia");
-        return;
-      }
-
       try {
-        const distancia = await obtenerDistanciaCarretera(
-          {
-            latitud: 15.551719134171245,
-            longitud: -87.65120082503267,
-          },
-          {
-            latitud: rutasList[1].punto_origen.latitud,
-            longitud: rutasList[1].punto_origen.longitud,
-          },
-        );
+        let distancia = 0;
+
+        // Solo calcular distancia si rutasList está disponible
+        if (rutasList && rutasList.length >= 2) {
+          distancia = await obtenerDistanciaCarretera(
+            {
+              latitud: 15.551719134171245,
+              longitud: -87.65120082503267,
+            },
+            {
+              latitud: rutasList[1].punto_origen.latitud,
+              longitud: rutasList[1].punto_origen.longitud,
+            },
+          );
+        }
 
         setMiUbicacion({
           latitud: 15.551719134171245,
           longitud: -87.65120082503267,
           distanciaDesdeOrigen: distancia,
         });
-
-        console.log("Ubicación obtenida", {
-          latitud: 15.551719134171245,
-          longitud: -87.65120082503267,
-          distanciaDesdeOrigen: distancia,
-        });
       } catch (error) {
-        console.error("Error al obtener ubicación:", error);
         // Establecer ubicación sin distancia si falla el cálculo
         setMiUbicacion({
           latitud: 15.551719134171245,
@@ -118,7 +101,7 @@ export default function Home() {
     };
 
     navigator.geolocation.getCurrentPosition(
-      async (pos) => {
+      async () => {
         await obtenerUbicacion();
       },
       handleGeolocationError,
@@ -130,13 +113,11 @@ export default function Home() {
     );
   }, [setMiUbicacion, rutasList]);
 
- 
-
   if (isError) {
     return <div>Error: {error.message}</div>;
   }
 
-  if (!horaProximoBus) {
+  if (!rutasList || rutasList.length === 0) {
     return (
       <div className=" h-full w-full flex flex-col gap-8  ">
         <div className="w-full  flex justify-center animate-zoom-in   ">
@@ -150,14 +131,14 @@ export default function Home() {
             style={{ width: "auto", height: "auto" }} // Refuerzo para eliminar la advertencia de Next.js
           />
         </div>
-           <div className="flex flex-col h-full w-full ">
-              <div className="animate-jelly delay-100 h-full w-full">
-                <CargaCell />
-              </div>
-              <div className="text-cyan-600">
-                <p>Revisando rutas..</p>
-              </div>
-            </div>
+        <div className="flex flex-col h-full w-full ">
+          <div className="animate-jelly delay-100 h-full w-full">
+            <CargaCell />
+          </div>
+          <div className="text-cyan-600">
+            <p>Cargando rutas..</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -177,34 +158,29 @@ export default function Home() {
           />
         </div>
         <div className="">
-     
-            <div className="animate-zoom-in ">
-              <div className="text-cyan-600">
-                <p>Proximo Autobus</p>
-              </div>
-              <div className="text-6xl text-slate-700 font-bold">
-                {horaProximoBus}
-              </div>
-              <p>{tiempoProximoAutoBus || ""}</p>
+          <div className="animate-zoom-in ">
+            <div className="text-cyan-600">
+              <p>Proximo Autobus</p>
             </div>
-     
+            <div className="text-6xl text-slate-700 font-bold">
+              {horaProximoBus}
+            </div>
+            <p>{tiempoProximoAutoBus || ""}</p>
+          </div>
         </div>
       </div>
       <section className="animate-fade-in-up delay-75 ">
-
-      <div className="bg-orange-500  rounded-t-md h-12 p-2 mb-2">
-        <h2 className="text-2xl font-bold text-slate-200">
-          Rutas en tu ubicacion
-        </h2>
-      </div> 
-      <div className="flex flex-col w-full h-120 min-h-120 overflow-y-auto gap-2 pb-48 px-2 lg:px-8 ">
-        {rutasList?.map((ruta) => (
-          <RutaItem key={ruta.id_rutas} ruta={ruta} />
-        ))}
-      </div>
-        </section>
-
+        <div className="bg-orange-500  rounded-t-md h-12 p-2 mb-2">
+          <h2 className="text-2xl font-bold text-slate-200">
+            Rutas en tu ubicacion
+          </h2>
+        </div>
+        <div className="flex flex-col w-full h-120 min-h-120 overflow-y-auto gap-2 pb-48 px-2 lg:px-8 ">
+          {rutasList?.map((ruta) => (
+            <RutaItem key={ruta.id_rutas} ruta={ruta} />
+          ))}
+        </div>
+      </section>
     </div>
-
   );
 }
