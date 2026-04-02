@@ -25,7 +25,10 @@ import {
   PieChartIcon,
   MapIcon,
 } from "lucide-react";
-
+import BotonSengInSengUp from "./Auth/BotonSengInSengUp";
+import { useAuth } from "@/hooks/UseAuthHook";
+import { cerrarSesion } from "@/lib/services/authServices";
+import FormularioAuth from "./Auth/FormularioAuth";
 // This is sample data.
 const data = {
   user: {
@@ -122,7 +125,23 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+    const { isAuthenticated } = useAuth();
+      const [openFormularioAuth, setOpenFormularioAuth] = React.useState(false);
+  const abrirFormularioAuth = () => {
+    if (isAuthenticated) {
+      cerrarSesion()
+      setOpenFormularioAuth(false)
+      return;
+    }
+    setOpenFormularioAuth(true);
+  };
+
   return (
+    <>
+     <FormularioAuth
+        open={openFormularioAuth}
+        onClose={() => setOpenFormularioAuth(false)}
+      />
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
   <NavUser user={data.user} />
@@ -135,6 +154,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         
       </SidebarFooter>
       <SidebarRail />
+      <BotonSengInSengUp onClick={abrirFormularioAuth} haySesion={isAuthenticated} />
     </Sidebar>
+    </>
+
   );
 }

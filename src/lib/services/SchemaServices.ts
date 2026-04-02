@@ -1,8 +1,8 @@
-import { dataBaseSupabase } from "@/services/supabase";
+import { ClienteBrowserSupabase } from "@/lib/supabase";
 
 export async function getSchemaInfo() {
     try {
-        const { data, error } = await dataBaseSupabase.rpc('get_schema_info');
+        const { data, error } = await ClienteBrowserSupabase.rpc('get_schema_info');
 
         if (error) {
             console.error('Error al obtener schema info:', error);

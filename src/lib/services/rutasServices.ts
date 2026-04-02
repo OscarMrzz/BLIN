@@ -1,14 +1,14 @@
 
-import { dataBaseSupabase } from "./supabase";
+import { ClienteBrowserSupabase} from "../supabase";
 import { ParadasDetalladasInterface } from "@/Interfaces/rutas.interface";
-dataBaseSupabase
+ClienteBrowserSupabase
 
 
 
 
 export async function getAllRutas() {
 
-  const { data, error } = await dataBaseSupabase
+  const { data, error } = await ClienteBrowserSupabase
     .from("rutas")
     .select(`
       *,
@@ -41,7 +41,7 @@ export async function getRutaById(id: string) {
   console.log(" [SERVICE] Buscando ruta con ID:", id);
   console.log(" [SERVICE] Tipo de ID:", typeof id);
 
-  const { data, error } = await dataBaseSupabase.from("rutas").select("*").eq("id_rutas", id).single();
+  const { data, error } = await ClienteBrowserSupabase.from("rutas").select("*").eq("id_rutas", id).single();
 
   console.log(" [SERVICE] Respuesta Supabase - data:", data);
   console.log(" [SERVICE] Respuesta Supabase - error:", error);
@@ -52,11 +52,11 @@ export async function getRutaById(id: string) {
   }
 
   console.log(" [SERVICE] Ruta encontrada:", data);
-  return data ;
+  return data;
 }
 
 export async function getSchemaInfo() {
-  const { data, error } = await dataBaseSupabase.rpc('get_schema_info', { schema_name: 'public' });
+  const { data, error } = await ClienteBrowserSupabase.rpc('get_schema_info', { schema_name: 'public' });
   if (error) {
     console.error("Error al obtener la información del schema:", error);
     return [];

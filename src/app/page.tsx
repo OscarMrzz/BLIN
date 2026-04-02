@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { miUbicacionStore } from "@/Store/miUbicacionStore";
 import { useQuery } from "@tanstack/react-query";
-import { getAllRutas } from "@/services/rutasServices";
+import { getAllRutas } from "@/lib/services/rutasServices";
 import {
   obtenerDistanciaCarretera,
   ObtenerhoraProximoBus,
@@ -14,7 +14,10 @@ import {
 import CargaCell from "@/components/Animaciones/Carga/cargaCell";
 import { CardTitle } from "@/components/ui/card";
 
-import { displaySchemaInfo, getSchemaInfo } from "@/services/SchemaServices";
+import {
+  displaySchemaInfo,
+  getSchemaInfo,
+} from "@/lib/services/SchemaServices";
 
 export default function Home() {
   const {

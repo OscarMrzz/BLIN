@@ -2,7 +2,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
 
-import { getRutaById } from "@/services/rutasServices";
+import { getRutaById } from "@/lib/services/rutasServices";
 import { useQuery } from "@tanstack/react-query";
 
 const MapComponent = dynamic(() => import("@/components/Map/MapComponent"), {

@@ -2,7 +2,7 @@
 
 import { NuevoMapa } from "@/components/Map/NuevoMapa";
 import { rutaInterface } from "@/Interfaces/rutasfff.iterface";
-import { getRutaById } from "@/services/rutasServices";
+import { getRutaById } from "@/lib/services/rutasServices";
 import { miUbicacionStore } from "@/Store/miUbicacionStore";
 import React, { useEffect } from "react";
 type Props = {
