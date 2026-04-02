@@ -10,7 +10,7 @@ import Link from "next/link";
 
 export default function HeaderComponent() {
   return (
-    <div className=" felx w-full h-16 p-4 flex justify-between fixed   top-0 z-50 ">
+    <div className=" felx w-full h-16 p-4 flex justify-between fixed   top-0 z-50 bg-background text-foreground ">
       <Link href="/">
         <Image
           src="/logo2/logoLetras.png"
@@ -26,7 +26,7 @@ export default function HeaderComponent() {
         <div className="hidden  lg:flex gap-4">
           <BotonFavorito size={32} />
           <BotonHome size={32} />
-          <div className="bg-slate-300 rounded-full h-12 w-12 flex justify-center items-center">
+          <div className=" rounded-full h-12 w-12 flex justify-center items-center">
             <UserIcon size={32} Styles="text-slate-700" />
           </div>
         </div>

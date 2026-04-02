@@ -8,7 +8,7 @@ type Props = {
 export default function BotonHamburguesa({ onClick, size = 48 }: Props) {
   return (
     <button onClick={onClick} className="cursor-pointer">
-      <HamburguesaIcon size={size} Styles="text-slate-700" />
+      <HamburguesaIcon size={size} Styles="text-foreground" />
     </button>
   );
 }

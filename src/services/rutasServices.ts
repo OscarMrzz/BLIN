@@ -1,5 +1,6 @@
 import { rutaInterface } from "@/Interfaces/rutas.iterface";
-
+import { dataBaseSupabase } from "./supabase";
+dataBaseSupabase
 const rutasList: rutaInterface[] = [
   {
     id_rutas: "1",
@@ -60,7 +61,7 @@ const rutasList: rutaInterface[] = [
         nombreLugar: "El progreso",
       },
     ],
-    horarios_ruta: [60 * 6, 60 * 7, 60 * 8, 60 * 9, 60 * 10, 60 * 11, 60 * 12, 60 * 13, 60 * 14, 60 * 15, 60 * 16, 60 * 17, 20 * 60,21*60,22*60,23*60,24*60],
+    horarios_ruta: [60 * 6, 60 * 7, 60 * 8, 60 * 9, 60 * 10, 60 * 11, 60 * 12, 60 * 13, 60 * 14, 60 * 15, 60 * 16, 60 * 17, 20 * 60, 21 * 60, 22 * 60, 23 * 60, 24 * 60],
     velocidad: 60,
     punto_origen: {
       latitud: 15.603563320676374,
@@ -152,10 +153,42 @@ const rutasList: rutaInterface[] = [
 
 
 
-export function getAllRutas() {
-  return rutasList;
+export async function getAllRutas() {
+
+
+  const { data, error } = await dataBaseSupabase.from("rutas").select("*");
+  if (error) {
+    console.error("Error al obtener las rutas:", error);
+    return [];
+  }
+  console.log(data)
+  return data as rutaInterface[];
 }
 
-export function getRutaById(id: string) {
-  return rutasList.find((ruta) => ruta.id_rutas === id) as rutaInterface;
+export async function getRutaById(id: string) {
+  console.log(" [SERVICE] Buscando ruta con ID:", id);
+  console.log(" [SERVICE] Tipo de ID:", typeof id);
+
+  const { data, error } = await dataBaseSupabase.from("rutas").select("*").eq("id_rutas", id).single();
+
+  console.log(" [SERVICE] Respuesta Supabase - data:", data);
+  console.log(" [SERVICE] Respuesta Supabase - error:", error);
+
+  if (error) {
+    console.error(" [SERVICE] Error al obtener la ruta:", error);
+    return null;
+  }
+
+  console.log(" [SERVICE] Ruta encontrada:", data);
+  return data as rutaInterface;
+}
+
+export async function getSchemaInfo() {
+  const { data, error } = await dataBaseSupabase.rpc('get_schema_info', { schema_name: 'public' });
+  if (error) {
+    console.error("Error al obtener la información del schema:", error);
+    return [];
+  }
+  console.log(data)
+  return data;
 }

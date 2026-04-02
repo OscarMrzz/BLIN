@@ -30,7 +30,7 @@ export default function SidebarMovil() {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="overflow-y-auto pb-32 flex flex-col font-bold bg-slate-800 h-screen w-60 py-6 animate-fade-in-right shadow-2xl"
+        className="overflow-y-auto pb-32 flex flex-col font-bold bg-background text-foreground h-screen w-60 py-6 animate-fade-in-right shadow-2xl"
       >
         <div className="flex justify-center items-center">
           <UserDropdown
@@ -60,7 +60,7 @@ export default function SidebarMovil() {
   return (
     <div className="lg:hidden">
       {/* El botón se queda donde está en el layout */}
-      <BotonHamburguesa onClick={toggleSidebar} size={32} />
+      <BotonHamburguesa onClick={toggleSidebar} size={48} />
 
       {/* Si está abierto y montado, mandamos el menú al final del body */}
       {isOpen && mounted && createPortal(menuContent, document.body)}

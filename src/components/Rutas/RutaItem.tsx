@@ -1,9 +1,5 @@
 "use client";
 
-
-
-
-
 import {
   obtenerDistanciaCarretera,
   ObtenerhoraProximoBus,
@@ -28,35 +24,29 @@ type Props = {
   ruta: rutaInterface;
 };
 
-
-
 export function RutaItem({ ruta }: Props) {
-    const [horaProximoBus, setHoraProximoBus] = useState<string>("");
-    const [tiempoProximoAutoBus, setTiempoProximoAutoBus] = useState<string>("");
-    
-  
-    const { miUbicacion } = miUbicacionStore();
-    useEffect(() => {
-     
-  
-      if (!miUbicacion) return;
-      const minutosParaProximoViaje = obtenerMinutosParaLlegada(
-        miUbicacion,
-        ruta,
-      );
-  
-      if (minutosParaProximoViaje !== null) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setTiempoProximoAutoBus(`${minutosParaProximoViaje} minutos`);
-        const hora = ObtenerhoraProximoBus(minutosParaProximoViaje);
-        setHoraProximoBus(hora);
-      }
-    }, [ruta, miUbicacion]);
+  const [horaProximoBus, setHoraProximoBus] = useState<string>("");
+  const [tiempoProximoAutoBus, setTiempoProximoAutoBus] = useState<string>("");
 
-const handleVerRuta = (rutaId: number) => {
-  window.location.href = `rutas/${rutaId}`;
-};
+  const { miUbicacion } = miUbicacionStore();
+  useEffect(() => {
+    if (!miUbicacion) return;
+    const minutosParaProximoViaje = obtenerMinutosParaLlegada(
+      miUbicacion,
+      ruta,
+    );
 
+    if (minutosParaProximoViaje !== null) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setTiempoProximoAutoBus(`${minutosParaProximoViaje} minutos`);
+      const hora = ObtenerhoraProximoBus(minutosParaProximoViaje);
+      setHoraProximoBus(hora);
+    }
+  }, [ruta, miUbicacion]);
+
+  const handleVerRuta = (rutaId: string) => {
+    window.location.href = `rutas/${rutaId}`;
+  };
 
   return (
     <Card className="relative mx-auto w-full max-w-sm pt-0">
@@ -64,7 +54,7 @@ const handleVerRuta = (rutaId: number) => {
       <Image
         src="/img/busFino.png"
         alt="Bus cover"
-        className="relative z-20 w-full h-48 object-cover "
+        className="relative z-20 w-full h-48  p-4 "
         width={500}
         height={300}
         priority
@@ -80,10 +70,7 @@ const handleVerRuta = (rutaId: number) => {
         </CardDescription>
       </CardHeader>
       <CardFooter>
-        <Button
-          className="w-full"
-          onClick={() => handleVerRuta(Number(ruta.id_rutas))}
-        >
+        <Button className="w-full" onClick={() => handleVerRuta(ruta.id_rutas)}>
           Ver Ruta
         </Button>
       </CardFooter>

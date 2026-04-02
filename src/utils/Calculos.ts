@@ -37,6 +37,11 @@ export const obtenerMinutosParaLlegada = (
   const tiempoTransito = (miParada.distanciaDesdeOrigen / ruta.velocidad) * 60;
 
   // 2. Buscar la salida cuyo (despacho + viaje) sea mayor a la hora actual
+  if (!ruta.horarios_ruta || ruta.horarios_ruta.length === 0) {
+    console.log("❌ La ruta no tiene horarios definidos");
+    return null;
+  }
+
   const proximaSalida = ruta.horarios_ruta.find(salida => (salida + tiempoTransito) > minutosActuales);
 
   if (!proximaSalida) {

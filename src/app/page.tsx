@@ -177,7 +177,7 @@ export default function Home() {
             Rutas en tu ubicacion
           </h2>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full gap-4 pb-48">
+        <div className="grid grid-cols-1 pt-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full gap-4 pb-48">
           {rutasList?.map((ruta) => (
             <RutaItem key={ruta.id_rutas} ruta={ruta} />
           ))}

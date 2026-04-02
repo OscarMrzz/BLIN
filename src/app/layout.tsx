@@ -4,6 +4,7 @@ import "./globals.css";
 import HeadersComponent from "@/components/layout/HeaderCompnent";
 import FooterComponet from "@/components/layout/FooterComponet";
 import Provider from "./Provider";
+import SidebarGeneral from "@/components/Sidebar/SidebarGeneral";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,15 +32,14 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable}  h-screen w-full font-sans bg-background text-foreground`}
       >
         <Provider>
-          <header className=" w-full ">
-            <HeadersComponent />
-          </header>
+          <SidebarGeneral>
+
+        
           <main className="h-full w-full p-4 flex flex-col pt-24 pb-32">
             <div className="w-full h-full">{children}</div>
           </main>
-          <footer className="">
-            <FooterComponet />
-          </footer>
+ 
+              </SidebarGeneral>
         </Provider>
       </body>
     </html>
