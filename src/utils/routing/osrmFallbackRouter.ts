@@ -7,7 +7,7 @@ import {
   type FormattedRoutingError,
 } from "./formatRoutingError";
 
-export type OsrmBackendLabel = "primario" | "reserva" | "demo";
+export type OsrmBackendLabel = "primario" | "reserva" | "backup" | "demo";
 
 export type OsrmEndpointConfig = {
   label: OsrmBackendLabel;
@@ -45,6 +45,7 @@ export function buildOsrmEndpointList(): OsrmEndpointConfig[] {
   const candidates: { label: OsrmBackendLabel; serviceUrl: string | undefined }[] = [
     { label: "primario", serviceUrl: primary || undefined },
     { label: "reserva", serviceUrl: secondary || undefined },
+    { label: "backup", serviceUrl: "https://routing.openstreetmap.de/routed-car/route/v1" },
     { label: "demo", serviceUrl: DEMO_OSRM },
   ];
 

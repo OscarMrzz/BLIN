@@ -73,7 +73,6 @@ export function RutaMap({ puntos }: Props) {
   useEffect(() => {
     if (!map) return;
     let cancelled = false;
-    setMapReady(false);
     const m = map as L.Map;
     const markReady = () => {
       if (!cancelled) setMapReady(true);
@@ -120,14 +119,44 @@ export function RutaMap({ puntos }: Props) {
 
         console.log(
           RUTA_MAP_LOG_PREFIX,
-          `Mapa listo · registrando ruta con ${endpoints.length} motor(es) OSRM (salida con console.log para que siempre se vea en la consola):`,
-          endpoints.map((e) => `${e.label} → ${e.serviceUrl}`).join(" | "),
+          "🚀 Iniciando proceso de enrutamiento OSRM",
+        );
+        console.log(
+          RUTA_MAP_LOG_PREFIX,
+          `📍 Puntos a procesar: ${puntos.length} paradas`,
+        );
+        console.log(
+          RUTA_MAP_LOG_PREFIX,
+          `🔧 Motores OSRM disponibles: ${endpoints.length}`,
+        );
+        console.log(
+          RUTA_MAP_LOG_PREFIX,
+          `📋 Orden de intento: ${endpoints.map((e) => `${e.label} (${e.serviceUrl})`).join(" → ")}`,
         );
 
         // 1. Transformar puntos de tu interfaz a objetos LatLng de Leaflet
-        const waypoints = puntos.map((p) => L.latLng(p.latitud, p.longitud));
+        console.log(
+          RUTA_MAP_LOG_PREFIX,
+          "🔄 Transformando coordenadas de paradas...",
+        );
+        const waypoints = puntos.map((p) => {
+          const latLng = L.latLng(p.latitud, p.longitud);
+          console.log(
+            RUTA_MAP_LOG_PREFIX,
+            `   📍 Parada: ${p.nombreLugar || "Sin nombre"} → [${p.latitud.toFixed(6)}, ${p.longitud.toFixed(6)}]`,
+          );
+          return latLng;
+        });
+        console.log(
+          RUTA_MAP_LOG_PREFIX,
+          `✅ Coordenadas listas: ${waypoints.length} waypoints`,
+        );
 
         // 2. Configurar el control de rutas (varios OSRM en cadena)
+        console.log(
+          RUTA_MAP_LOG_PREFIX,
+          "⚙️ Configurando control de enrutamiento...",
+        );
         const routingControl = L.Routing.control({
           waypoints: waypoints,
           router: createOsrmFallbackRouter(endpoints),
@@ -146,10 +175,22 @@ export function RutaMap({ puntos }: Props) {
         });
 
         // 3. Añadir el control al mapa
+        console.log(
+          RUTA_MAP_LOG_PREFIX,
+          "🗺️ Añadiendo control de ruta al mapa...",
+        );
         routingControl.addTo(map);
         routingControlRef.current = routingControl;
+        console.log(
+          RUTA_MAP_LOG_PREFIX,
+          "✅ Control de ruta añadido exitosamente",
+        );
 
         // 4. Ocultar las instrucciones de ruta con CSS
+        console.log(
+          RUTA_MAP_LOG_PREFIX,
+          "🎨 Aplicando estilos para ocultar instrucciones...",
+        );
         setTimeout(() => {
           const routingContainer = map.getContainer();
           if (routingContainer) {
@@ -162,18 +203,48 @@ export function RutaMap({ puntos }: Props) {
             `;
             document.head.appendChild(style);
           }
+          console.log(
+            RUTA_MAP_LOG_PREFIX,
+            "✅ Estilos aplicados correctamente",
+          );
         }, 100);
 
         routingControl.on("routingerror", (e: { error?: unknown }) => {
+          console.log(
+            RUTA_MAP_LOG_PREFIX,
+            "❌ Evento de error de enrutamiento recibido",
+          );
           const formatted = formatRoutingError(e.error);
+          console.log(
+            RUTA_MAP_LOG_PREFIX,
+            `📄 Error formateado: ${formatted.tipoFallo}`,
+          );
           setError(
             `${formatted.resumenUsuario} ${formatted.sugerencias.join(" ")}`,
           );
         });
+
+        console.log(
+          RUTA_MAP_LOG_PREFIX,
+          "🎉 Configuración de enrutamiento completada",
+        );
       } catch (err) {
+        console.log(
+          RUTA_MAP_LOG_PREFIX,
+          "💥 Error capturado en initializeRouting",
+        );
         const errorMessage =
           err instanceof Error ? err.message : "Error desconocido";
-        console.error("Error al inicializar la ruta:", errorMessage);
+        console.error(
+          RUTA_MAP_LOG_PREFIX,
+          "🔍 Detalles del error:",
+          errorMessage,
+        );
+        console.error(
+          RUTA_MAP_LOG_PREFIX,
+          "🔍 Stack trace:",
+          err instanceof Error ? err.stack : "No disponible",
+        );
         setError(`Error al cargar la ruta: ${errorMessage}`);
       }
     };
@@ -182,14 +253,28 @@ export function RutaMap({ puntos }: Props) {
 
     // 5. Limpieza
     return () => {
+      console.log(RUTA_MAP_LOG_PREFIX, "🧹 Iniciando limpieza de recursos...");
       if (routingControlRef.current && map) {
         try {
+          console.log(
+            RUTA_MAP_LOG_PREFIX,
+            "🗑️ Removiendo control de ruta del mapa...",
+          );
           map.removeControl(routingControlRef.current);
+          console.log(
+            RUTA_MAP_LOG_PREFIX,
+            "✅ Control de ruta removido exitosamente",
+          );
         } catch (cleanupError) {
-          console.debug("Error en limpieza de routing control:", cleanupError);
+          console.error(
+            RUTA_MAP_LOG_PREFIX,
+            "⚠️ Error en limpieza de routing control:",
+            cleanupError,
+          );
         }
         routingControlRef.current = null;
       }
+      console.log(RUTA_MAP_LOG_PREFIX, "🧼 Limpieza de recursos completada");
     };
   }, [mapReady, map, puntos]);
 
