@@ -12,12 +12,13 @@ import {
   obtenerMinutosParaLlegada,
 } from "@/utils/Calculos";
 import CargaCell from "@/components/Animaciones/Carga/cargaCell";
-import { CardTitle } from "@/components/ui/card";
+
 
 import {
   displaySchemaInfo,
   getSchemaInfo,
 } from "@/lib/services/SchemaServices";
+import HiroComponent from "@/components/Hiro/HiroComponent";
 
 export default function Home() {
   const {
@@ -151,33 +152,11 @@ export default function Home() {
   }
 
   return (
-    <div className="w-full min-h-screen">
-      <div className="w-full flex flex-col gap-4 p-4">
-        <div className="w-full h-60 flex justify-center animate-zoom-in delay-150">
-          <Image
-            src="/logo2/logoCompleto.png"
-            alt="Logo de la aplicación"
-            width={100}
-            height={100}
-            priority
-            className="w-auto h-auto "
-            style={{ width: "auto", height: "auto" }}
-          />
-        </div>
-        <div className="text-center">
-          <div className="animate-zoom-in">
-            <div className="text-cyan-600">
-              <p>Proximo Autobus</p>
-            </div>
-
-            <CardTitle>{horaProximoBus}</CardTitle>
-
-            <p>{tiempoProximoAutoBus || ""}</p>
-          </div>
-        </div>
-      </div>
+    <div className="w-full min-h-screen ">
+      <HiroComponent horaProximoBus={horaProximoBus} tiempoProximoAutoBus={tiempoProximoAutoBus} />
+ 
       <section className="animate-fade-in-up delay-75 w-full px-4">
-        <div className="bg-orange-500 rounded-t-md h-12 p-2 mb-2  ">
+        <div className="bg-orange-500 rounded-t-md h-12 p-2 mb-2 flex lg:hidden ">
           <h2 className="text-2xl font-bold text-slate-200">
             Rutas en tu ubicacion
           </h2>

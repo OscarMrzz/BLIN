@@ -35,7 +35,7 @@ export default function RootLayout({
           <SidebarGeneral>
 
         
-          <main className="h-full w-full p-4 flex flex-col pt-24 pb-32">
+          <main className="h-full w-full p-4 flex flex-col pt-24 lg:pt-0 pb-32">
             <div className="w-full h-full">{children}</div>
           </main>
  

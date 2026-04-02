@@ -31,23 +31,22 @@ export default function FormularioAuth({ open, onClose }: Props) {
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  
+
     const email = event.currentTarget.email.value;
     const password = event.currentTarget.password.value;
 
     try {
-     
       const resultado = await login(email, password);
 
       if (resultado.error) {
         setIsError(true);
-      
+
         return;
       }
 
       if (resultado.data) {
-        
         onClose();
+        window.location.reload();
       } else {
         setIsError(true);
       }
@@ -58,13 +57,13 @@ export default function FormularioAuth({ open, onClose }: Props) {
   };
   const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+
     const email = event.currentTarget.email.value;
     const password = event.currentTarget.password.value;
 
     try {
       const usuario = await register(email, password);
-  
+
       onClose();
     } catch (error) {
       console.error("Error al registrar usuario:", error);
@@ -73,7 +72,6 @@ export default function FormularioAuth({ open, onClose }: Props) {
 
   const quiereregistrarse = () => {
     setSeVaARegistrar(true);
-
   };
 
   const siguientePaso = () => {
@@ -95,10 +93,7 @@ export default function FormularioAuth({ open, onClose }: Props) {
                 <div className="flex flex-col gap-4 w-full ">
                   <div className="flex flex-col gap-2 animate-slide-in-right">
                     <div>
-                      <label
-                        className="block text-sm font-medium "
-                        htmlFor=""
-                      >
+                      <label className="block text-sm font-medium " htmlFor="">
                         Nombre
                       </label>
                       <input
@@ -110,10 +105,7 @@ export default function FormularioAuth({ open, onClose }: Props) {
                       />
                     </div>
                     <div>
-                      <label
-                        className="block text-sm font-medium  "
-                        htmlFor=""
-                      >
+                      <label className="block text-sm font-medium  " htmlFor="">
                         Apellido
                       </label>
                       <input
@@ -236,7 +228,6 @@ export default function FormularioAuth({ open, onClose }: Props) {
               <button
                 className="text-blue-400 cursor-pointer font-light"
                 onClick={quiereregistrarse}
-                
               >
                 Registrate
               </button>

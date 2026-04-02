@@ -27,17 +27,12 @@ import {
 } from "lucide-react";
 import BotonSengInSengUp from "./Auth/BotonSengInSengUp";
 import { useAuth } from "@/hooks/UseAuthHook";
-import { cerrarSesion } from "@/lib/services/authServices";
+import { cerrarSesion, getUserAuth } from "@/lib/services/authServices";
 import FormularioAuth from "./Auth/FormularioAuth";
+import { User } from "@supabase/supabase-js";
 // This is sample data.
 const data = {
-  user: {
-    name: "Sander",
-    email: "sander@uth.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   teams: [
-  
     {
       name: "Acme Corp.",
       logo: <AudioLinesIcon />,
@@ -59,7 +54,7 @@ const data = {
           title: "Favorito",
           url: "#",
         },
-      
+
         {
           title: "Estado de cuenta",
           url: "#",
@@ -72,7 +67,6 @@ const data = {
           title: "Historial",
           url: "#",
         },
-      
       ],
     },
     {
@@ -102,8 +96,6 @@ const data = {
         },
       ],
     },
-  
-
   ],
   projects: [
     {
@@ -125,12 +117,39 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-    const { isAuthenticated } = useAuth();
-      const [openFormularioAuth, setOpenFormularioAuth] = React.useState(false);
+  const { isAuthenticated } = useAuth();
+  const [openFormularioAuth, setOpenFormularioAuth] = React.useState(false);
+  const [userAuth, setUserAuth] = React.useState<
+    | {
+        name: string;
+        email: string;
+        avatar: string;
+      }
+    | undefined
+  >(undefined);
+
+  React.useEffect(() => {
+    const usuarioObtenido = async () => {
+      const usuarioEncontrado = await getUserAuth();
+      if (!usuarioEncontrado) {
+        setUserAuth(undefined);
+        return;
+      }
+      const userParaEnviar = {
+        name: "Usuario",
+        email: usuarioEncontrado.email || "",
+        avatar: "/avatars/shadcn.jpg",
+      };
+
+      setUserAuth(userParaEnviar);
+    };
+    usuarioObtenido();
+  }, [isAuthenticated]);
+
   const abrirFormularioAuth = () => {
     if (isAuthenticated) {
-      cerrarSesion()
-      setOpenFormularioAuth(false)
+      cerrarSesion();
+      setOpenFormularioAuth(false);
       return;
     }
     setOpenFormularioAuth(true);
@@ -138,25 +157,26 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <>
-     <FormularioAuth
+      <FormularioAuth
         open={openFormularioAuth}
         onClose={() => setOpenFormularioAuth(false)}
       />
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-  <NavUser user={data.user} />
-      </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={data.navMain} />
-      {/*   <NavProjects projects={data.projects} /> */}
-      </SidebarContent>
-      <SidebarFooter>
-        
-      </SidebarFooter>
-      <SidebarRail />
-      <BotonSengInSengUp onClick={abrirFormularioAuth} haySesion={isAuthenticated} />
-    </Sidebar>
+      <Sidebar collapsible="icon" {...props}>
+        <SidebarHeader>
+          <NavUser
+            user={userAuth}
+            onLogin={() => setOpenFormularioAuth(true)}
+            onLogout={() => cerrarSesion()}
+          />
+        </SidebarHeader>
+        <SidebarContent>
+          <NavMain items={data.navMain} />
+          {/*   <NavProjects projects={data.projects} /> */}
+        </SidebarContent>
+        <SidebarFooter></SidebarFooter>
+        <SidebarRail />
+     
+      </Sidebar>
     </>
-
   );
 }
