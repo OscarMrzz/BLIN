@@ -3,9 +3,7 @@
 import * as React from "react";
 
 import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
-import { TeamSwitcher } from "@/components/team-switcher";
 import {
   Sidebar,
   SidebarContent,
@@ -14,104 +12,107 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import {
-  GalleryVerticalEndIcon,
-  AudioLinesIcon,
-  TerminalIcon,
-  TerminalSquareIcon,
-  BotIcon,
-  BookOpenIcon,
-  Settings2Icon,
-  FrameIcon,
-  PieChartIcon,
-  MapIcon,
+  BusIcon,
+  CreditCardIcon,
+  HistoryIcon,
+  SettingsIcon,
+  UsersIcon,
+  BarChartIcon,
+  WalletIcon,
 } from "lucide-react";
-import BotonSengInSengUp from "./Auth/BotonSengInSengUp";
+import UserIcon from "@/Icons/UserIcon";
+import Buscaricon from "@/Icons/Buscaricon";
+import Favoritosicon from "@/Icons/Favoritosicon";
+import CashIcon from "@/Icons/CashIcon";
+import CustomMapIcon from "@/Icons/MapIcon";
 import { useAuth } from "@/hooks/UseAuthHook";
 import { cerrarSesion, getUserAuth } from "@/lib/services/authServices";
 import FormularioAuth from "./Auth/FormularioAuth";
-import { User } from "@supabase/supabase-js";
 // This is sample data.
 const data = {
   teams: [
     {
-      name: "Acme Corp.",
-      logo: <AudioLinesIcon />,
-      plan: "Startup",
+      name: "BLIN",
+      logo: <BusIcon />,
+      plan: "Transporte",
     },
   ],
   navMain: [
     {
       title: "Usuario",
       url: "#",
-      icon: <TerminalSquareIcon />,
+      icon: <UserIcon />,
       isActive: true,
       items: [
         {
           title: "Buscar",
           url: "#",
+          icon: <Buscaricon />,
         },
         {
           title: "Favorito",
           url: "#",
+          icon: <Favoritosicon />,
         },
 
         {
           title: "Estado de cuenta",
           url: "#",
+          icon: <CashIcon />,
         },
         {
           title: "Recargar",
           url: "#",
+          icon: <CreditCardIcon />,
         },
         {
           title: "Historial",
           url: "#",
-        },
-      ],
-    },
-    {
-      title: "Administracion",
-      url: "#",
-      icon: <BotIcon />,
-      items: [
-        {
-          title: "usuarios",
-          url: "#",
-        },
-        {
-          title: "Rutas",
-          url: "#",
-        },
-        {
-          title: "Recargar",
-          url: "#",
-        },
-        {
-          title: "Estados de cuenta",
-          url: "#",
-        },
-        {
-          title: "Buses",
-          url: "#",
+          icon: <HistoryIcon />,
         },
       ],
     },
   ],
-  projects: [
+
+  navAdmin: [
     {
-      name: "Design Engineering",
+      title: "Administrador",
       url: "#",
-      icon: <FrameIcon />,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: <PieChartIcon />,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: <MapIcon />,
+      icon: <SettingsIcon />,
+      isActive: true,
+      items: [
+        {
+          title: "Usuarios",
+          url: "#",
+          icon: <UsersIcon />,
+        },
+        {
+          title: "Rutas",
+          url: "/admin/rutas",
+          icon: <CustomMapIcon />,
+        },
+
+        {
+          title: "Buses",
+          url: "#",
+          icon: <BusIcon />,
+        },
+        {
+          title: "Estados de cuenta",
+          url: "#",
+          icon: <WalletIcon />,
+        },
+        {
+          title: "Tarjetas",
+          url: "#",
+          icon: <CreditCardIcon />,
+        },
+        {
+          title: "Reporte",
+          url: "#",
+          icon: <BarChartIcon />,
+        },
+      ],
     },
   ],
 };
@@ -146,15 +147,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     usuarioObtenido();
   }, [isAuthenticated]);
 
-  const abrirFormularioAuth = () => {
-    if (isAuthenticated) {
-      cerrarSesion();
-      setOpenFormularioAuth(false);
-      return;
-    }
-    setOpenFormularioAuth(true);
-  };
-
   return (
     <>
       <FormularioAuth
@@ -171,11 +163,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarHeader>
         <SidebarContent>
           <NavMain items={data.navMain} />
-          {/*   <NavProjects projects={data.projects} /> */}
+          {isAuthenticated && <NavMain items={data.navAdmin} />}
         </SidebarContent>
         <SidebarFooter></SidebarFooter>
         <SidebarRail />
-     
       </Sidebar>
     </>
   );

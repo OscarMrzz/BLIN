@@ -45,7 +45,7 @@ export default function HiroComponent({
           </div>
           <div>
             <span>Tiempo restante</span>
-            <span>{tiempoProximoAutoBus || "..."}</span>
+            <span>{tiempoProximoAutoBus || " ..."}</span>
           </div>
         </div>
       </div>
