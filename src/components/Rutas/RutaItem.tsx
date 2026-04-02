@@ -16,12 +16,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { rutaInterface } from "@/Interfaces/rutas.iterface";
+
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { miUbicacionStore } from "@/Store/miUbicacionStore";
+import { ParadasDetalladasInterface } from "@/Interfaces/rutas.interface";
 type Props = {
-  ruta: rutaInterface;
+  ruta: ParadasDetalladasInterface;
 };
 
 export function RutaItem({ ruta }: Props) {
@@ -40,6 +41,7 @@ export function RutaItem({ ruta }: Props) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setTiempoProximoAutoBus(`${minutosParaProximoViaje} minutos`);
       const hora = ObtenerhoraProximoBus(minutosParaProximoViaje);
+
       setHoraProximoBus(hora);
     }
   }, [ruta, miUbicacion]);
@@ -65,7 +67,7 @@ export function RutaItem({ ruta }: Props) {
         </CardAction>
         <CardTitle>{ruta.nombre}</CardTitle>
         <CardDescription className="flex flex-col">
-          <span>Precio: L 37.00</span>
+          <span>Precio: L {ruta.precio}</span>
           <span>{horaProximoBus}</span>
         </CardDescription>
       </CardHeader>

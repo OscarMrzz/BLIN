@@ -17,16 +17,6 @@ import { CardTitle } from "@/components/ui/card";
 import { displaySchemaInfo, getSchemaInfo } from "@/services/SchemaServices";
 
 export default function Home() {
-  useEffect(() => {
-    const fetchSchema = async () => {
-      const data = await getSchemaInfo();
-      console.log("======================================");
-      console.log("JSON Schema:", JSON.stringify(data, null, 2));
-      console.log("======================================");
-    };
-    fetchSchema();
-  }, []);
-  // Queries
   const {
     data: rutasList,
 
@@ -39,8 +29,6 @@ export default function Home() {
   const [horaProximoBus, setHoraProximoBus] = useState<string>("");
 
   useEffect(() => {
-    console.log("Home renderizado", { rutasList, miUbicacion });
-
     if (!rutasList || rutasList.length < 2 || !miUbicacion) return;
     const minutosParaProximoViaje = obtenerMinutosParaLlegada(
       miUbicacion,
@@ -80,22 +68,27 @@ export default function Home() {
 
     const obtenerUbicacion = async () => {
       try {
-        let distancia = 0;
+        let distancia = 1;
+        console.log("Ditancia Inicial:", distancia);
+        const miPosicionDePrueba = {
+          latitud: 15.551719134171245,
+          longitud: -87.65120082503267,
+        };
 
-        // Solo calcular distancia si rutasList está disponible
         if (rutasList && rutasList.length >= 2) {
+          console.log("Logro entrar✅✅✅");
+          console.log(rutasList[1]);
+          const rutaOrigenDePrueba = {
+            latitud: rutasList[1].punto_origen.latitud,
+            longitud: rutasList[1].punto_origen.longitud,
+          };
           distancia = await obtenerDistanciaCarretera(
-            {
-              latitud: 15.551719134171245,
-              longitud: -87.65120082503267,
-            },
-            {
-              latitud: rutasList[1].punto_origen.latitud,
-              longitud: rutasList[1].punto_origen.longitud,
-            },
+            miPosicionDePrueba,
+            rutaOrigenDePrueba,
           );
         }
 
+        console.log("Ditancia Despues de calculos:", distancia);
         setMiUbicacion({
           latitud: 15.551719134171245,
           longitud: -87.65120082503267,

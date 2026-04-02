@@ -1,4 +1,4 @@
-export interface UbicacionInterface {
+/* export interface UbicacionInterface {
 
   latitud: number;
   longitud: number;
@@ -35,3 +35,4 @@ export interface rutaInterface {
   imagen_bus?: string;
 }
 
+ */

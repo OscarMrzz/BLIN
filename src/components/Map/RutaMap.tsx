@@ -8,7 +8,7 @@ import "leaflet-routing-machine";
 // Importar el CSS es vital para que la línea y marcadores se vean bien
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
-import { ParadaBusInterface } from "@/Interfaces/rutas.iterface";
+import { ParadaBusInterface } from "@/Interfaces/rutasfff.iterface";
 import {
   formatRoutingError,
   formatRoutingErrorLogBlock,

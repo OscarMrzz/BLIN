@@ -1,0 +1,22 @@
+export interface RolesInterface {
+  id_roles: string;
+  nombre: string;
+  estado?: string;
+}
+
+export interface PerfilesInterface {
+  id_perfiles: string;
+  id_roles?: string;
+  nombre: string;
+  apellido?: string;
+  dni?: number;
+  foto?: string;
+  id_user?: string;
+}
+
+export interface PermisosInterface {
+  id_permisos: string;
+  id_roles?: string;
+  tabla: string;
+  accion?: string;
+}

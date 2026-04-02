@@ -1,4 +1,4 @@
-import { ParadaBusInterface, rutaInterface, UbicacionInterface } from "@/Interfaces/rutas.iterface";
+import { ParadaBusInterface, rutaInterface, UbicacionInterface } from "@/Interfaces/rutasfff.iterface";
 
 export const obtenerDistanciaCarretera = async (
   miUbicacion: UbicacionInterface,
@@ -34,6 +34,7 @@ export const obtenerMinutosParaLlegada = (
 
   // 1. Tiempo que le toma al bus llegar de la terminal a MI parada
   // (Distancia / Velocidad) * 60 para pasar a minutos
+
   const tiempoTransito = (miParada.distanciaDesdeOrigen / ruta.velocidad) * 60;
 
   // 2. Buscar la salida cuyo (despacho + viaje) sea mayor a la hora actual

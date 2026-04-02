@@ -7,7 +7,7 @@ import "leaflet-routing-machine";
 import { RutaMap } from "./RutaMap";
 import { miUbicacionStore } from "@/Store/miUbicacionStore";
 import { LocalizacionUsuario } from "./LocalizacionUsuario";
-import { ParadaBusInterface } from "@/Interfaces/rutas.iterface";
+import { ParadaBusInterface } from "@/Interfaces/rutasfff.iterface";
 
 // Fix para iconos
 if (typeof window !== "undefined") {
