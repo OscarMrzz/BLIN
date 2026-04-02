@@ -14,7 +14,18 @@ import {
 import CargaCell from "@/components/Animaciones/Carga/cargaCell";
 import { CardTitle } from "@/components/ui/card";
 
+import { displaySchemaInfo, getSchemaInfo } from "@/services/SchemaServices";
+
 export default function Home() {
+  useEffect(() => {
+    const fetchSchema = async () => {
+      const data = await getSchemaInfo();
+      console.log("======================================");
+      console.log("JSON Schema:", JSON.stringify(data, null, 2));
+      console.log("======================================");
+    };
+    fetchSchema();
+  }, []);
   // Queries
   const {
     data: rutasList,
@@ -26,7 +37,6 @@ export default function Home() {
   const { setMiUbicacion, miUbicacion } = miUbicacionStore();
   const [tiempoProximoAutoBus, setTiempoProximoAutoBus] = useState<string>("");
   const [horaProximoBus, setHoraProximoBus] = useState<string>("");
-
 
   useEffect(() => {
     console.log("Home renderizado", { rutasList, miUbicacion });
@@ -161,12 +171,11 @@ export default function Home() {
         <div className="text-center">
           <div className="animate-zoom-in">
             <div className="text-cyan-600">
-              
               <p>Proximo Autobus</p>
             </div>
-          
-              <CardTitle>{horaProximoBus}</CardTitle>
-     
+
+            <CardTitle>{horaProximoBus}</CardTitle>
+
             <p>{tiempoProximoAutoBus || ""}</p>
           </div>
         </div>
