@@ -1,10 +1,9 @@
-import React from 'react'
+import TablaGeneral from '@/components/Tablas/TablaGeneral'
 
 export default function page() {
   return (
     <div>
-        <h1>Admin Rutas</h1>
-      
+      <TablaGeneral />
     </div>
   )
 }
