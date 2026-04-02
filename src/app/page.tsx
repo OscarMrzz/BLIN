@@ -1,5 +1,5 @@
 "use client";
-import RutaItem from "@/components/Rutas/RutaItem";
+import { RutaItem } from "@/components/Rutas/RutaItem";
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -12,6 +12,7 @@ import {
   obtenerMinutosParaLlegada,
 } from "@/utils/Calculos";
 import CargaCell from "@/components/Animaciones/Carga/cargaCell";
+import { CardTitle } from "@/components/ui/card";
 
 export default function Home() {
   // Queries
@@ -25,7 +26,7 @@ export default function Home() {
   const { setMiUbicacion, miUbicacion } = miUbicacionStore();
   const [tiempoProximoAutoBus, setTiempoProximoAutoBus] = useState<string>("");
   const [horaProximoBus, setHoraProximoBus] = useState<string>("");
-  useEffect(() => {});
+
 
   useEffect(() => {
     console.log("Home renderizado", { rutasList, miUbicacion });
@@ -127,7 +128,7 @@ export default function Home() {
             width={100}
             height={100}
             priority
-            className="w-auto h-auto border-2" // Fuerza a mantener el aspect ratio si hay estilos externos
+            className="w-auto h-auto " // Fuerza a mantener el aspect ratio si hay estilos externos
             style={{ width: "auto", height: "auto" }} // Refuerzo para eliminar la advertencia de Next.js
           />
         </div>
@@ -144,38 +145,39 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col  h-full w-full  mx-auto  gap-2 ">
-      <div className="w-full h-full   items-center flex flex-col gap-4 ">
-        <div className="w-full h-60 flex justify-center animate-zoom-in  delay-150">
+    <div className="w-full min-h-screen">
+      <div className="w-full flex flex-col gap-4 p-4">
+        <div className="w-full h-60 flex justify-center animate-zoom-in delay-150">
           <Image
             src="/logo2/logoCompleto.png"
             alt="Logo de la aplicación"
             width={100}
             height={100}
             priority
-            className="w-auto h-auto border-2" // Fuerza a mantener el aspect ratio si hay estilos externos
-            style={{ width: "auto", height: "auto" }} // Refuerzo para eliminar la advertencia de Next.js
+            className="w-auto h-auto "
+            style={{ width: "auto", height: "auto" }}
           />
         </div>
-        <div className="">
-          <div className="animate-zoom-in ">
+        <div className="text-center">
+          <div className="animate-zoom-in">
             <div className="text-cyan-600">
+              
               <p>Proximo Autobus</p>
             </div>
-            <div className="text-6xl text-slate-700 font-bold">
-              {horaProximoBus}
-            </div>
+          
+              <CardTitle>{horaProximoBus}</CardTitle>
+     
             <p>{tiempoProximoAutoBus || ""}</p>
           </div>
         </div>
       </div>
-      <section className="animate-fade-in-up delay-75 ">
-        <div className="bg-orange-500  rounded-t-md h-12 p-2 mb-2">
+      <section className="animate-fade-in-up delay-75 w-full px-4">
+        <div className="bg-orange-500 rounded-t-md h-12 p-2 mb-2  ">
           <h2 className="text-2xl font-bold text-slate-200">
             Rutas en tu ubicacion
           </h2>
         </div>
-        <div className="flex flex-col w-full h-120 min-h-120 overflow-y-auto gap-2 pb-48 px-2 lg:px-8 ">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full gap-4 pb-48">
           {rutasList?.map((ruta) => (
             <RutaItem key={ruta.id_rutas} ruta={ruta} />
           ))}

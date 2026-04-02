@@ -26,18 +26,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-slate-200 h-screen w-full font-sans`}
+        className={`${geistSans.variable} ${geistMono.variable}  h-screen w-full font-sans bg-background text-foreground`}
       >
         <Provider>
           <header className=" w-full ">
             <HeadersComponent />
           </header>
-          <main className="h-full w-full p-4  lg:justify-center lg:items-center  flex flex-col pt-24 pb-32 ">
-            <div className="lg:w-4xl lg:min-w-2xl items-center justify-center h-full w-full">
-              {children}
-            </div>
+          <main className="h-full w-full p-4 flex flex-col pt-24 pb-32">
+            <div className="w-full h-full">{children}</div>
           </main>
           <footer className="">
             <FooterComponet />

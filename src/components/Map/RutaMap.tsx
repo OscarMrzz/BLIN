@@ -9,6 +9,11 @@ import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
 import { ParadaBusInterface } from "@/Interfaces/rutas.iterface";
+import { formatRoutingError, formatRoutingErrorLogBlock } from "@/utils/routing/formatRoutingError";
+import {
+  buildOsrmEndpointList,
+  createOsrmFallbackRouter,
+} from "@/utils/routing/osrmFallbackRouter";
 
 // Aplicar parche global una sola vez para prevenir el error
 if (typeof window !== "undefined") {
@@ -88,23 +93,25 @@ export function RutaMap({ puntos }: Props) {
         // Limpiar errores anteriores de forma asíncrona
         setError(null);
 
+        // Enrutado OSRM v5: NEXT_PUBLIC_OSRM_URL (servidor principal, p. ej. https://tu-host/route/v1),
+        // NEXT_PUBLIC_OSRM_FALLBACK_URL (segundo servidor opcional, mismo formato), y como tercer
+        // intento el demo router.project-osrm.org (solo respaldo; ver buildOsrmEndpointList).
+        const endpoints = buildOsrmEndpointList();
+        if (endpoints.length === 0) {
+          const msg =
+            "No hay ninguna URL OSRM válida. Define NEXT_PUBLIC_OSRM_URL (p. ej. https://tu-servidor/route/v1) o NEXT_PUBLIC_OSRM_FALLBACK_URL.";
+          console.error(`[RutaMap] ${msg}`);
+          setError(msg);
+          return;
+        }
+
         // 1. Transformar puntos de tu interfaz a objetos LatLng de Leaflet
         const waypoints = puntos.map((p) => L.latLng(p.latitud, p.longitud));
 
-        // 2. Configurar el control de rutas
+        // 2. Configurar el control de rutas (varios OSRM en cadena)
         const routingControl = L.Routing.control({
           waypoints: waypoints,
-          router: L.Routing.osrmv1({
-            // NUEVA CONFIGURACIÓN: Servidor local en Docker (Honduras)
-            serviceUrl: process.env.NEXT_PUBLIC_OSRM_URL,
-
-            /* CÓDIGO ANTERIOR (SERVIDOR DEMO):
-            serviceUrl: "https://router.project-osrm.org/route/v1",
-            */
-
-            useHints: false,
-            timeout: 5000,
-          }),
+          router: createOsrmFallbackRouter(endpoints),
           lineOptions: {
             styles: [{ color: "#1d4ed8", weight: 6, opacity: 0.85 }],
             extendToWaypoints: true,
@@ -114,6 +121,9 @@ export function RutaMap({ puntos }: Props) {
           routeWhileDragging: false,
           show: false,
           fitSelectedRoutes: true,
+          defaultErrorHandler(ev: { error?: unknown }) {
+            console.error(formatRoutingErrorLogBlock(ev.error));
+          },
         });
 
         // 3. Añadir el control al mapa
@@ -135,16 +145,12 @@ export function RutaMap({ puntos }: Props) {
           }
         }, 100);
 
-        // Manejar errores del routing
-        routingControl.on(
-          "routingerror",
-          (e: { error?: { message?: string } }) => {
-            const errorMessage =
-              e.error?.message || "Error al calcular la ruta";
-            console.error("Error de routing:", errorMessage);
-            setError(`No se pudo calcular la ruta: ${errorMessage}`);
-          },
-        );
+        routingControl.on("routingerror", (e: { error?: unknown }) => {
+          const formatted = formatRoutingError(e.error);
+          setError(
+            `${formatted.resumenUsuario} ${formatted.sugerencias.join(" ")}`,
+          );
+        });
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : "Error desconocido";
