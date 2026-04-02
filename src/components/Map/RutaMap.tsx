@@ -9,7 +9,11 @@ import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
 import { ParadaBusInterface } from "@/Interfaces/rutas.iterface";
-import { formatRoutingError, formatRoutingErrorLogBlock } from "@/utils/routing/formatRoutingError";
+import {
+  formatRoutingError,
+  formatRoutingErrorLogBlock,
+  RUTA_MAP_LOG_PREFIX,
+} from "@/utils/routing/formatRoutingError";
 import {
   buildOsrmEndpointList,
   createOsrmFallbackRouter,
@@ -67,26 +71,35 @@ export function RutaMap({ puntos }: Props) {
   const routingControlRef = useRef<L.Routing.Control | null>(null);
 
   useEffect(() => {
-    // Esperar a que el mapa esté completamente inicializado
-    const checkMapReady = () => {
-      if (
-        map &&
-        map.getContainer() &&
-        (map as unknown as { _loaded?: boolean })._loaded
-      ) {
-        setMapReady(true);
-      } else if (map) {
-        // Reintentar después de un pequeño delay
-        setTimeout(checkMapReady, 100);
-      }
+    if (!map) return;
+    let cancelled = false;
+    setMapReady(false);
+    const m = map as L.Map;
+    const markReady = () => {
+      if (!cancelled) setMapReady(true);
     };
-
-    checkMapReady();
+    // whenReady evita depender solo de _loaded con polling; el mapa dispara una sola vez al estar listo
+    if ((m as unknown as { _loaded?: boolean })._loaded) {
+      markReady();
+    } else {
+      m.whenReady(markReady);
+    }
+    return () => {
+      cancelled = true;
+    };
   }, [map]);
 
   useEffect(() => {
-    // Solo ejecutar si el mapa está listo y hay puntos válidos
-    if (!mapReady || !map || !puntos || puntos.length < 2) return;
+    if (!mapReady || !map) return;
+    if (!puntos || puntos.length < 2) {
+      if (puntos && puntos.length === 1) {
+        console.log(
+          RUTA_MAP_LOG_PREFIX,
+          "Enrutado OSRM omitido: hace falta al menos 2 paradas para trazar ruta (hay 1).",
+        );
+      }
+      return;
+    }
 
     const initializeRouting = async () => {
       try {
@@ -100,10 +113,16 @@ export function RutaMap({ puntos }: Props) {
         if (endpoints.length === 0) {
           const msg =
             "No hay ninguna URL OSRM válida. Define NEXT_PUBLIC_OSRM_URL (p. ej. https://tu-servidor/route/v1) o NEXT_PUBLIC_OSRM_FALLBACK_URL.";
-          console.error(`[RutaMap] ${msg}`);
+          console.error(RUTA_MAP_LOG_PREFIX, msg);
           setError(msg);
           return;
         }
+
+        console.log(
+          RUTA_MAP_LOG_PREFIX,
+          `Mapa listo · registrando ruta con ${endpoints.length} motor(es) OSRM (salida con console.log para que siempre se vea en la consola):`,
+          endpoints.map((e) => `${e.label} → ${e.serviceUrl}`).join(" | "),
+        );
 
         // 1. Transformar puntos de tu interfaz a objetos LatLng de Leaflet
         const waypoints = puntos.map((p) => L.latLng(p.latitud, p.longitud));

@@ -16,6 +16,11 @@ export type OsrmEndpointConfig = {
 
 const DEMO_OSRM = "https://router.project-osrm.org/route/v1";
 
+/** Usa log (no info): en Edge/Chrome el nivel "Info" suele estar oculto y no verías los motores OSRM. */
+function osrmConsole(...args: unknown[]) {
+  console.log(RUTA_MAP_LOG_PREFIX, ...args);
+}
+
 function normalizeUrl(url: string): string {
   return url.trim().replace(/\/+$/, "");
 }
@@ -92,20 +97,20 @@ function logMotorBanner(
 ) {
   const tag = `[${motor}/${total}]`;
   if (phase === "start") {
-    console.info(
-      `${RUTA_MAP_LOG_PREFIX} ▶ Motor OSRM ${tag} · ${ep.label} — ejecutando solicitud de ruta…`,
+    osrmConsole(
+      `▶ Motor OSRM ${tag} · ${ep.label} — ejecutando solicitud de ruta…`,
     );
-    console.info(`${RUTA_MAP_LOG_PREFIX}    Endpoint base: ${ep.serviceUrl}`);
+    osrmConsole(`   Endpoint base: ${ep.serviceUrl}`);
     return;
   }
   if (phase === "ok") {
-    console.info(
-      `${RUTA_MAP_LOG_PREFIX} ✓ Motor OSRM ${tag} · ${ep.label} — éxito; ruta recibida.`,
+    osrmConsole(
+      `✓ Motor OSRM ${tag} · ${ep.label} — éxito; ruta recibida (este motor es el que está usando el mapa).`,
     );
     return;
   }
-  console.info(
-    `${RUTA_MAP_LOG_PREFIX} ✗ Motor OSRM ${tag} · ${ep.label} — falló la solicitud.`,
+  osrmConsole(
+    `✗ Motor OSRM ${tag} · ${ep.label} — falló la solicitud.`,
   );
 }
 
@@ -114,18 +119,14 @@ function logMotorFailureDetails(
   motor: number,
   total: number,
 ) {
-  console.info(
-    `${RUTA_MAP_LOG_PREFIX}    Diagnóstico (${motor}/${total}): ${formatted.tipoFallo}`,
-  );
-  console.info(`${RUTA_MAP_LOG_PREFIX}    Resumen: ${formatted.mensajeTecnico}`);
+  osrmConsole(`   Diagnóstico (${motor}/${total}): ${formatted.tipoFallo}`);
+  osrmConsole(`   Resumen técnico: ${formatted.mensajeTecnico}`);
   if (formatted.url) {
-    console.info(`${RUTA_MAP_LOG_PREFIX}    URL de petición: ${formatted.url}`);
+    osrmConsole(`   URL de petición: ${formatted.url}`);
   }
-  console.info(
-    `${RUTA_MAP_LOG_PREFIX}    Posibles causas y qué hacer (revisa en orden):`,
-  );
+  osrmConsole(`   Posibles causas y qué hacer (en orden):`);
   formatted.sugerencias.forEach((paso, i) => {
-    console.info(`${RUTA_MAP_LOG_PREFIX}      ${i + 1}. ${paso}`);
+    osrmConsole(`     ${i + 1}. ${paso}`);
   });
 }
 
@@ -158,8 +159,8 @@ export function createOsrmFallbackRouter(
     route(waypoints, callback, context, options) {
       let index = 0;
 
-      console.info(
-        `${RUTA_MAP_LOG_PREFIX} Inicio secuencia OSRM: ${total} motor(es) · Orden: ${endpoints.map((e) => e.label).join(" → ")} · Waypoints: ${waypoints.length}`,
+      osrmConsole(
+        `━━━ Inicio secuencia OSRM ━━━ ${total} motor(es) · Orden: ${endpoints.map((e) => e.label).join(" → ")} · Waypoints: ${waypoints.length}`,
       );
 
       const tryNext = (err?: unknown, routes?: L.Routing.IRoute[]) => {
@@ -180,8 +181,8 @@ export function createOsrmFallbackRouter(
         logMotorFailureDetails(formatted, motor, total);
 
         if (index >= routers.length - 1) {
-          console.info(
-            `${RUTA_MAP_LOG_PREFIX} Secuencia terminada: todos los motores fallaron; se notifica error al control del mapa.`,
+          osrmConsole(
+            `Secuencia terminada: ✗ todos los motores fallaron; se muestra error en el mapa.`,
           );
           return callback.call(
             context ?? callback,
@@ -192,8 +193,8 @@ export function createOsrmFallbackRouter(
         index += 1;
         const next = endpoints[index];
         const nextMotor = index + 1;
-        console.info(
-          `${RUTA_MAP_LOG_PREFIX} Pasando al siguiente motor [${nextMotor}/${total}] · ${next.label}`,
+        osrmConsole(
+          `⏭ Pasando al siguiente motor [${nextMotor}/${total}] · ${next.label}`,
         );
 
         logMotorBanner(nextMotor, total, next, "start");
