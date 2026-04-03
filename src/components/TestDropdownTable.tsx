@@ -6,11 +6,10 @@ import {
   DownloadIcon,
   FileTextIcon,
   FileSpreadsheetIcon,
-
-  ArrowUpIcon,
-  ArrowDownIcon,
-  SearchIcon,
-  PlusIcon,
+  MoreHorizontalIcon,
+  EyeIcon,
+  PencilIcon,
+  TrashIcon,
 } from "lucide-react";
 
 import Papa from "papaparse";
@@ -52,50 +51,199 @@ import {
 } from "@/components/ui/table";
 
 import { cn } from "@/lib/utils";
-import MenuMasOpciones from "@/components/MenuMasOpciones/MenuMasOpciones";
 
-type Props<T> = {
-  data: T[];
-  columns?: ColumnDef<T>[];
-  onClickAgregar?: () => void;
-  conMasOpciones?: boolean; // Nueva prop para controlar si se muestra la columna de acciones
+const data: Payment[] = [
+  {
+    id: "1",
+    name: "Shang Chain",
+    amount: 699,
+    status: "success",
+    email: "shang07@yahoo.com",
+  },
+  {
+    id: "2",
+    name: "Kevin Lincoln",
+    amount: 242,
+    status: "success",
+    email: "kevinli09@gmail.com",
+  },
+  {
+    id: "3",
+    name: "Milton Rose",
+    amount: 655,
+    status: "processing",
+    email: "rose96@gmail.com",
+  },
+  {
+    id: "4",
+    name: "Silas Ryan",
+    amount: 874,
+    status: "success",
+    email: "silas22@gmail.com",
+  },
+  {
+    id: "5",
+    name: "Ben Tenison",
+    amount: 541,
+    status: "failed",
+    email: "bent@hotmail.com",
+  },
+  {
+    id: "6",
+    name: "Alice Cooper",
+    amount: 321,
+    status: "processing",
+    email: "alice@email.com",
+  },
+  {
+    id: "7",
+    name: "Bob Johnson",
+    amount: 789,
+    status: "success",
+    email: "bob.j@company.com",
+  },
+  {
+    id: "8",
+    name: "Carol Williams",
+    amount: 456,
+    status: "processing",
+    email: "carol.w@domain.org",
+  },
+];
+
+export type Payment = {
+  id: string;
+  name: string;
+  amount: number;
+  status: "processing" | "success" | "failed";
+  email: string;
 };
 
-export default function TablaGeneral<T>({
-  data,
-  columns = [],
-  onClickAgregar,
-  conMasOpciones = true,
-}: Props<T>) {
+export const columns: ColumnDef<Payment>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "name",
+    header: "Name",
+    cell: ({ row }) => <div className="font-medium">{row.getValue("name")}</div>,
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => {
+      const status = row.getValue("status") as string;
+
+      const styles = {
+        success:
+          "bg-green-600/10 text-green-600 focus-visible:ring-green-600/20 dark:bg-green-400/10 dark:text-green-400 dark:focus-visible:ring-green-400/40 [a&]:hover:bg-green-600/5 dark:[a&]:hover:bg-green-400/5",
+        failed:
+          "bg-destructive/10 [a&]:hover:bg-destructive/5 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 text-destructive",
+        processing:
+          "bg-amber-600/10 text-amber-600 focus-visible:ring-amber-600/20 dark:bg-amber-400/10 dark:text-amber-400 dark:focus-visible:ring-amber-400/40 [a&]:hover:bg-amber-600/5 dark:[a&]:hover:bg-amber-400/5",
+      }[status];
+
+      return (
+        <Badge className={cn("border-none focus-visible:outline-none", styles)}>
+          {row.getValue("status")}
+        </Badge>
+      );
+    },
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+  },
+  {
+    accessorKey: "amount",
+    header: () => <div className="text-right">Amount</div>,
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("amount"));
+
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(amount);
+
+      return <div className="text-right font-medium">{formatted}</div>;
+    },
+  },
+  {
+    id: "actions",
+    header: () => <div className="text-right">Acciones</div>,
+    cell: ({ row }) => {
+      const payment = row.original;
+
+      return (
+        <div className="text-right">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="size-8">
+                <MoreHorizontalIcon className="size-4" />
+                <span className="sr-only">Abrir menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => console.log("Ver", payment)}>
+                <EyeIcon className="mr-2 size-4" />
+                Ver
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => console.log("Descargar", payment)}>
+                <DownloadIcon className="mr-2 size-4" />
+                Descargar
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => console.log("Editar", payment)}>
+                <PencilIcon className="mr-2 size-4" />
+                Editar
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => console.log("Eliminar", payment)}
+                className="text-destructive focus:text-destructive"
+              >
+                <TrashIcon className="mr-2 size-4" />
+                Eliminar
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      );
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
+];
+
+const TestDropdownTable = () => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [globalFilter, setGlobalFilter] = useState("");
 
-  // Agregar automáticamente la columna de acciones si conMasOpciones es true
-  const columnasconMasOpciones = conMasOpciones
-    ? [
-        ...columns,
-        {
-          header: () => <div className="text-right"></div>,
-          accessorKey: "acciones",
-          cell: ({ row }) => (
-            <MenuMasOpciones
-              row={row}
-              onVer={() => {}}
-              onEditar={() => {}}
-              onEliminar={() => {}}
-              
-            />
-          ),
-        } as ColumnDef<T>,
-      ]
-    : columns;
-
   const table = useReactTable({
     data,
-    columns: columnasconMasOpciones,
+    columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -105,7 +253,6 @@ export default function TablaGeneral<T>({
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     onGlobalFilterChange: setGlobalFilter,
-
     globalFilterFn: "includesString",
     state: {
       sorting,
@@ -135,7 +282,7 @@ export default function TablaGeneral<T>({
     link.setAttribute("href", url);
     link.setAttribute(
       "download",
-      `payments-export-${new Date().toISOString().split("T")[0]}.csv`,
+      `payments-export-${new Date().toISOString().split("T")[0]}.csv`
     );
     link.style.visibility = "hidden";
     document.body.appendChild(link);
@@ -156,27 +303,19 @@ export default function TablaGeneral<T>({
 
     XLSX.utils.book_append_sheet(workbook, worksheet, "Payments");
 
-    // Opción 1: Ancho automático basado en el contenido
-    const cols: { wch: number }[] = [];
-    if (dataToExport.length > 0) {
-      const firstRow = dataToExport[0] as Record<string, unknown>;
-      Object.keys(firstRow).forEach((key) => {
-        // Calcular el máximo largo del contenido en esta columna
-        const maxLength = Math.max(
-          key.length, // largo del encabezado
-          ...dataToExport.map(
-            (row) => String((row as Record<string, unknown>)[key] || "").length,
-          ),
-        );
-        cols.push({ wch: Math.min(Math.max(maxLength + 2, 10), 50) }); // mínimo 10, máximo 50
-      });
-    }
+    const cols = [
+      { wch: 10 },
+      { wch: 20 },
+      { wch: 15 },
+      { wch: 25 },
+      { wch: 15 },
+    ];
 
     worksheet["!cols"] = cols;
 
     XLSX.writeFile(
       workbook,
-      `payments-export-${new Date().toISOString().split("T")[0]}.xlsx`,
+      `payments-export-${new Date().toISOString().split("T")[0]}.xlsx`
     );
   };
 
@@ -196,7 +335,7 @@ export default function TablaGeneral<T>({
     link.setAttribute("href", url);
     link.setAttribute(
       "download",
-      `payments-export-${new Date().toISOString().split("T")[0]}.json`,
+      `payments-export-${new Date().toISOString().split("T")[0]}.json`
     );
     link.style.visibility = "hidden";
     document.body.appendChild(link);
@@ -205,15 +344,15 @@ export default function TablaGeneral<T>({
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full p-8">
+      <h1 className="text-2xl font-bold mb-4">Test Dropdown Table</h1>
       <div className="flex justify-between gap-2 pb-4 max-sm:flex-col sm:items-center">
-        <div className="relative max-w-sm">
-          <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2  h-4 w-4" />
+        <div className="flex items-center space-x-2">
           <Input
-            placeholder="buscar..."
+            placeholder="Search all columns..."
             value={globalFilter ?? ""}
             onChange={(event) => setGlobalFilter(String(event.target.value))}
-            className="pl-10"
+            className="max-w-sm"
           />
         </div>
         <div className="flex items-center space-x-2">
@@ -225,35 +364,26 @@ export default function TablaGeneral<T>({
               </span>
             )}
           </div>
-          {
-            onClickAgregar && (
-              <Button variant="default" size="sm" onClick={onClickAgregar}>
-                <PlusIcon className="mr-2" />
-                Agregar
-              </Button>
-            )
-          }
-          
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="default" size="sm">
+              <Button variant="outline" size="sm">
                 <DownloadIcon className="mr-2" />
-                Exportar
+                Export
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={exportToCSV}>
                 <FileTextIcon className="mr-2 size-4" />
-                Exportar como CSV
+                Export as CSV
               </DropdownMenuItem>
               <DropdownMenuItem onClick={exportToExcel}>
                 <FileSpreadsheetIcon className="mr-2 size-4" />
-                Exportar como Excel
+                Export as Excel
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={exportToJSON}>
                 <FileTextIcon className="mr-2 size-4" />
-                Exportar como JSON
+                Export as JSON
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -266,27 +396,13 @@ export default function TablaGeneral<T>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead
-                      key={header.id}
-                      onClick={() => header.column.toggleSorting()}
-                      className={cn(
-                        "cursor-pointer select-none",
-                        header.column.getCanSort() && "hover:bg-muted/50",
-                      )}
-                    >
-                      <div className="flex items-center gap-2">
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                        {header.column.getIsSorted() === "asc" ? (
-                          <ArrowUpIcon className="ml-2 h-4 w-4" />
-                        ) : header.column.getIsSorted() === "desc" ? (
-                          <ArrowDownIcon className="ml-2 h-4 w-4" />
-                        ) : (
-                          <div className="ml-2 h-4 w-4"></div>
-                        )}
-                      </div>
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
                   );
                 })}
@@ -304,7 +420,7 @@ export default function TablaGeneral<T>({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}
@@ -312,10 +428,7 @@ export default function TablaGeneral<T>({
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columnasconMasOpciones.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -324,8 +437,10 @@ export default function TablaGeneral<T>({
         </Table>
       </div>
       <p className="text-muted-foreground mt-4 text-center text-sm">
-        Data table with export functionality (CSV, Excel, JSON)
+        Test table to verify dropdown functionality
       </p>
     </div>
   );
-}
+};
+
+export default TestDropdownTable;
