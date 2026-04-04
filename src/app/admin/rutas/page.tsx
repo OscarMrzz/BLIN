@@ -2,11 +2,11 @@
 import { ConfirmarEliminar } from "@/components/Confirmacion/ConfirmarEliminar";
 import { FormularioEditarRuta } from "@/components/Formularios/Rutas/FormularioEditarRuta";
 import TablaGeneral from "@/components/Tablas/TablaGeneral";
+import { RutasInterface } from "@/Interfaces/rutas.interface";
 import { getAllRutasForTable, deleteRuta } from "@/lib/services/rutasServices";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast, Toaster } from "sonner";
-
 
 export default function Page() {
   const { data: rutasList, refetch } = useQuery({
@@ -19,29 +19,31 @@ export default function Page() {
   };
 
   const [showModal, setShowModal] = useState(false);
+  const [showModalEditar, setShowModalEditar] = useState(false);
+  const [rutaAEditar, setRutaAEditar] = useState<RutasInterface | null>(null);
   const [nombreRuta, setNombreRuta] = useState("");
   const [idRuta, setIdRuta] = useState("");
 
   const handleEliminar = async (id: string) => {
-    try{
+    try {
       await deleteRuta(id);
-      toast.success("Ruta eliminada correctamente",{
+      toast.success("Ruta eliminada correctamente", {
         duration: 3000,
         style: {
           background: "green",
           color: "white",
-        }
+        },
       });
     } catch (error) {
       console.error("Error al eliminar la ruta:", error);
-      toast.error("Error al eliminar la ruta",{
+      toast.error("Error al eliminar la ruta", {
         duration: 3000,
         style: {
           background: "red",
           color: "white",
-        }
-      })
-    }finally{
+        },
+      });
+    } finally {
       refetch();
     }
   };
@@ -53,6 +55,12 @@ export default function Page() {
     setShowModal(true);
   };
 
+  const abrirModalEditar = (datosAEditar: RutasInterface) => {
+    setRutaAEditar(datosAEditar);
+
+    setShowModalEditar(true);
+  };
+
   return (
     <div className="flex px-12">
       <TablaGeneral
@@ -60,7 +68,8 @@ export default function Page() {
         columns={rutasList?.columnas || []}
         onClickAgregar={() => {}}
         refrescarTabla={refrescarTabla}
-        onEliminar={abrirModalEliminar}
+        AbrirModalEliminar={abrirModalEliminar}
+        AbrirFormularioEditar={abrirModalEditar}
       />
 
       <ConfirmarEliminar
@@ -70,6 +79,14 @@ export default function Page() {
         nombreRuta={nombreRuta}
       />
       <Toaster />
+      {showModalEditar && rutaAEditar && (
+        <FormularioEditarRuta
+          open={showModalEditar}
+          setOpen={setShowModalEditar}
+          rutaAEditar={rutaAEditar}
+          refrescarTabla={refrescarTabla}
+        />
+      )}
     </div>
   );
 }

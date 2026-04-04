@@ -9,7 +9,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -25,7 +24,6 @@ import {
 } from "@/components/ui/select";
 import { RutasInterface } from "@/Interfaces/rutas.interface";
 import { createRuta } from "@/lib/services/rutasServices";
-import { PlusIcon } from "lucide-react";
 import React from "react";
 import { toast, Toaster } from "sonner";
 import { useRef } from "react";
@@ -44,11 +42,18 @@ import { useRef } from "react";
 */
 
 type Props = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
   refrescarTabla: () => void;
   rutaAEditar: RutasInterface;
 };
 
-export function FormularioEditarRuta({ refrescarTabla, rutaAEditar }: Props) {
+export function FormularioEditarRuta({
+  open,
+  setOpen,
+  refrescarTabla,
+  rutaAEditar,
+}: Props) {
   const closeRef = useRef<HTMLButtonElement>(null);
   const [formData, setFormData] = React.useState<RutasInterface>(rutaAEditar);
   const handleSubmit = async (evento: React.FormEvent) => {
@@ -84,7 +89,7 @@ export function FormularioEditarRuta({ refrescarTabla, rutaAEditar }: Props) {
 
     try {
       await createRuta(nuevaRuta as RutasInterface);
-      toast.success("Ruta creada exitosamente", {
+      toast.success("Ruta editada exitosamente", {
         duration: 3000,
         style: {
           background: "green",
@@ -106,8 +111,8 @@ export function FormularioEditarRuta({ refrescarTabla, rutaAEditar }: Props) {
       closeRef.current?.click();
       refrescarTabla();
     } catch (error) {
-      console.error("Error al guardar la ruta:", error);
-      toast.error("Error al guardar la ruta", {
+      console.error("Error al editar la ruta:", error);
+      toast.error("Error al editar la ruta", {
         duration: 3000,
         style: {
           background: "red",
@@ -130,19 +135,13 @@ export function FormularioEditarRuta({ refrescarTabla, rutaAEditar }: Props) {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <Toaster />
-      <DialogTrigger asChild>
-        <Button variant="default">
-          {" "}
-          <PlusIcon /> Agregar
-        </Button>
-      </DialogTrigger>
 
       <DialogContent className="sm:max-w-sm">
         <form onSubmit={handleSubmit}>
           <DialogHeader className="mb-4">
-            <DialogTitle>Agregar Ruta</DialogTitle>
+            <DialogTitle>Editar Ruta</DialogTitle>
           </DialogHeader>
 
           <FieldGroup className="space-y-4">

@@ -60,7 +60,8 @@ type Props<T> = {
   onClickAgregar?: () => void;
   conMasOpciones?: boolean;
   refrescarTabla: () => void;
-  onEliminar?: (id: string, nombre: string) => void;
+  AbrirModalEliminar?: (id: string, nombre: string) => void;
+  AbrirFormularioEditar?: (datosAEditar: T) => void;
 };
 
 export default function TablaGeneral<T>({
@@ -69,7 +70,8 @@ export default function TablaGeneral<T>({
   onClickAgregar,
   conMasOpciones = true,
   refrescarTabla,
-  onEliminar,
+  AbrirModalEliminar,
+  AbrirFormularioEditar,
 }: Props<T>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -77,7 +79,10 @@ export default function TablaGeneral<T>({
   const [rowSelection, setRowSelection] = useState({});
   const [globalFilter, setGlobalFilter] = useState("");
   const dispararAbrirModalEliminar = (id: string, nombre: string) => {
-    onEliminar?.(id, nombre);
+    AbrirModalEliminar?.(id, nombre);
+  };
+  const dispararAbrirFormularioEditar = (datosAEditar: T) => {
+    AbrirFormularioEditar?.(datosAEditar);
   };
   // Agregar automáticamente la columna de acciones si conMasOpciones es true
   const columnasconMasOpciones = conMasOpciones
@@ -91,12 +96,17 @@ export default function TablaGeneral<T>({
               row={row}
               onVer={() => {}}
               onEditar={() => {}}
-              onEliminar={() => {
+              AbrirModalEliminar={() => {
                 const rowData = row.original as Record<string, unknown>;
                 dispararAbrirModalEliminar(
                   rowData.id_rutas as string,
                   row.getValue("nombre") as string,
                 );
+              }}
+
+              AbrirFormularioEditar={() => {
+                const rowData = row.original as Record<string, unknown>;
+                dispararAbrirFormularioEditar(rowData as T);
               }}
             />
           ),
@@ -327,9 +337,7 @@ export default function TablaGeneral<T>({
           </TableBody>
         </Table>
       </div>
-      <p className="text-muted-foreground mt-4 text-center text-sm">
-        Data table with export functionality (CSV, Excel, JSON)
-      </p>
+
     </div>
   );
 }

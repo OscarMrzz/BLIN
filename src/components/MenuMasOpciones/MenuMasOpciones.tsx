@@ -25,7 +25,8 @@ export interface MenuMasOpcionesProps<T> {
 
   onDescargar?: (item: T) => void;
   onEditar?: () => void;
-  onEliminar?: () => void;
+  AbrirModalEliminar?: () => void;
+  AbrirFormularioEditar?: () => void;
   accionesPersonalizadas?: Array<{
     label: string;
     icon?: React.ReactNode;
@@ -40,7 +41,8 @@ export default function MenuMasOpciones<T>({
   onVer,
   onDescargar,
   onEditar,
-  onEliminar,
+  AbrirModalEliminar,
+  AbrirFormularioEditar,
   accionesPersonalizadas = [],
 }: MenuMasOpcionesProps<T>) {
   const item = row.original;
@@ -50,7 +52,8 @@ export default function MenuMasOpciones<T>({
     onVer ||
     onDescargar ||
     onEditar ||
-    onEliminar ||
+    AbrirModalEliminar ||
+    AbrirFormularioEditar ||
     accionesPersonalizadas.length > 0
   );
 
@@ -81,8 +84,8 @@ export default function MenuMasOpciones<T>({
               Descargar
             </DropdownMenuItem>
           )}
-          {onEditar && (
-            <DropdownMenuItem onClick={() => onEditar()}>
+          {AbrirFormularioEditar && (
+            <DropdownMenuItem onClick={() => AbrirFormularioEditar()}>
               <PencilIcon className="mr-2 size-4" />
               Editar
             </DropdownMenuItem>
@@ -99,11 +102,11 @@ export default function MenuMasOpciones<T>({
               {accion.label}
             </DropdownMenuItem>
           ))}
-          {onEliminar && (
+          {AbrirModalEliminar && (
             <>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => onEliminar()}
+                onClick={() => AbrirModalEliminar()}
                 className="text-destructive focus:text-destructive"
               >
                 <TrashIcon className="mr-2 size-4" />

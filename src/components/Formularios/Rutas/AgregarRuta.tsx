@@ -257,6 +257,7 @@ export function AgregarRuta({ refrescarTabla }: Props) {
           </DialogFooter>
         </form>
       </DialogContent>
+      
     </Dialog>
   );
 }
