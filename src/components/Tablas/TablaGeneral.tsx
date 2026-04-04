@@ -6,7 +6,6 @@ import {
   DownloadIcon,
   FileTextIcon,
   FileSpreadsheetIcon,
-
   ArrowUpIcon,
   ArrowDownIcon,
   SearchIcon,
@@ -61,6 +60,7 @@ type Props<T> = {
   onClickAgregar?: () => void;
   conMasOpciones?: boolean;
   refrescarTabla: () => void;
+  onEliminar?: (id: string, nombre: string) => void;
 };
 
 export default function TablaGeneral<T>({
@@ -69,13 +69,16 @@ export default function TablaGeneral<T>({
   onClickAgregar,
   conMasOpciones = true,
   refrescarTabla,
+  onEliminar,
 }: Props<T>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [globalFilter, setGlobalFilter] = useState("");
-
+  const dispararAbrirModalEliminar = (id: string, nombre: string) => {
+    onEliminar?.(id, nombre);
+  };
   // Agregar automáticamente la columna de acciones si conMasOpciones es true
   const columnasconMasOpciones = conMasOpciones
     ? [
@@ -87,11 +90,14 @@ export default function TablaGeneral<T>({
             <MenuMasOpciones
               row={row}
               onVer={() => {}}
-              onAgregarHorarios={() => {}}
-              onAgregarCordenadas={() => {}}
               onEditar={() => {}}
-              onEliminar={() => {}}
-              
+              onEliminar={() => {
+                const rowData = row.original as Record<string, unknown>;
+                dispararAbrirModalEliminar(
+                  rowData.id_rutas as string,
+                  row.getValue("nombre") as string,
+                );
+              }}
             />
           ),
         } as ColumnDef<T>,
@@ -230,12 +236,8 @@ export default function TablaGeneral<T>({
               </span>
             )}
           </div>
-          {
-            onClickAgregar && (
-              <AgregarRuta refrescarTabla={refrescarTabla} />
-            )
-          }
-          
+          {onClickAgregar && <AgregarRuta refrescarTabla={refrescarTabla} />}
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="default" size="sm">

@@ -22,11 +22,10 @@ export interface MenuMasOpcionesProps<T> {
     original: T;
   };
   onVer?: (item: T) => void;
-  onAgregarHorarios?: (item: T) => void;
-  onAgregarCordenadas?: (item: T) => void;
+
   onDescargar?: (item: T) => void;
-  onEditar?: (item: T) => void;
-  onEliminar?: (item: T) => void;
+  onEditar?: () => void;
+  onEliminar?: () => void;
   accionesPersonalizadas?: Array<{
     label: string;
     icon?: React.ReactNode;
@@ -37,8 +36,7 @@ export interface MenuMasOpcionesProps<T> {
 
 export default function MenuMasOpciones<T>({
   row,
-  onAgregarHorarios,
-  onAgregarCordenadas,
+
   onVer,
   onDescargar,
   onEditar,
@@ -76,18 +74,7 @@ export default function MenuMasOpciones<T>({
               Ver
             </DropdownMenuItem>
           )}
-          {onAgregarHorarios && (
-            <DropdownMenuItem onClick={() => onAgregarHorarios(item)}>
-              <ClockIcon className="mr-2 size-4" />
-              Agregar Horarios
-            </DropdownMenuItem>
-          )}
-          {onAgregarCordenadas && (
-            <DropdownMenuItem onClick={() => onAgregarCordenadas(item)}>
-              <MapPinIcon className="mr-2 size-4" />
-              Agregar Cordenadas
-            </DropdownMenuItem>
-          )}
+
           {onDescargar && (
             <DropdownMenuItem onClick={() => onDescargar(item)}>
               <DownloadIcon className="mr-2 size-4" />
@@ -95,7 +82,7 @@ export default function MenuMasOpciones<T>({
             </DropdownMenuItem>
           )}
           {onEditar && (
-            <DropdownMenuItem onClick={() => onEditar(item)}>
+            <DropdownMenuItem onClick={() => onEditar()}>
               <PencilIcon className="mr-2 size-4" />
               Editar
             </DropdownMenuItem>
@@ -116,7 +103,7 @@ export default function MenuMasOpciones<T>({
             <>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => onEliminar(item)}
+                onClick={() => onEliminar()}
                 className="text-destructive focus:text-destructive"
               >
                 <TrashIcon className="mr-2 size-4" />
