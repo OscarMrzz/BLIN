@@ -88,6 +88,7 @@ export function AgregarRuta({ refrescarTabla }: Props) {
       origen: formData.origen,
       destino: formData.destino,
       activo: formData.activo,
+
       imagen_bus: formData.imagen_bus,
     };
 
@@ -212,6 +213,16 @@ export function AgregarRuta({ refrescarTabla }: Props) {
                 onChange={handleInputChange}
               />
             </Field>
+            <Field>
+              <Label htmlFor="precio">Precio:</Label>
+              <Input
+                id="precio"
+                name="precio"
+                placeholder="ejemplo: 100"
+                value={formData.precio}
+                onChange={handleInputChange}
+              />
+            </Field>
 
             <Field orientation="horizontal">
               <Checkbox
@@ -241,7 +252,7 @@ export function AgregarRuta({ refrescarTabla }: Props) {
               <SelectContent>
                 <SelectGroup>
                   <SelectLabel>Modelo</SelectLabel>
-                  <SelectItem value="schoolbus">School Bus</SelectItem>
+                  <SelectItem value="school-bus">School Bus</SelectItem>
                   <SelectItem value="microbus">Microbus</SelectItem>
                   <SelectItem value="castor">Castor</SelectItem>
                 </SelectGroup>
@@ -257,7 +268,6 @@ export function AgregarRuta({ refrescarTabla }: Props) {
           </DialogFooter>
         </form>
       </DialogContent>
-      
     </Dialog>
   );
 }

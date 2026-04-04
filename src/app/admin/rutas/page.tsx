@@ -7,6 +7,9 @@ import { getAllRutasForTable, deleteRuta } from "@/lib/services/rutasServices";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast, Toaster } from "sonner";
+import ModalverRuta from "@/components/Ver/ModalverRuta";
+import { AgregarRuta } from "@/components/Formularios/Rutas/AgregarRuta";
+
 
 export default function Page() {
   const { data: rutasList, refetch } = useQuery({
@@ -19,6 +22,8 @@ export default function Page() {
   };
 
   const [showModal, setShowModal] = useState(false);
+  const [showModalVer, setShowModalVer] = useState(false);
+  const [rutaSelecionada, setRutaSelecionada] = useState<RutasInterface | null>(null);
   const [showModalEditar, setShowModalEditar] = useState(false);
   const [rutaAEditar, setRutaAEditar] = useState<RutasInterface | null>(null);
   const [nombreRuta, setNombreRuta] = useState("");
@@ -61,6 +66,11 @@ export default function Page() {
     setShowModalEditar(true);
   };
 
+  const abrirModalVer = (datosAVer: RutasInterface) => {
+    setRutaSelecionada(datosAVer);
+    setShowModalVer(true);
+  };
+
   return (
     <div className="flex px-12">
       <TablaGeneral
@@ -70,6 +80,8 @@ export default function Page() {
         refrescarTabla={refrescarTabla}
         AbrirModalEliminar={abrirModalEliminar}
         AbrirFormularioEditar={abrirModalEditar}
+        AbrirModalVer={abrirModalVer}
+        BotonAgregar={AgregarRuta}
       />
 
       <ConfirmarEliminar
@@ -85,6 +97,14 @@ export default function Page() {
           setOpen={setShowModalEditar}
           rutaAEditar={rutaAEditar}
           refrescarTabla={refrescarTabla}
+        />
+      )}
+
+      {showModalVer && rutaSelecionada && (
+        <ModalverRuta
+          open={showModalVer}
+          setOpen={setShowModalVer}
+          rutaSeleccionada={rutaSelecionada}
         />
       )}
     </div>

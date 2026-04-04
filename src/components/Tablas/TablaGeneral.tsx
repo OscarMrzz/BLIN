@@ -52,26 +52,28 @@ import {
 
 import { cn } from "@/lib/utils";
 import MenuMasOpciones from "@/components/MenuMasOpciones/MenuMasOpciones";
-import { AgregarRuta } from "../Formularios/Rutas/AgregarRuta";
-
 type Props<T> = {
   data: T[];
   columns?: ColumnDef<T>[];
   onClickAgregar?: () => void;
+  BotonAgregar?: React.ElementType;
   conMasOpciones?: boolean;
   refrescarTabla: () => void;
   AbrirModalEliminar?: (id: string, nombre: string) => void;
   AbrirFormularioEditar?: (datosAEditar: T) => void;
+  AbrirModalVer?: (datosAVer: T) => void;
 };
 
 export default function TablaGeneral<T>({
   data,
   columns = [],
   onClickAgregar,
+  BotonAgregar,
   conMasOpciones = true,
   refrescarTabla,
   AbrirModalEliminar,
   AbrirFormularioEditar,
+  AbrirModalVer,
 }: Props<T>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -84,6 +86,9 @@ export default function TablaGeneral<T>({
   const dispararAbrirFormularioEditar = (datosAEditar: T) => {
     AbrirFormularioEditar?.(datosAEditar);
   };
+  const dispararAbrirModalVer = (datosAVer: T) => {
+    AbrirModalVer?.(datosAVer);
+  };
   // Agregar automáticamente la columna de acciones si conMasOpciones es true
   const columnasconMasOpciones = conMasOpciones
     ? [
@@ -94,7 +99,6 @@ export default function TablaGeneral<T>({
           cell: ({ row }) => (
             <MenuMasOpciones
               row={row}
-              onVer={() => {}}
               onEditar={() => {}}
               AbrirModalEliminar={() => {
                 const rowData = row.original as Record<string, unknown>;
@@ -103,7 +107,10 @@ export default function TablaGeneral<T>({
                   row.getValue("nombre") as string,
                 );
               }}
-
+              AbrirModalVer={() => {
+                const rowData = row.original as Record<string, unknown>;
+                dispararAbrirModalVer(rowData as T);
+              }}
               AbrirFormularioEditar={() => {
                 const rowData = row.original as Record<string, unknown>;
                 dispararAbrirFormularioEditar(rowData as T);
@@ -126,7 +133,6 @@ export default function TablaGeneral<T>({
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     onGlobalFilterChange: setGlobalFilter,
-
     globalFilterFn: "includesString",
     state: {
       sorting,
@@ -246,7 +252,7 @@ export default function TablaGeneral<T>({
               </span>
             )}
           </div>
-          {onClickAgregar && <AgregarRuta refrescarTabla={refrescarTabla} />}
+          {BotonAgregar && <BotonAgregar />}
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -338,6 +344,115 @@ export default function TablaGeneral<T>({
         </Table>
       </div>
 
+      {/* Controles de paginación */}
+      <div className="flex flex-col items-center gap-4 px-2 py-4 sm:flex-row sm:justify-between">
+        <div className="text-sm text-muted-foreground">
+          {data.length} filas
+        </div>
+        <div className="flex items-center space-x-1">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.setPageIndex(0)}
+            disabled={!table.getCanPreviousPage()}
+            className="hidden sm:inline-flex"
+          >
+            <span className="sr-only">Ir a la primera página</span>
+            ««
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <span className="sr-only">Página anterior</span>‹
+          </Button>
+
+          {/* Números de página */}
+          <div className="flex items-center space-x-1">
+            {Array.from(
+              { length: Math.min(5, table.getPageCount()) },
+              (_, i) => {
+                const pageNumber = i + 1;
+                const isActive =
+                  table.getState().pagination.pageIndex + 1 === pageNumber;
+                const totalPages = table.getPageCount();
+
+                // Lógica para mostrar páginas alrededor de la página actual
+                let showPage = false;
+                const currentPage = table.getState().pagination.pageIndex + 1;
+
+                if (totalPages <= 5) {
+                  showPage = true;
+                } else if (pageNumber === 1 || pageNumber === totalPages) {
+                  showPage = true;
+                } else if (Math.abs(pageNumber - currentPage) <= 1) {
+                  showPage = true;
+                }
+
+                if (!showPage) {
+                  // Mostrar ellipsis para páginas ocultas
+                  if (
+                    (pageNumber === 2 && currentPage > 4) ||
+                    (pageNumber === totalPages - 1 &&
+                      currentPage < totalPages - 3)
+                  ) {
+                    return (
+                      <PaginationItem key={`ellipsis-${i}`}>
+                        <span className="flex h-9 w-9 items-center justify-center text-sm text-muted-foreground">
+                          ...
+                        </span>
+                      </PaginationItem>
+                    );
+                  }
+                  return null;
+                }
+
+                return (
+                  <Button
+                    key={pageNumber}
+                    variant={isActive ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => table.setPageIndex(pageNumber - 1)}
+                    className="h-9 w-9 p-0"
+                  >
+                    {pageNumber}
+                  </Button>
+                );
+              },
+            )}
+          </div>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            <span className="sr-only">Página siguiente</span>›
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            disabled={!table.getCanNextPage()}
+            className="hidden sm:inline-flex"
+          >
+            <span className="sr-only">Ir a la última página</span>
+            »»
+          </Button>
+        </div>
+        <div className="text-sm text-muted-foreground sm:hidden">
+          Página {table.getState().pagination.pageIndex + 1} de{" "}
+          {table.getPageCount()}
+        </div>
+      </div>
     </div>
   );
 }
+
+// Componente auxiliar para consistencia
+const PaginationItem = ({ children }: { children: React.ReactNode }) => (
+  <div className="flex items-center">{children}</div>
+);
