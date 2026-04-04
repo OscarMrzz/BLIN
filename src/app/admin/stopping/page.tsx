@@ -6,6 +6,7 @@ import { StoppingInterface } from "@/Interfaces/rutas.interface";
 import {
   getAllParadasForTable,
   deleteParada,
+  getParadaByIdParada,
 } from "@/lib/services/ParadasServices";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -58,25 +59,111 @@ export default function Page() {
     }
   };
 
-  const abrirModalEliminar = (idParada: string) => {
-    const paradaBuscada = paradasList?.datos.find(
-      (parada) => parada.id_paradas === idParada,
-    );
+  const abrirModalEliminar = (idFila: string) => {
+    // Extraer el índice del ID de TanStack Table (formato: "row-0", "row-1", etc.)
+    const indice = parseInt(idFila.replace("row-", ""), 10);
 
-    setNombreParada(paradaBuscada?.nombre_lugar || "");
-    setIdParada(idParada);
+    if (isNaN(indice)) {
+      console.error("ID de fila inválido:", idFila);
+      return;
+    }
+
+    // Buscar la parada por su índice original
+    const paradaBuscada = paradasList?.datos[indice];
+
+    if (!paradaBuscada) {
+      console.error("No se encontró la parada en el índice:", indice);
+      return;
+    }
+
+    // Obtener el ID real para la eliminación
+    const idReal = paradaBuscada.id_paradas;
+
+    setNombreParada(paradaBuscada.nombre_lugar || "");
+    setIdParada(idReal);
     setShowModal(true);
   };
 
-  const abrirModalEditar = (datosAEditar: StoppingInterface) => {
-    setParadaAEditar(datosAEditar);
+  const abrirModalEditar = async (idFila: string) => {
+    // Extraer el índice del ID de TanStack Table (formato: "row-0", "row-1", etc.)
+    const indice = parseInt(idFila.replace("row-", ""), 10);
 
-    setShowModalEditar(true);
+    if (isNaN(indice)) {
+      console.error("ID de fila inválido:", idFila);
+      return;
+    }
+
+    // Buscar la parada por su índice original para obtener el ID real
+    const paradaBuscada = paradasList?.datos[indice];
+
+    if (!paradaBuscada) {
+      console.error("No se encontró la parada en el índice:", indice);
+      return;
+    }
+
+    // Obtener el ID real para la consulta
+    const idReal = paradaBuscada.id_paradas;
+
+    try {
+      // Obtener los datos completos y actualizados de la parada
+      const paradaCompleta = await getParadaByIdParada(idReal);
+
+      if (paradaCompleta) {
+        setParadaAEditar(paradaCompleta);
+        setShowModalEditar(true);
+      } else {
+        console.error("No se pudo obtener la parada completa");
+        // Como fallback, usar los datos de la tabla
+        setParadaAEditar(paradaBuscada);
+        setShowModalEditar(true);
+      }
+    } catch (error) {
+      console.error("Error al obtener la parada completa:", error);
+      // Como fallback, usar los datos de la tabla
+      setParadaAEditar(paradaBuscada);
+      setShowModalEditar(true);
+    }
   };
 
-  const abrirModalVer = (datosAVer: StoppingInterface) => {
-    setParadaSeleccionada(datosAVer);
-    setShowModalVer(true);
+  const abrirModalVer = async (idFila: string) => {
+    // Extraer el índice del ID de TanStack Table (formato: "row-0", "row-1", etc.)
+    const indice = parseInt(idFila.replace("row-", ""), 10);
+
+    if (isNaN(indice)) {
+      console.error("ID de fila inválido:", idFila);
+      return;
+    }
+
+    // Buscar la parada por su índice original para obtener el ID real
+    const paradaBuscada = paradasList?.datos[indice];
+
+    if (!paradaBuscada) {
+      console.error("No se encontró la parada en el índice:", indice);
+      return;
+    }
+
+    // Obtener el ID real para la consulta
+    const idReal = paradaBuscada.id_paradas;
+
+    try {
+      // Obtener los datos completos y actualizados de la parada
+      const paradaCompleta = await getParadaByIdParada(idReal);
+
+      if (paradaCompleta) {
+        setParadaSeleccionada(paradaCompleta);
+        setShowModalVer(true);
+      } else {
+        console.error("No se pudo obtener la parada completa");
+        // Como fallback, usar los datos de la tabla
+        setParadaSeleccionada(paradaBuscada);
+        setShowModalVer(true);
+      }
+    } catch (error) {
+      console.error("Error al obtener la parada completa:", error);
+      // Como fallback, usar los datos de la tabla
+      setParadaSeleccionada(paradaBuscada);
+      setShowModalVer(true);
+    }
   };
 
   return (
