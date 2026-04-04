@@ -53,12 +53,14 @@ import {
 
 import { cn } from "@/lib/utils";
 import MenuMasOpciones from "@/components/MenuMasOpciones/MenuMasOpciones";
+import { AgregarRuta } from "../Formularios/Rutas/AgregarRuta";
 
 type Props<T> = {
   data: T[];
   columns?: ColumnDef<T>[];
   onClickAgregar?: () => void;
-  conMasOpciones?: boolean; // Nueva prop para controlar si se muestra la columna de acciones
+  conMasOpciones?: boolean;
+  refrescarTabla: () => void;
 };
 
 export default function TablaGeneral<T>({
@@ -66,6 +68,7 @@ export default function TablaGeneral<T>({
   columns = [],
   onClickAgregar,
   conMasOpciones = true,
+  refrescarTabla,
 }: Props<T>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -84,6 +87,8 @@ export default function TablaGeneral<T>({
             <MenuMasOpciones
               row={row}
               onVer={() => {}}
+              onAgregarHorarios={() => {}}
+              onAgregarCordenadas={() => {}}
               onEditar={() => {}}
               onEliminar={() => {}}
               
@@ -227,10 +232,7 @@ export default function TablaGeneral<T>({
           </div>
           {
             onClickAgregar && (
-              <Button variant="default" size="sm" onClick={onClickAgregar}>
-                <PlusIcon className="mr-2" />
-                Agregar
-              </Button>
+              <AgregarRuta refrescarTabla={refrescarTabla} />
             )
           }
           

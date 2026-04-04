@@ -13,7 +13,6 @@ import {
 } from "@/utils/Calculos";
 import CargaCell from "@/components/Animaciones/Carga/cargaCell";
 
-
 import {
   displaySchemaInfo,
   getSchemaInfo,
@@ -31,6 +30,8 @@ export default function Home() {
   const { setMiUbicacion, miUbicacion } = miUbicacionStore();
   const [tiempoProximoAutoBus, setTiempoProximoAutoBus] = useState<string>("");
   const [horaProximoBus, setHoraProximoBus] = useState<string>("");
+
+ 
 
   useEffect(() => {
     if (!rutasList || rutasList.length < 2 || !miUbicacion) return;
@@ -153,8 +154,11 @@ export default function Home() {
 
   return (
     <div className="w-full min-h-screen ">
-      <HiroComponent horaProximoBus={horaProximoBus} tiempoProximoAutoBus={tiempoProximoAutoBus} />
- 
+      <HiroComponent
+        horaProximoBus={horaProximoBus}
+        tiempoProximoAutoBus={tiempoProximoAutoBus}
+      />
+
       <section className="animate-fade-in-up delay-75 w-full px-4">
         <div className="bg-orange-500 rounded-t-md h-12 p-2 mb-2 flex lg:hidden ">
           <h2 className="text-2xl font-bold text-slate-200">

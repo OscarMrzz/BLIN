@@ -140,3 +140,30 @@ export async function getSchemaInfo() {
   console.log(data)
   return data;
 }
+
+export const createRuta = async (ruta: RutasInterface) => {
+  const { data, error } = await ClienteBrowserSupabase.from("rutas").insert(ruta);
+  if (error) {
+    console.error("Error al crear la ruta:", error);
+    return null;
+  }
+  return data;
+}
+
+export const updateRuta = async (id: string, ruta: RutasInterface) => {
+  const { data, error } = await ClienteBrowserSupabase.from("rutas").update(ruta).eq("id_rutas", id);
+  if (error) {
+    console.error("Error al actualizar la ruta:", error);
+    return null;
+  }
+  return data;
+}
+
+export const deleteRuta = async (id: string) => {
+  const { data, error } = await ClienteBrowserSupabase.from("rutas").delete().eq("id_rutas", id);
+  if (error) {
+    console.error("Error al eliminar la ruta:", error);
+    return null;
+  }
+  return data;
+}

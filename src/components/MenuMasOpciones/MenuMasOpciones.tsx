@@ -2,8 +2,10 @@ import React from "react";
 import { DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import {
+  ClockIcon,
   DownloadIcon,
   EyeIcon,
+  MapPinIcon,
   MoreVerticalIcon,
   PencilIcon,
   TrashIcon,
@@ -20,6 +22,8 @@ export interface MenuMasOpcionesProps<T> {
     original: T;
   };
   onVer?: (item: T) => void;
+  onAgregarHorarios?: (item: T) => void;
+  onAgregarCordenadas?: (item: T) => void;
   onDescargar?: (item: T) => void;
   onEditar?: (item: T) => void;
   onEliminar?: (item: T) => void;
@@ -33,6 +37,8 @@ export interface MenuMasOpcionesProps<T> {
 
 export default function MenuMasOpciones<T>({
   row,
+  onAgregarHorarios,
+  onAgregarCordenadas,
   onVer,
   onDescargar,
   onEditar,
@@ -68,6 +74,18 @@ export default function MenuMasOpciones<T>({
             <DropdownMenuItem onClick={() => onVer(item)}>
               <EyeIcon className="mr-2 size-4" />
               Ver
+            </DropdownMenuItem>
+          )}
+          {onAgregarHorarios && (
+            <DropdownMenuItem onClick={() => onAgregarHorarios(item)}>
+              <ClockIcon className="mr-2 size-4" />
+              Agregar Horarios
+            </DropdownMenuItem>
+          )}
+          {onAgregarCordenadas && (
+            <DropdownMenuItem onClick={() => onAgregarCordenadas(item)}>
+              <MapPinIcon className="mr-2 size-4" />
+              Agregar Cordenadas
             </DropdownMenuItem>
           )}
           {onDescargar && (

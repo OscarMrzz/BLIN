@@ -1,27 +1,27 @@
 "use client";
 import TablaGeneral from "@/components/Tablas/TablaGeneral";
 import { getAllRutasForTable } from "@/lib/services/rutasServices";
-import { useEffect, useState } from "react";
-import { RutasInterface } from "@/Interfaces/rutas.interface";
-import { ColumnDef } from "@tanstack/react-table";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Page() {
-  const [data, setData] = useState<RutasInterface[]>([]);
-  const [columns, setColumns] = useState<
-    ColumnDef<RutasInterface>[]
-  >([]);
+  const {
+    data: rutasList ,refetch,} = useQuery({
+    queryKey: ["getAllRutasForTable"],
+    queryFn: getAllRutasForTable,
+  });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const respuesta = await getAllRutasForTable();
-      setData(respuesta.datos);
-      setColumns(respuesta.columnas);
-    };
-    fetchData();
-  }, []);
+  const refrescarTabla = () => {
+    refetch();
+  };
+
   return (
     <div className="flex px-12">
-      <TablaGeneral data={data} columns={columns} />
+      <TablaGeneral
+        data={rutasList?.datos || []}
+        columns={rutasList?.columnas || []}
+        onClickAgregar={() => {}}
+        refrescarTabla={refrescarTabla}
+      />
     </div>
   );
 }
