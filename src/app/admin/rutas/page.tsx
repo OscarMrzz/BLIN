@@ -53,9 +53,10 @@ export default function Page() {
     }
   };
 
-  const abrirModalEliminar = (idRuta: string, nombreRuta: string) => {
-    console.log("Abriendo modal para eliminar:", nombreRuta);
-    setNombreRuta(nombreRuta);
+  const abrirModalEliminar = (idRuta: string) => {
+
+    const rutaBuscada = rutasList?.datos.find((ruta) => ruta.id_rutas === idRuta);
+    setNombreRuta(rutaBuscada?.nombre || "");
     setIdRuta(idRuta);
     setShowModal(true);
   };
@@ -76,7 +77,6 @@ export default function Page() {
       <TablaGeneral
         data={rutasList?.datos || []}
         columns={rutasList?.columnas || []}
-        onClickAgregar={() => {}}
         refrescarTabla={refrescarTabla}
         AbrirModalEliminar={abrirModalEliminar}
         AbrirFormularioEditar={abrirModalEditar}

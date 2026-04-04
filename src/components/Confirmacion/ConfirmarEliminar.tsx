@@ -27,9 +27,9 @@ export function ConfirmarEliminar({ open, setOpen, onConfirm, nombreRuta }: Prop
           <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
             <Trash2Icon />
           </AlertDialogMedia>
-          <AlertDialogTitle>Eliminar ruta</AlertDialogTitle>
+          <AlertDialogTitle>Eliminar</AlertDialogTitle>
           <AlertDialogDescription>
-            ¿Estás seguro de que deseas eliminar la ruta <span className="font-bold">{nombreRuta}</span>?
+            ¿Estás seguro de que deseas eliminar <span className="font-bold">{nombreRuta}</span>?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

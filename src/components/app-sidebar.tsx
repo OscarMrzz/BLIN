@@ -91,6 +91,11 @@ const data = {
           url: "/admin/rutas",
           icon: <CustomMapIcon />,
         },
+        {
+          title: "Stopping",
+          url: "/admin/stopping",
+          icon: <CustomMapIcon />,
+        },
 
         {
           title: "Buses",

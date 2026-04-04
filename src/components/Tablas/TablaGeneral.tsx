@@ -55,11 +55,11 @@ import MenuMasOpciones from "@/components/MenuMasOpciones/MenuMasOpciones";
 type Props<T> = {
   data: T[];
   columns?: ColumnDef<T>[];
-  onClickAgregar?: () => void;
+
   BotonAgregar?: React.ElementType;
   conMasOpciones?: boolean;
   refrescarTabla: () => void;
-  AbrirModalEliminar?: (id: string, nombre: string) => void;
+  AbrirModalEliminar?: (id: string) => void;
   AbrirFormularioEditar?: (datosAEditar: T) => void;
   AbrirModalVer?: (datosAVer: T) => void;
 };
@@ -67,7 +67,7 @@ type Props<T> = {
 export default function TablaGeneral<T>({
   data,
   columns = [],
-  onClickAgregar,
+
   BotonAgregar,
   conMasOpciones = true,
   refrescarTabla,
@@ -80,8 +80,9 @@ export default function TablaGeneral<T>({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [globalFilter, setGlobalFilter] = useState("");
-  const dispararAbrirModalEliminar = (id: string, nombre: string) => {
-    AbrirModalEliminar?.(id, nombre);
+
+  const dispararAbrirModalEliminar = (id: string) => {
+    AbrirModalEliminar?.(id);
   };
   const dispararAbrirFormularioEditar = (datosAEditar: T) => {
     AbrirFormularioEditar?.(datosAEditar);
@@ -103,8 +104,8 @@ export default function TablaGeneral<T>({
               AbrirModalEliminar={() => {
                 const rowData = row.original as Record<string, unknown>;
                 dispararAbrirModalEliminar(
-                  rowData.id_rutas as string,
-                  row.getValue("nombre") as string,
+                  rowData.id_paradas as string,
+              
                 );
               }}
               AbrirModalVer={() => {
@@ -252,7 +253,7 @@ export default function TablaGeneral<T>({
               </span>
             )}
           </div>
-          {BotonAgregar && <BotonAgregar />}
+          {BotonAgregar && <BotonAgregar refrescarTabla={refrescarTabla} />}
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -346,9 +347,7 @@ export default function TablaGeneral<T>({
 
       {/* Controles de paginación */}
       <div className="flex flex-col items-center gap-4 px-2 py-4 sm:flex-row sm:justify-between">
-        <div className="text-sm text-muted-foreground">
-          {data.length} filas
-        </div>
+        <div className="text-sm text-muted-foreground">{data.length} filas</div>
         <div className="flex items-center space-x-1">
           <Button
             variant="outline"

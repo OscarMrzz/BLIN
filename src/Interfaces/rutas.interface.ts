@@ -17,7 +17,7 @@ export interface BusesInterface {
   estado?: string;
 }
 
-export interface ParadasInterface {
+export interface StoppingInterface {
   id_paradas: string;
   latitud: number;
   longitud?: number;
