@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RutasInterface } from "@/Interfaces/rutas.interface";
-import { createRuta } from "@/lib/services/rutasServices";
+import { createRuta, updateRuta } from "@/lib/services/rutasServices";
 import React from "react";
 import { toast, Toaster } from "sonner";
 import { useRef } from "react";
@@ -88,7 +88,7 @@ export function FormularioEditarRuta({
     };
 
     try {
-      await createRuta(nuevaRuta as RutasInterface);
+      await updateRuta(rutaAEditar.id_rutas, nuevaRuta as RutasInterface);
       toast.success("Ruta editada exitosamente", {
         duration: 3000,
         style: {
@@ -202,6 +202,16 @@ export function FormularioEditarRuta({
                 onChange={handleInputChange}
               />
             </Field>
+            <Field>
+              <Label htmlFor="precio">Precio:</Label>
+              <Input
+                id="precio"
+                name="precio"
+                placeholder="ejemplo: 100"
+                value={formData.precio}
+                onChange={handleInputChange}
+              />
+            </Field>
 
             <Field orientation="horizontal">
               <Checkbox
@@ -231,7 +241,7 @@ export function FormularioEditarRuta({
               <SelectContent>
                 <SelectGroup>
                   <SelectLabel>Modelo</SelectLabel>
-                  <SelectItem value="schoolbus">School Bus</SelectItem>
+                  <SelectItem value="school-bus">School Bus</SelectItem>
                   <SelectItem value="microbus">Microbus</SelectItem>
                   <SelectItem value="castor">Castor</SelectItem>
                 </SelectGroup>

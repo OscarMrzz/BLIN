@@ -42,7 +42,7 @@ export async function getAllRutasForTable(): Promise<tablaInterface<RutasInterfa
         latitud,
         longitud
       )
-    `);
+    `).order("nombre", { ascending: true })
   if (error) {
     console.error("Error al obtener las rutas:", error);
     return {
@@ -86,11 +86,7 @@ export async function getAllRutasForTable(): Promise<tablaInterface<RutasInterfa
       accessorKey: "precio",
       enableSorting: true
     },
-    {
-      header: "Tiempo de espera",
-      accessorKey: "tiempo_espera",
-      enableSorting: true
-    },
+
     {
       header: "Origen",
       accessorKey: "origen",

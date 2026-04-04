@@ -2,10 +2,8 @@ import React from "react";
 import { DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import {
-  ClockIcon,
   DownloadIcon,
   EyeIcon,
-  MapPinIcon,
   MoreVerticalIcon,
   PencilIcon,
   TrashIcon,
@@ -26,6 +24,7 @@ export interface MenuMasOpcionesProps<T> {
   onDescargar?: (item: T) => void;
   onEditar?: () => void;
   AbrirModalEliminar?: () => void;
+  AbrirModalVer?: () => void;
   AbrirFormularioEditar?: () => void;
   accionesPersonalizadas?: Array<{
     label: string;
@@ -42,6 +41,7 @@ export default function MenuMasOpciones<T>({
   onDescargar,
   onEditar,
   AbrirModalEliminar,
+  AbrirModalVer,
   AbrirFormularioEditar,
   accionesPersonalizadas = [],
 }: MenuMasOpcionesProps<T>) {
@@ -53,6 +53,7 @@ export default function MenuMasOpciones<T>({
     onDescargar ||
     onEditar ||
     AbrirModalEliminar ||
+    AbrirModalVer ||
     AbrirFormularioEditar ||
     accionesPersonalizadas.length > 0
   );
@@ -71,8 +72,8 @@ export default function MenuMasOpciones<T>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          {onVer && (
-            <DropdownMenuItem onClick={() => onVer(item)}>
+          {AbrirModalVer && (
+            <DropdownMenuItem onClick={() => AbrirModalVer()}>
               <EyeIcon className="mr-2 size-4" />
               Ver
             </DropdownMenuItem>
@@ -90,6 +91,7 @@ export default function MenuMasOpciones<T>({
               Editar
             </DropdownMenuItem>
           )}
+
           {accionesPersonalizadas.map((accion, index) => (
             <DropdownMenuItem
               key={index}
