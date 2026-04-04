@@ -59,9 +59,9 @@ type Props<T> = {
   BotonAgregar?: React.ElementType;
   conMasOpciones?: boolean;
   refrescarTabla: () => void;
-  AbrirModalEliminar?: (id: string) => void;
-  AbrirFormularioEditar?: (datosAEditar: T) => void;
-  AbrirModalVer?: (datosAVer: T) => void;
+  AbrirModalEliminar?: (idFila: string) => void;
+  AbrirFormularioEditar?: (idFila: string) => void;
+  AbrirModalVer?: (idFila: string) => void;
 };
 
 export default function TablaGeneral<T>({
@@ -81,14 +81,14 @@ export default function TablaGeneral<T>({
   const [rowSelection, setRowSelection] = useState({});
   const [globalFilter, setGlobalFilter] = useState("");
 
-  const dispararAbrirModalEliminar = (id: string) => {
-    AbrirModalEliminar?.(id);
+  const dispararAbrirModalEliminar = (idFila: string) => {
+    AbrirModalEliminar?.(idFila);
   };
-  const dispararAbrirFormularioEditar = (datosAEditar: T) => {
-    AbrirFormularioEditar?.(datosAEditar);
+  const dispararAbrirFormularioEditar = (idFila: string) => {
+    AbrirFormularioEditar?.(idFila);
   };
-  const dispararAbrirModalVer = (datosAVer: T) => {
-    AbrirModalVer?.(datosAVer);
+  const dispararAbrirModalVer = (idFila: string) => {
+    AbrirModalVer?.(idFila);
   };
   // Agregar automáticamente la columna de acciones si conMasOpciones es true
   const columnasconMasOpciones = conMasOpciones
@@ -102,19 +102,16 @@ export default function TablaGeneral<T>({
               row={row}
               onEditar={() => {}}
               AbrirModalEliminar={() => {
-                const rowData = row.original as Record<string, unknown>;
-                dispararAbrirModalEliminar(
-                  rowData.id_paradas as string,
-              
-                );
+                // Usar el ID interno de TanStack Table que es único y persistente
+                dispararAbrirModalEliminar(row.id);
               }}
               AbrirModalVer={() => {
-                const rowData = row.original as Record<string, unknown>;
-                dispararAbrirModalVer(rowData as T);
+                // Usar el ID interno de TanStack Table que es único y persistente
+                dispararAbrirModalVer(row.id);
               }}
               AbrirFormularioEditar={() => {
-                const rowData = row.original as Record<string, unknown>;
-                dispararAbrirFormularioEditar(rowData as T);
+                // Usar el ID interno de TanStack Table que es único y persistente
+                dispararAbrirFormularioEditar(row.id);
               }}
             />
           ),
@@ -142,6 +139,8 @@ export default function TablaGeneral<T>({
       rowSelection,
       globalFilter,
     },
+    // Generar IDs únicos para cada fila basados en el índice original
+    getRowId: (row, index) => `row-${index}`,
   });
 
   const exportToCSV = () => {
