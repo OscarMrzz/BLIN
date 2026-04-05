@@ -145,7 +145,9 @@ export const columns: ColumnDef<Payment>[] = [
   {
     accessorKey: "name",
     header: "Name",
-    cell: ({ row }) => <div className="font-medium">{row.getValue("name")}</div>,
+    cell: ({ row }) => (
+      <div className="font-medium">{row.getValue("name")}</div>
+    ),
   },
   {
     accessorKey: "status",
@@ -208,7 +210,9 @@ export const columns: ColumnDef<Payment>[] = [
                 <EyeIcon className="mr-2 size-4" />
                 Ver
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => console.log("Descargar", payment)}>
+              <DropdownMenuItem
+                onClick={() => console.log("Descargar", payment)}
+              >
                 <DownloadIcon className="mr-2 size-4" />
                 Descargar
               </DropdownMenuItem>
@@ -282,7 +286,7 @@ const TestDropdownTable = () => {
     link.setAttribute("href", url);
     link.setAttribute(
       "download",
-      `payments-export-${new Date().toISOString().split("T")[0]}.csv`
+      `payments-export-${new Date().toISOString().split("T")[0]}.csv`,
     );
     link.style.visibility = "hidden";
     document.body.appendChild(link);
@@ -315,7 +319,7 @@ const TestDropdownTable = () => {
 
     XLSX.writeFile(
       workbook,
-      `payments-export-${new Date().toISOString().split("T")[0]}.xlsx`
+      `payments-export-${new Date().toISOString().split("T")[0]}.xlsx`,
     );
   };
 
@@ -335,7 +339,7 @@ const TestDropdownTable = () => {
     link.setAttribute("href", url);
     link.setAttribute(
       "download",
-      `payments-export-${new Date().toISOString().split("T")[0]}.json`
+      `payments-export-${new Date().toISOString().split("T")[0]}.json`,
     );
     link.style.visibility = "hidden";
     document.body.appendChild(link);
@@ -401,7 +405,7 @@ const TestDropdownTable = () => {
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -420,7 +424,7 @@ const TestDropdownTable = () => {
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -428,7 +432,10 @@ const TestDropdownTable = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   No results.
                 </TableCell>
               </TableRow>

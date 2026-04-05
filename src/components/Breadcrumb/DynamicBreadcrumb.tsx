@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Breadcrumb,
@@ -26,7 +26,9 @@ export default function DynamicBreadcrumb() {
               )}
             </BreadcrumbItem>
             {!item.isCurrent && (
-              <BreadcrumbSeparator className={index === 0 ? "hidden md:block" : ""} />
+              <BreadcrumbSeparator
+                className={index === 0 ? "hidden md:block" : ""}
+              />
             )}
           </div>
         ))}

@@ -51,45 +51,34 @@ export default function ModalVerStopping({
             </div>
           </DialogHeader>
 
-  
-        
-
-              <div className="flex items-center  w-full justify-between rounded-xl bg-card border border-border p-4 transition-all hover:shadow-md">
-                <div className="flex items-center gap-3">
-        
-                  <div>
-
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Latitud
-                    </p>
-                    <p className="font-semibold text-foreground">
-                      {paradaSeleccionada.latitud}
-                    </p>
-                  </div>
-                    <div>
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Longitud
-                    </p>
-                    <p className="text-sm text-foreground">
-                      {paradaSeleccionada.longitud || "N/A"}
-                    </p>
-                  </div>
-                  </div>
-
-
+          <div className="flex items-center  w-full justify-between rounded-xl bg-card border border-border p-4 transition-all hover:shadow-md">
+            <div className="flex items-center gap-3">
+              <div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Latitud
+                  </p>
+                  <p className="font-semibold text-foreground">
+                    {paradaSeleccionada.latitud}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Longitud
+                  </p>
+                  <p className="text-sm text-foreground">
+                    {paradaSeleccionada.longitud || "N/A"}
+                  </p>
                 </div>
               </div>
+            </div>
+          </div>
 
-
-       
-
-   
-                    <DialogFooter >
-                      <Button onClick={() => setOpen(false)} variant="default">
-                        Cerrar
-                      </Button>
-                    </DialogFooter>
+          <DialogFooter>
+            <Button onClick={() => setOpen(false)} variant="default">
+              Cerrar
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>

@@ -15,10 +15,15 @@ interface Props {
   open: boolean;
   setOpen: (open: boolean) => void;
   onConfirm: () => void;
-  nombreRuta:string;
+  nombreRuta: string;
 }
 
-export function ConfirmarEliminar({ open, setOpen, onConfirm, nombreRuta }: Props) {
+export function ConfirmarEliminar({
+  open,
+  setOpen,
+  onConfirm,
+  nombreRuta,
+}: Props) {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       {/* Ya no necesitas AlertDialogTrigger aquí */}
@@ -29,15 +34,13 @@ export function ConfirmarEliminar({ open, setOpen, onConfirm, nombreRuta }: Prop
           </AlertDialogMedia>
           <AlertDialogTitle>Eliminar</AlertDialogTitle>
           <AlertDialogDescription>
-            ¿Estás seguro de que deseas eliminar <span className="font-bold">{nombreRuta}</span>?
+            ¿Estás seguro de que deseas eliminar{" "}
+            <span className="font-bold">{nombreRuta}</span>?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
-          <AlertDialogAction 
-            variant="destructive" 
-            onClick={onConfirm}
-          >
+          <AlertDialogAction variant="destructive" onClick={onConfirm}>
             Eliminar
           </AlertDialogAction>
         </AlertDialogFooter>

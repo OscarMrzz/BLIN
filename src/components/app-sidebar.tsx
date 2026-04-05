@@ -113,6 +113,11 @@ const data = {
           icon: <CreditCardIcon />,
         },
         {
+          title: "Generador QR",
+          url: "/admin/generador-qr",
+          icon: <CreditCardIcon />,
+        },
+        {
           title: "Reporte",
           url: "#",
           icon: <BarChartIcon />,

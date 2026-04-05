@@ -62,7 +62,6 @@ export function AgregarStopping({ refrescarTabla }: Props) {
     try {
       const [latitud, longitud] = formData.cordenadas.split(", ");
       await createParada({
-      
         nombre_lugar: formData.nombre_lugar,
         id_rutas: formData.id_rutas,
         latitud: parseFloat(latitud),

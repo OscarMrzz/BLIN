@@ -54,16 +54,15 @@ export function RutaItem({ ruta }: Props) {
     <Card className="relative mx-auto w-full max-w-sm pt-0">
       <div className="absolute inset-0 z-30 aspect-video bg-black/35  h-48 " />
       <div className="bg-linear-to-b from-sky-500/75 to-transparent">
-
-      <Image
-        src="/img/busFino.png"
-        alt="Bus cover"
-        className="relative z-20 w-full h-48  p-4 overflow-hidden "
-        width={500}
-        height={300}
-        priority
+        <Image
+          src="/img/busFino.png"
+          alt="Bus cover"
+          className="relative z-20 w-full h-48  p-4 overflow-hidden "
+          width={500}
+          height={300}
+          priority
         />
-        </div>
+      </div>
 
       <CardHeader>
         <CardAction>

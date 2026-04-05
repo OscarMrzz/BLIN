@@ -45,22 +45,19 @@ export default function ModalverRuta({
           <div className="relative mt-6 space-y-4">
             <div className="relative mx-auto w-32 h-32 overflow-hidden rounded-2xl border-2 border-border bg-card p-1 shadow-lg">
               <div className="h-full w-full rounded-2xl bg-background p-4 flex items-center justify-center">
-                {
-                  rutaSeleccionada.imagen_bus && (
-                    <Image
-                      src={`/img/${rutaSeleccionada.imagen_bus}.png`}
-                      alt={rutaSeleccionada.nombre}
-                      width={80}
-                      height={80}
-                      className="object-contain"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = "/img/school-bus.png";
-                      }}
-                    />
-                  )
-                }
-       
+                {rutaSeleccionada.imagen_bus && (
+                  <Image
+                    src={`/img/${rutaSeleccionada.imagen_bus}.png`}
+                    alt={rutaSeleccionada.nombre}
+                    width={80}
+                    height={80}
+                    className="object-contain"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = "/img/school-bus.png";
+                    }}
+                  />
+                )}
               </div>
             </div>
 
@@ -101,7 +98,7 @@ export default function ModalverRuta({
                 <div className="rounded-xl bg-card border border-border p-4 transition-all hover:shadow-md">
                   <div className="flex items-center gap-2">
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-200 text-muted-foreground">
-                     <span className="text-lg text-orange-800">L</span>
+                      <span className="text-lg text-orange-800">L</span>
                     </div>
                     <div>
                       <p className="text-xs font-medium text-muted-foreground">
@@ -130,8 +127,6 @@ export default function ModalverRuta({
                   </div>
                 </div>
               </div>
-
-              
             </div>
           </div>
 
