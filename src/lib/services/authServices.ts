@@ -1,5 +1,6 @@
 import { ClienteBrowserSupabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
+import { createPerfilForUser } from "./perfilesServices";
 
 
 
@@ -10,12 +11,35 @@ export async function login(email: string, password: string) {
     });
     return { data, error };
 }
-export async function register(email: string, password: string) {
-    const { data, error } = await ClienteBrowserSupabase.auth.signUp({
-        email,
-        password
-    });
-    return { data, error };
+export async function register(email: string, password: string, nombre?: string, apellido?: string) {
+    try {
+        // Create user in auth
+        const { data, error } = await ClienteBrowserSupabase.auth.signUp({
+            email,
+            password
+        });
+
+        if (error) {
+            console.error("Error en registro de auth:", error);
+            return { data, error };
+        }
+
+        // If user created successfully, create profile
+        if (data.user && (nombre || apellido)) {
+            try {
+                await createPerfilForUser(data.user.id, nombre || '', apellido);
+                console.log("Perfil creado automáticamente para usuario:", data.user.id);
+            } catch (profileError) {
+                console.error("Error al crear perfil automáticamente:", profileError);
+                // Don't fail the registration, just log the error
+            }
+        }
+
+        return { data, error };
+    } catch (error) {
+        console.error("Error en register:", error);
+        return { data: null, error };
+    }
 }
 
 export const getUserAuth = async () => {

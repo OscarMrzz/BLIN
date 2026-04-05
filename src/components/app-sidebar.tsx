@@ -109,13 +109,38 @@ const data = {
         },
         {
           title: "Tarjetas",
-          url: "#",
+          url: "/admin/tarjetas",
           icon: <CreditCardIcon />,
         },
         {
           title: "Reporte",
           url: "#",
           icon: <BarChartIcon />,
+        },
+      ],
+    },
+  ],
+  navCobrador: [
+    {
+      title: "Cobrador",
+      url: "#",
+      icon: <SettingsIcon />,
+      isActive: true,
+      items: [
+        {
+          title: "lectura",
+          url: "/cobrador/lectura",
+          icon: <UsersIcon />,
+        },
+        {
+          title: "cobro",
+          url: "/cobrador/cobro",
+          icon: <CustomMapIcon />,
+        },
+        {
+          title: "reporte",
+          url: "/cobrador/reporte",
+          icon: <CustomMapIcon />,
         },
       ],
     },
@@ -169,6 +194,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarContent>
           <NavMain items={data.navMain} />
           {isAuthenticated && <NavMain items={data.navAdmin} />}
+          {isAuthenticated && <NavMain items={data.navCobrador} />}
         </SidebarContent>
         <SidebarFooter></SidebarFooter>
         <SidebarRail />

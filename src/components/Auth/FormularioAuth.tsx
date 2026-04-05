@@ -60,12 +60,21 @@ export default function FormularioAuth({ open, onClose }: Props) {
 
     const email = event.currentTarget.email.value;
     const password = event.currentTarget.password.value;
+    const nombre = event.currentTarget.nombre?.value || "";
+    const apellido = event.currentTarget.apellido?.value || "";
 
     try {
-      const usuario = await register(email, password);
+      const usuario = await register(email, password, nombre, apellido);
+
+      if (usuario.error) {
+        setIsError(true);
+        console.error("Error al registrar usuario:", usuario.error);
+        return;
+      }
 
       onClose();
     } catch (error) {
+      setIsError(true);
       console.error("Error al registrar usuario:", error);
     }
   };
