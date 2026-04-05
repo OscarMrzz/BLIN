@@ -10,10 +10,15 @@ export default function FormularioAuth({ open, onClose }: Props) {
   const [seVaARegistrar, setSeVaARegistrar] = React.useState(false);
   const [stepRegistro, setStepRegistro] = React.useState(1);
   const [isError, setIsError] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const handleClose = () => {
     setSeVaARegistrar(false);
     setStepRegistro(1);
+    setIsError(false);
+    setErrorMessage("");
+    setIsLoading(false);
     onClose();
   };
 
@@ -31,51 +36,112 @@ export default function FormularioAuth({ open, onClose }: Props) {
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoading(true);
+    setIsError(false);
+    setErrorMessage("");
 
     const email = event.currentTarget.email.value;
     const password = event.currentTarget.password.value;
+
+    console.log("🔄 Formulario: Iniciando login", { email });
 
     try {
       const resultado = await login(email, password);
 
       if (resultado.error) {
+        console.error("❌ Formulario: Error en login", resultado.error);
         setIsError(true);
-
+        setErrorMessage(
+          (resultado.error as { message?: string })?.message ||
+            "Error al iniciar sesión",
+        );
         return;
       }
 
       if (resultado.data) {
+        console.log("✅ Formulario: Login exitoso");
         onClose();
         window.location.reload();
       } else {
+        console.error("❌ Formulario: Login sin datos");
         setIsError(true);
+        setErrorMessage("No se pudo iniciar sesión");
       }
     } catch (error) {
+      console.error("❌ Formulario: Error inesperado en login", error);
       setIsError(true);
-      console.error("Error al iniciar sesion:", error);
+      setErrorMessage("Error inesperado al iniciar sesión");
+    } finally {
+      setIsLoading(false);
     }
   };
   const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoading(true);
+    setIsError(false);
+    setErrorMessage("");
 
     const email = event.currentTarget.email.value;
     const password = event.currentTarget.password.value;
+    const confirmPassword = event.currentTarget.confirmPassword?.value || "";
     const nombre = event.currentTarget.nombre?.value || "";
     const apellido = event.currentTarget.apellido?.value || "";
+
+    console.log("🔄 Formulario: Iniciando registro", {
+      email,
+      nombre,
+      apellido,
+    });
+
+    // Validar contraseñas
+    if (password !== confirmPassword) {
+      console.error("❌ Formulario: Las contraseñas no coinciden");
+      setIsError(true);
+      setErrorMessage("Las contraseñas no coinciden");
+      setIsLoading(false);
+      return;
+    }
+
+    // Validar longitud mínima de contraseña
+    if (password.length < 6) {
+      console.error("❌ Formulario: Contraseña demasiado corta");
+      setIsError(true);
+      setErrorMessage("La contraseña debe tener al menos 6 caracteres");
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const usuario = await register(email, password, nombre, apellido);
 
       if (usuario.error) {
+        console.error(
+          "❌ Formulario: Error al registrar usuario",
+          usuario.error,
+        );
         setIsError(true);
-        console.error("Error al registrar usuario:", usuario.error);
+        setErrorMessage(
+          (usuario.error as { message?: string })?.message ||
+            "Error al registrar usuario",
+        );
         return;
       }
 
+      console.log("✅ Formulario: Registro exitoso");
+      // Mostrar mensaje de éxito y cerrar
+      alert(
+        "¡Registro exitoso! Por favor revisa tu correo para confirmar la cuenta.",
+      );
       onClose();
     } catch (error) {
+      console.error(
+        "❌ Formulario: Error inesperado al registrar usuario",
+        error,
+      );
       setIsError(true);
-      console.error("Error al registrar usuario:", error);
+      setErrorMessage("Error inesperado al registrar usuario");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -183,10 +249,11 @@ export default function FormularioAuth({ open, onClose }: Props) {
                       Anterior
                     </button>
                     <button
-                      className="bg-sky-800 text-white px-4 py-2 rounded"
+                      className="bg-sky-800 text-white px-4 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed"
                       type="submit"
+                      disabled={isLoading}
                     >
-                      Registrarse
+                      {isLoading ? "Registrando..." : "Registrarse"}
                     </button>
                   </div>
                 </div>
@@ -226,10 +293,11 @@ export default function FormularioAuth({ open, onClose }: Props) {
                 />
               </div>
               <button
-                className="bg-sky-700 rounded p-2 text-white"
+                className="bg-sky-700 rounded p-2 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                 type="submit"
+                disabled={isLoading}
               >
-                Iniciar sesion
+                {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
               </button>
             </form>
             <span className="">
@@ -242,7 +310,7 @@ export default function FormularioAuth({ open, onClose }: Props) {
               </button>
             </span>
             <span className="text-red-500">
-              {isError && "Correo o contraseña incorrectos"}
+              {isError && (errorMessage || "Correo o contraseña incorrectos")}
             </span>
           </div>
         )}

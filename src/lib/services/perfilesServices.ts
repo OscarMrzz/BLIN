@@ -166,7 +166,9 @@ export const deletePerfil = async (id: string) => {
     }
 };
 
-export const createPerfilForUser = async (userId: string, email?: string, nombre?: string, apellido?: string, id_roles?: string) => {
+export const createPerfilForUser = async (userId: string, nombre?: string, apellido?: string, id_roles?: string) => {
+    console.log("🔄 Creando perfil para usuario:", { userId, nombre, apellido, id_roles });
+
     try {
         const perfilData: Partial<PerfilesInterface> = {
             id_user: userId,
@@ -175,20 +177,27 @@ export const createPerfilForUser = async (userId: string, email?: string, nombre
             id_roles: id_roles,
         };
 
+        console.log("📝 Datos del perfil a insertar:", perfilData);
+
         const { data, error } = await ClienteBrowserSupabase.from("perfiles")
             .insert(perfilData)
             .select()
             .single();
 
         if (error) {
-            console.error("Error al crear perfil para usuario:", error);
+            console.error("❌ Error al crear perfil para usuario:", {
+                message: error.message,
+                code: error.code || 'NO_CODE',
+                details: error.details,
+                hint: error.hint
+            });
             throw error;
         }
 
-        console.log("Perfil creado exitosamente para usuario:", userId);
+        console.log("✅ Perfil creado exitosamente para usuario:", userId);
         return data;
     } catch (err) {
-        console.error("Error en createPerfilForUser:", err);
+        console.error("❌ Error en createPerfilForUser:", err);
         throw err;
     }
 };
