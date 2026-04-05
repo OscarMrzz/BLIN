@@ -87,7 +87,18 @@ export async function getParadaByIdParada(id: string) {
     return data;
 }
 export async function getParadaByIdRuta(id: string) {
-    const { data, error } = await ClienteBrowserSupabase.from("paradas").select("*").eq("id_rutas", id).single();
+    console.log("🔍 [PARADAS SERVICE] Buscando paradas para ruta ID:", id);
+
+    const { data, error } = await ClienteBrowserSupabase.from("paradas").select("*").eq("id_rutas", id);
+
+    console.log("📦 [PARADAS SERVICE] Respuesta Supabase - data:", data);
+    console.log("❌ [PARADAS SERVICE] Respuesta Supabase - error:", error);
+    console.log("📊 [PARADAS SERVICE] Número de paradas encontradas:", data?.length || 0);
+
+    // Verificar todas las paradas que existen en la base de datos
+    const { data: todasParadas, error: errorTodas } = await ClienteBrowserSupabase.from("paradas").select("id_paradas, id_rutas, nombre_lugar").limit(10);
+    console.log("🌍 [PARADAS SERVICE] Primeras 10 paradas en la BD:", todasParadas);
+    console.log("📈 [PARADAS SERVICE] Total de paradas en BD:", todasParadas?.length || 0);
 
     if (error) {
         console.error(" [SERVICE] Error al obtener la parada:", error);

@@ -47,7 +47,7 @@ export default function ModalverRuta({
               <div className="h-full w-full rounded-2xl bg-background p-4 flex items-center justify-center">
                 {rutaSeleccionada.imagen_bus && (
                   <Image
-                    src={`/img/${rutaSeleccionada.imagen_bus}.png`}
+                    src={`/img/${rutaSeleccionada.imagen_bus.replace(/['"]+/g, "")}.png`}
                     alt={rutaSeleccionada.nombre}
                     width={80}
                     height={80}

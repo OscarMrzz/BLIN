@@ -55,7 +55,7 @@ export function RutaItem({ ruta }: Props) {
       <div className="absolute inset-0 z-30 aspect-video bg-black/35  h-48 " />
       <div className="bg-linear-to-b from-sky-500/75 to-transparent">
         <Image
-          src={`/img/${ruta.imagen_bus}.png`}
+          src={`/img/${(ruta.imagen_bus || "").replace(/['"]+/g, "")}.png`}
           alt="Bus cover"
           className="relative z-20 w-full h-48  p-4 overflow-hidden "
           width={500}

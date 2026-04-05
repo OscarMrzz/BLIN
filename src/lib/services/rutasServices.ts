@@ -1,7 +1,8 @@
 import { tablaInterface } from "@/Interfaces/tabla.interface";
 import type { ColumnDef } from "@tanstack/react-table";
 import { ClienteBrowserSupabase } from "../supabase";
-import { ParadasDetalladasInterface, RutasInterface } from "@/Interfaces/rutas.interface";
+import { ParadasDetalladasInterface, RutasInterface, StoppingInterface } from "@/Interfaces/rutas.interface";
+import { getParadaByIdRuta } from "./ParadasServices";
 
 export async function getAllRutas() {
   const { data, error } = await ClienteBrowserSupabase
@@ -113,18 +114,62 @@ export async function getRutaById(id: string) {
   console.log(" [SERVICE] Buscando ruta con ID:", id);
   console.log(" [SERVICE] Tipo de ID:", typeof id);
 
-  const { data, error } = await ClienteBrowserSupabase.from("rutas").select("*").eq("id_rutas", id).single();
+  // Obtener la ruta básica primero
+  const { data: rutaData, error: rutaError } = await ClienteBrowserSupabase
+    .from("rutas")
+    .select("*")
+    .eq("id_rutas", id)
+    .single();
 
-  console.log(" [SERVICE] Respuesta Supabase - data:", data);
-  console.log(" [SERVICE] Respuesta Supabase - error:", error);
+  console.log(" [SERVICE] Ruta básica - data:", rutaData);
+  console.log(" [SERVICE] Ruta básica - error:", rutaError);
 
-  if (error) {
-    console.error(" [SERVICE] Error al obtener la ruta:", error);
+  if (rutaError) {
+    console.error(" [SERVICE] Error al obtener la ruta:", rutaError);
     return null;
   }
 
-  console.log(" [SERVICE] Ruta encontrada:", data);
-  return data;
+  // Obtener todas las paradas de la ruta usando el servicio de paradas
+  const paradas = await getParadaByIdRuta(id);
+
+  console.log(" [SERVICE] Paradas obtenidas de ParadasService:", paradas);
+  console.log(" [SERVICE] Número de paradas:", paradas?.length || 0);
+
+  if (!paradas || paradas.length === 0) {
+    console.error(" [SERVICE] No se encontraron paradas para la ruta");
+    return null;
+  }
+
+  // Ordenar paradas por distancia_desde_origen si está disponible
+  const paradasOrdenadas = paradas.sort((a: StoppingInterface, b: StoppingInterface) =>
+    (a.distancia_desde_origen || 0) - (b.distancia_desde_origen || 0)
+  );
+
+  console.log(" [SERVICE] Paradas ordenadas:", paradasOrdenadas);
+
+  // Usar la primera parada como origen y la última como destino
+  const primeraParada = paradasOrdenadas[0];
+  const ultimaParada = paradasOrdenadas[paradasOrdenadas.length - 1];
+
+  console.log(" [SERVICE] Primera parada (origen):", primeraParada);
+  console.log(" [SERVICE] Última parada (destino):", ultimaParada);
+
+  // Transformar los datos para incluir punto_origen y punto_destino
+  const rutaConCoordenadas = {
+    ...rutaData,
+    punto_origen: {
+      latitud: primeraParada.latitud,
+      longitud: primeraParada.longitud
+    },
+    punto_destino: {
+      latitud: ultimaParada.latitud,
+      longitud: ultimaParada.longitud
+    },
+    paradas: paradasOrdenadas
+  };
+
+  console.log(" [SERVICE] Ruta con coordenadas procesadas:", rutaConCoordenadas);
+  return rutaConCoordenadas;
 }
 
 export async function getSchemaInfo() {
