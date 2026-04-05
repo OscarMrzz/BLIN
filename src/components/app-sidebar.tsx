@@ -45,6 +45,11 @@ const data = {
       isActive: true,
       items: [
         {
+          title: "Inicio",
+          url: "/",
+          icon: <Buscaricon />,
+        },
+        {
           title: "Buscar",
           url: "#",
           icon: <Buscaricon />,
@@ -94,6 +99,11 @@ const data = {
         {
           title: "Stopping",
           url: "/admin/stopping",
+          icon: <CustomMapIcon />,
+        },
+        {
+          title: "horarios",
+          url: "/admin/horarios",
           icon: <CustomMapIcon />,
         },
 

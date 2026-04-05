@@ -3,6 +3,7 @@ export interface TargetasInterface {
   id_perfiles?: string;
   codigo_targeta: string;
   estado?: string;
+  asignada: boolean;
 }
 
 export interface SaldoInterface {
