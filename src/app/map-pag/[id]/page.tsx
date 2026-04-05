@@ -1,7 +1,7 @@
 "use client";
 
 import { NuevoMapa } from "@/components/Map/NuevoMapa";
-import { rutaInterface } from "@/Interfaces/rutasfff.iterface";
+import { ParadasDetalladasInterface } from "@/Interfaces/rutas.interface";
 import { getRutaById } from "@/lib/services/rutasServices";
 import { miUbicacionStore } from "@/Store/miUbicacionStore";
 import React, { useEffect } from "react";
@@ -14,7 +14,7 @@ interface MapData {
   end: { name: string; lng: number; lat: number };
 }
 export default function Page({ params }: Props) {
-  const [ruta, setRuta] = React.useState<rutaInterface>();
+  const [ruta, setRuta] = React.useState<ParadasDetalladasInterface>();
   const { miUbicacion } = miUbicacionStore();
 
   const [mapData, setMapData] = React.useState<MapData | null>(null);
@@ -49,7 +49,7 @@ export default function Page({ params }: Props) {
           miUbicacion
             ? {
                 name: "Mi ubicación",
-                lng: miUbicacion.longitud,
+                lng: miUbicacion.longitud || 0,
                 lat: miUbicacion.latitud,
               }
             : undefined

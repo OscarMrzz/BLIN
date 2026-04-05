@@ -8,7 +8,7 @@ import "leaflet-routing-machine";
 // Importar el CSS es vital para que la línea y marcadores se vean bien
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
-import { ParadaBusInterface } from "@/Interfaces/rutasfff.iterface";
+import { StoppingInterface } from "@/Interfaces/rutas.interface";
 import {
   formatRoutingError,
   formatRoutingErrorLogBlock,
@@ -61,7 +61,7 @@ if (typeof window !== "undefined") {
 }
 
 type Props = {
-  puntos: ParadaBusInterface[];
+  puntos: StoppingInterface[];
 };
 
 export function RutaMap({ puntos }: Props) {
@@ -140,10 +140,10 @@ export function RutaMap({ puntos }: Props) {
           "🔄 Transformando coordenadas de paradas...",
         );
         const waypoints = puntos.map((p) => {
-          const latLng = L.latLng(p.latitud, p.longitud);
+          const latLng = L.latLng(p.latitud, p.longitud || 0);
           console.log(
             RUTA_MAP_LOG_PREFIX,
-            `   📍 Parada: ${p.nombreLugar || "Sin nombre"} → [${p.latitud.toFixed(6)}, ${p.longitud.toFixed(6)}]`,
+            `   📍 Parada: ${p.nombre_lugar || "Sin nombre"} → [${p.latitud.toFixed(6)}, ${(p.longitud || 0).toFixed(6)}]`,
           );
           return latLng;
         });

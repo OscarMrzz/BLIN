@@ -1,6 +1,4 @@
-import Lottie from "lottie-react";
 import React, { useEffect, useState } from "react";
-import loading from "@/animacionesJson/Loading1.json";
 
 type OverleyModalProps = {
   open: boolean;
@@ -43,8 +41,25 @@ export default function LoadingMessage1({
               Animar ? "scale-100" : "scale-75"
             }  transition-all duration-500 ease-in-out`}
           >
-            <div className="absolute top-0 h-60 w-60 overflow-hidden  justify-center items-center">
-              <Lottie animationData={loading} loop={true} className=" " />
+            <div className="absolute top-0 h-60 w-60 overflow-hidden justify-center items-center">
+              <svg
+                width="80"
+                height="80"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="animate-spin"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="#3b82f6"
+                  strokeWidth="2"
+                  strokeDasharray="31.416"
+                  strokeLinecap="round"
+                />
+              </svg>
             </div>
             <div className="text-center absolute bottom-15">
               <h2 className="text-xl font-bold">{titulo}</h2>

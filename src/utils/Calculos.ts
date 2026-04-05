@@ -1,4 +1,16 @@
-import { ParadaBusInterface, rutaInterface, UbicacionInterface } from "@/Interfaces/rutasfff.iterface";
+import { StoppingInterface, ParadasDetalladasInterface } from "@/Interfaces/rutas.interface";
+
+interface UbicacionInterface {
+  latitud: number;
+  longitud: number;
+}
+
+interface ParadaBusInterface {
+  latitud: number;
+  longitud: number;
+  distanciaDesdeOrigen: number;
+  nombreLugar?: string;
+}
 
 export const obtenerDistanciaCarretera = async (
   miUbicacion: UbicacionInterface,
@@ -26,32 +38,26 @@ export const obtenerDistanciaCarretera = async (
 
 
 export const obtenerMinutosParaLlegada = (
-  miParada: ParadaBusInterface,
-  ruta: rutaInterface
+  miParada: StoppingInterface,
+  ruta: ParadasDetalladasInterface
 ): number | null => {
   const ahora = new Date();
   const minutosActuales = ahora.getHours() * 60 + ahora.getMinutes();
 
   // 1. Tiempo que le toma al bus llegar de la terminal a MI parada
   // (Distancia / Velocidad) * 60 para pasar a minutos
+  const distancia = miParada.distancia_desde_origen || 0;
+  const tiempoTransito = (distancia / ruta.velocidad) * 60;
 
-  const tiempoTransito = (miParada.distanciaDesdeOrigen / ruta.velocidad) * 60;
+  // 2. Como no tenemos horarios_ruta en ParadasDetalladasInterface, 
+  // devolvemos solo el tiempo de tránsito estimado
+  console.log("⏰ Tiempo de tránsito estimado:", tiempoTransito, "minutos");
 
-  // 2. Buscar la salida cuyo (despacho + viaje) sea mayor a la hora actual
-  if (!ruta.horarios_ruta || ruta.horarios_ruta.length === 0) {
-    console.log("❌ La ruta no tiene horarios definidos");
-    return null;
-  }
+  // Para simplificar, asumimos que hay un bus cada 30 minutos
+  const intervaloBuses = 30;
+  const proximoBus = Math.ceil((minutosActuales % intervaloBuses) + tiempoTransito);
 
-  const proximaSalida = ruta.horarios_ruta.find(salida => (salida + tiempoTransito) > minutosActuales);
-
-  if (!proximaSalida) {
-    console.log("❌Ya no hay mas buses en tu posicion")
-    return null
-  }; // Ya no pasan buses hoy
-
-  // 3. Resultado: Hora de llegada estimada - hora actual
-  return Math.round((proximaSalida + tiempoTransito) - minutosActuales);
+  return proximoBus;
 };
 
 export function ObtenerhoraProximoBus(minutos: number) {

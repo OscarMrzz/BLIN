@@ -1,8 +1,8 @@
 import React, { useState, useRef, useLayoutEffect, useEffect } from "react";
 import { createPortal } from "react-dom";
-import TresPuntosIncon from "@/icons/TresPuntosIncon";
-import BasureroIcon from "@/icons/BasureroIcon";
-import EditIcon from "@/icons/EditIcon";
+import TresPuntosIncon from "@/components/icons/TresPuntosIncon";
+import BasureroIcon from "@/components/icons/BasureroIcon";
+import EditIcon from "@/components/icons/EditIcon";
 
 type Props = {
   onEdit?: () => void;
@@ -18,18 +18,22 @@ export default function BotonTresPuntos({ onEdit, onDelete }: Props) {
   useLayoutEffect(() => {
     if (abrirMenu && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
-      
+
       // Calculamos la posición exacta respecto al viewport + scroll
       setCoords({
-        top: rect.bottom + window.scrollY -100 , // 5px de separación
-        left: rect.left + window.scrollX +10 , // Ajuste para que no se salga a la derecha
+        top: rect.bottom + window.scrollY - 100, // 5px de separación
+        left: rect.left + window.scrollX + 10, // Ajuste para que no se salga a la derecha
       });
     }
   }, [abrirMenu]);
 
   useEffect(() => {
     const cerrar = (e: MouseEvent) => {
-      if (abrirMenu && !menuRef.current?.contains(e.target as Node) && !buttonRef.current?.contains(e.target as Node)) {
+      if (
+        abrirMenu &&
+        !menuRef.current?.contains(e.target as Node) &&
+        !buttonRef.current?.contains(e.target as Node)
+      ) {
         setAbrirMenu(false);
       }
     };
@@ -61,20 +65,30 @@ export default function BotonTresPuntos({ onEdit, onDelete }: Props) {
           >
             <button
               className="px-4 py-2 text-sm text-left hover:bg-slate-50 border-b border-slate-100 flex items-center gap-2"
-              onClick={() => { onEdit?.(); setAbrirMenu(false); }}
+              onClick={() => {
+                onEdit?.();
+                setAbrirMenu(false);
+              }}
             >
-              <span><EditIcon size={16} style="text-slate-500" /></span>
+              <span>
+                <EditIcon size={16} style="text-slate-500" />
+              </span>
               <span className="text-slate-700">Editar</span>
             </button>
             <button
               className="px-4 py-2 text-sm text-left hover:bg-red-50 text-red-600 flex items-center gap-2"
-              onClick={() => { onDelete?.(); setAbrirMenu(false); }}
+              onClick={() => {
+                onDelete?.();
+                setAbrirMenu(false);
+              }}
             >
-              <span><BasureroIcon size={16} style="text-red-400 " /></span>
+              <span>
+                <BasureroIcon size={16} style="text-red-400 " />
+              </span>
               <span className="text-red-400">Eliminar</span>
             </button>
           </div>,
-          document.body // Esto saca el menú del flujo del Card y lo pone en el body
+          document.body, // Esto saca el menú del flujo del Card y lo pone en el body
         )}
     </>
   );

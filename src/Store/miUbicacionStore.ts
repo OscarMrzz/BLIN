@@ -1,9 +1,9 @@
 import { create } from 'zustand';
-import { ParadaBusInterface } from '../Interfaces/rutasfff.iterface';
+import { StoppingInterface } from '../Interfaces/rutas.interface';
 
 interface MiItnterface {
-    miUbicacion: ParadaBusInterface | null;
-    setMiUbicacion: (ubicacion: ParadaBusInterface) => void;
+    miUbicacion: StoppingInterface | null;
+    setMiUbicacion: (ubicacion: StoppingInterface) => void;
 
 }
 

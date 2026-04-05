@@ -7,7 +7,7 @@ import "leaflet-routing-machine";
 import { RutaMap } from "./RutaMap";
 import { miUbicacionStore } from "@/Store/miUbicacionStore";
 import { LocalizacionUsuario } from "./LocalizacionUsuario";
-import { ParadaBusInterface } from "@/Interfaces/rutasfff.iterface";
+import { StoppingInterface } from "@/Interfaces/rutas.interface";
 
 // Fix para iconos
 if (typeof window !== "undefined") {
@@ -24,7 +24,7 @@ if (typeof window !== "undefined") {
 }
 
 type Props = {
-  puntos: ParadaBusInterface[];
+  puntos: StoppingInterface[];
 };
 
 export default function MapComponent({ puntos }: Props) {
@@ -56,8 +56,8 @@ export default function MapComponent({ puntos }: Props) {
 
   // Usar el primer punto de la ruta como centro si no hay ubicación del usuario
   const center: [number, number] = miUbicacion
-    ? [miUbicacion.latitud, miUbicacion.longitud]
-    : [puntos[0].latitud, puntos[0].longitud];
+    ? [miUbicacion.latitud, miUbicacion.longitud || 0]
+    : [puntos[0].latitud, puntos[0].longitud || 0];
 
   return (
     <div

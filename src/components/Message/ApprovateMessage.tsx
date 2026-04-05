@@ -1,6 +1,4 @@
-import Lottie from "lottie-react";
 import React, { useEffect } from "react";
-import Approve from "@/animacionesJson/Approve.json";
 
 type OverleyModalProps = {
   open: boolean;
@@ -52,8 +50,29 @@ export default function ApprovateMessage({
               Animar ? "scale-100" : "scale-75"
             }  transition-all duration-500 ease-in-out`}
           >
-            <div className="absolute top-0 h-60 w-60 overflow-hidden  justify-center items-center">
-              <Lottie animationData={Approve} loop={false} className=" " />
+            <div className="absolute top-0 h-60 w-60 overflow-hidden justify-center items-center">
+              <svg
+                width="120"
+                height="120"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="#10b981"
+                  strokeWidth="2"
+                />
+                <path
+                  d="M8 12l2 2 4-4"
+                  stroke="#10b981"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </div>
             <div className="text-center absolute bottom-15">
               <h2 className="text-xl font-bold">{titulo}</h2>

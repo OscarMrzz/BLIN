@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
-import Lottie from "lottie-react";
-import ErrorIcon from "@/animacionesJson/Approve.json";
 
 type OverleyModalProps = {
   open: boolean;
@@ -56,12 +54,28 @@ export default function ErrorMessage({
               <div
                 className={`flex flex-col text-red-400 rounded-2xl bg-white gap-4 justify-center items-center`}
               >
-                <div className="w-60 overflow-hidden flex  justify-center items-center">
-                  <Lottie
-                    animationData={ErrorIcon}
-                    loop={false}
-                    className="w-45 h-45 "
-                  />
+                <div className="w-60 overflow-hidden flex justify-center items-center">
+                  <svg
+                    width="120"
+                    height="120"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="#ef4444"
+                      strokeWidth="2"
+                    />
+                    <path
+                      d="M12 8v4m0 4h.01"
+                      stroke="#ef4444"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
                 </div>
                 <div className="text-center flex flex-col justify-center items-center gap-4">
                   <h2 className="text-xl font-bold">{titulo}</h2>

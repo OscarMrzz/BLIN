@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import ExclamacionIcon from "@/icons/ExclamacionIcon";
+import ExclamacionIcon from "@/components/icons/ExclamacionIcon";
 
 type ConfirmDeleteModalProps = {
   open: boolean;

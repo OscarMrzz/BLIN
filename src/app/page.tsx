@@ -31,8 +31,6 @@ export default function Home() {
   const [tiempoProximoAutoBus, setTiempoProximoAutoBus] = useState<string>("");
   const [horaProximoBus, setHoraProximoBus] = useState<string>("");
 
- 
-
   useEffect(() => {
     if (!rutasList || rutasList.length < 2 || !miUbicacion) return;
     const minutosParaProximoViaje = obtenerMinutosParaLlegada(
@@ -95,16 +93,18 @@ export default function Home() {
 
         console.log("Ditancia Despues de calculos:", distancia);
         setMiUbicacion({
+          id_paradas: "ubicacion-usuario",
           latitud: 15.551719134171245,
           longitud: -87.65120082503267,
-          distanciaDesdeOrigen: distancia,
+          distancia_desde_origen: distancia,
         });
       } catch (error) {
         // Establecer ubicación sin distancia si falla el cálculo
         setMiUbicacion({
+          id_paradas: "ubicacion-usuario",
           latitud: 15.551719134171245,
           longitud: -87.65120082503267,
-          distanciaDesdeOrigen: 0,
+          distancia_desde_origen: 0,
         });
       }
     };
