@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/misUI/button";
 import { TargetasInterface } from "@/Interfaces/targetas.interface";
+import { cobrarPasaje } from "@/lib/services/saldoServices";
 import { getTarjetaById } from "@/lib/services/tarjetasServices";
 import React, { useEffect, useState } from "react";
 
@@ -33,6 +34,10 @@ export default function Page({ params }: Props) {
   if (loading) {
     return <div className="text-white">Cargando...</div>;
   }
+
+  const cobrar = async () => {
+    cobrarPasaje(tarjeta?.id_targetas || "", 5)
+  };
 
   return (
     <div className="flex justify-center items-center gap-24 flex-col">

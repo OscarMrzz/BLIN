@@ -12,6 +12,7 @@ export interface PerfilesInterface {
   dni?: number;
   foto?: string;
   id_user?: string;
+  id_rutas?: string;
 }
 
 export interface PermisosInterface {

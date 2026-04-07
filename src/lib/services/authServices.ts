@@ -1,6 +1,6 @@
 import { ClienteBrowserSupabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
-import { createPerfilForUser } from "./perfilesServices";
+import { createPerfilForUser, getPerfilByIdUser } from "./perfilesServices";
 
 
 
@@ -21,8 +21,30 @@ export async function login(email: string, password: string) {
             code: error.code || 'NO_CODE',
             details: error
         });
-    } else {
-        console.log("✅ Login exitoso");
+        return { data, error };
+    }
+
+    // Si el login es exitoso, verificar si tiene perfil y crearlo si no tiene
+    if (data.user) {
+        console.log("✅ Login exitoso, verificando perfil del usuario:", data.user.id);
+        try {
+            const perfilExistente = await getPerfilByIdUser(data.user.id);
+
+            if (!perfilExistente) {
+                console.log("👤 Usuario no tiene perfil, creando perfil automáticamente");
+                // Extraer nombre y apellido del metadata del usuario si existe
+                const nombre = data.user.user_metadata?.nombre || data.user.user_metadata?.full_name?.split(' ')[0] || '';
+                const apellido = data.user.user_metadata?.apellido || data.user.user_metadata?.full_name?.split(' ')[1] || '';
+
+                await createPerfilForUser(data.user.id, nombre, apellido);
+                console.log("✅ Perfil creado automáticamente para usuario:", data.user.id);
+            } else {
+                console.log("📝 Usuario ya tiene perfil");
+            }
+        } catch (profileError) {
+            console.error("❌ Error al verificar/crear perfil:", profileError);
+            // No fallar el login, solo registrar el error
+        }
     }
 
     return { data, error };
@@ -31,10 +53,16 @@ export async function register(email: string, password: string, nombre?: string,
     console.log("🔄 Iniciando registro de usuario:", { email, nombre, apellido });
 
     try {
-        // Create user in auth
+        // Create user in auth with metadata
         const { data, error } = await ClienteBrowserSupabase.auth.signUp({
             email,
-            password
+            password,
+            options: {
+                data: {
+                    nombre: nombre || '',
+                    apellido: apellido || ''
+                }
+            }
         });
 
         console.log("📝 Respuesta de Supabase auth.signUp:", { data, error });
@@ -49,17 +77,6 @@ export async function register(email: string, password: string, nombre?: string,
             return { data, error };
         }
 
-        // If user created successfully, create profile
-        if (data.user && (nombre || apellido)) {
-            console.log("👤 Usuario creado en auth, creando perfil:", data.user.id);
-            try {
-                await createPerfilForUser(data.user.id, nombre || '', apellido);
-                console.log("✅ Perfil creado automáticamente para usuario:", data.user.id);
-            } catch (profileError) {
-                console.error("❌ Error al crear perfil automáticamente:", profileError);
-                // Don't fail the registration, just log the error
-            }
-        }
 
         console.log("✅ Registro completado exitosamente");
         return { data, error };

@@ -97,6 +97,30 @@ export async function getPerfilByIdUser(id: string) {
     return data;
 }
 
+export async function getRolByUserId(id: string) {
+    try {
+        const perfil = await getPerfilByIdUser(id);
+        if (!perfil || !perfil.id_roles) {
+            return null;
+        }
+
+        const { data, error } = await ClienteBrowserSupabase.from("roles")
+            .select("*")
+            .eq("id_roles", perfil.id_roles)
+            .single();
+
+        if (error) {
+            console.error(" [SERVICE] Error al obtener el rol:", error);
+            return null;
+        }
+
+        return data;
+    } catch (error) {
+        console.error(" [SERVICE] Error en getRolByUserId:", error);
+        return null;
+    }
+}
+
 export const createPerfil = async (perfil: PerfilesInterface) => {
     try {
         const { data, error } =

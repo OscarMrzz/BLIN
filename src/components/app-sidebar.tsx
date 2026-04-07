@@ -27,6 +27,7 @@ import CashIcon from "@/Icons/CashIcon";
 import CustomMapIcon from "@/Icons/MapIcon";
 import { useAuth } from "@/hooks/UseAuthHook";
 import { cerrarSesion, getUserAuth } from "@/lib/services/authServices";
+import { getRolByUserId } from "@/lib/services/perfilesServices";
 import FormularioAuth from "./Auth/FormularioAuth";
 // This is sample data.
 const data = {
@@ -160,7 +161,7 @@ const data = {
       ],
     },
   ],
-  navRecarga: [
+  navAgente: [
     {
       title: "Recarga",
       url: "/recarga",
@@ -188,14 +189,26 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       }
     | undefined
   >(undefined);
+  const [userRole, setUserRole] = React.useState<string>("");
 
   React.useEffect(() => {
     const usuarioObtenido = async () => {
       const usuarioEncontrado = await getUserAuth();
       if (!usuarioEncontrado) {
         setUserAuth(undefined);
+        setUserRole("");
         return;
       }
+
+      // Obtener el rol del usuario
+      try {
+        const rolInfo = await getRolByUserId(usuarioEncontrado.id);
+        setUserRole(rolInfo?.nombre || "");
+      } catch (error) {
+        console.error("Error obteniendo rol:", error);
+        setUserRole("");
+      }
+
       const userParaEnviar = {
         name: "Usuario",
         email: usuarioEncontrado.email || "",
@@ -223,9 +236,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarHeader>
         <SidebarContent>
           <NavMain items={data.navMain} />
-          {isAuthenticated && <NavMain items={data.navAdmin} />}
-          {isAuthenticated && <NavMain items={data.navCobrador} />}
-          {isAuthenticated && <NavMain items={data.navRecarga} />}
+          {isAuthenticated && userRole === "administrador" && (
+            <NavMain items={data.navAdmin} />
+          )}
+          {isAuthenticated && userRole === "cobrador" && (
+            <NavMain items={data.navCobrador} />
+          )}
+          {isAuthenticated && userRole === "agente" && (
+            <NavMain items={data.navAgente} />
+          )}
         </SidebarContent>
         <SidebarFooter></SidebarFooter>
         <SidebarRail />
