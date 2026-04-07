@@ -19,7 +19,6 @@ type Props = {
 
 export default function Page({ params }: Props) {
   const { id } = React.use(params);
-  console.log("🔍 [ID PAGE] ID recibido:", id);
 
   const {
     data: rutas,
@@ -28,52 +27,58 @@ export default function Page({ params }: Props) {
     error,
   } = useQuery({
     queryKey: ["rutaBuscada", id],
-    queryFn: () => {
-      console.log(
-        "🚀 [QUERY] Ejecutando vista_completa_rutas_byid con ID:",
-        id,
-      );
-      return vista_completa_rutas_byid(id);
-    },
+    queryFn: () => vista_completa_rutas_byid(id),
   });
 
   // vista_completa_rutas_byid devuelve un array, tomamos el primer elemento
   const ruta = rutas?.[0];
 
-  console.log(
-    "📊 [QUERY] Estado - isLoading:",
-    isLoading,
-    "isError:",
-    isError,
-    "error:",
-    error,
-  );
-  console.log("📦 [QUERY] Datos recibidos:", ruta);
-
   if (isLoading) {
-    console.log("⏳ [RENDER] Mostrando pantalla de carga");
     return <div>Cargando...</div>;
   }
 
   if (isError) {
-    console.log(" [RENDER] Mostrando pantalla de error:", error);
     return <div>Error: {error?.message || "Error desconocido"}</div>;
   }
 
-  console.log(" [RENDER] Renderizando página con ruta:", ruta);
-  console.log(" [RENDER] Coordenadas para el mapa:", ruta);
+  if (!ruta) {
+    return <div>Ruta no encontrada</div>;
+  }
 
-  // Crear un array con el punto de la ruta para el mapa
-  const puntosMapa = ruta
-    ? [
-        {
-          id_paradas: ruta.id_paradas,
-          latitud: ruta.latitud,
-          longitud: ruta.longitud,
-          nombre_lugar: ruta.nombre,
-        },
-      ]
-    : [];
+  // Validar que las coordenadas sean válidas
+  if (!ruta.latitud || !ruta.longitud) {
+    return (
+      <div className="p-4 w-full">
+        <h2 className="text-2xl font-black text-slate-600 mb-4">
+          {ruta.nombre || "Ruta no encontrada"}
+        </h2>
+        <div className="rounded-xl overflow-hidden border border-slate-200 shadow-lg w-full p-8 text-center">
+          <p className="text-red-500">
+            Las coordenadas de la ruta no están disponibles
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Crear objeto con punto de inicio y final para el mapa
+  const puntosRuta = {
+    inicio: {
+      id_paradas: ruta.id_paradas,
+      latitud: Number(ruta.latitud),
+      longitud: Number(ruta.longitud),
+      nombre_lugar: ruta.origen,
+    },
+    final: {
+      id_paradas: `${ruta.id_paradas}_final`,
+      latitud: Number(ruta.latitud) + 0.01, // Pequeño desplazamiento para visualización
+      longitud: Number(ruta.longitud) + 0.01,
+      nombre_lugar: ruta.destino,
+    },
+  };
+
+  // Convertir a array para el MapComponent
+  const puntosMapa = [puntosRuta.inicio, puntosRuta.final];
 
   return (
     <div className="p-4 w-full ">
