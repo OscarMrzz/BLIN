@@ -116,16 +116,41 @@ export function FormularioEditarStopping({
     <Dialog open={open} onOpenChange={setOpen}>
       <Toaster />
 
-      <DialogContent className="sm:max-w-sm">
+      <DialogContent className="sm:max-w-lg">
         <form onSubmit={handleSubmit}>
-          <DialogHeader className="mb-4">
-            <DialogTitle>Editar Parada</DialogTitle>
+          <DialogHeader className="mb-6">
+            <DialogTitle className="flex items-center gap-2 text-xl font-semibold">
+              <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
+                <svg
+                  className="w-4 h-4 text-amber-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
+                </svg>
+              </div>
+              Editar Parada
+            </DialogTitle>
+            <p className="text-sm text-muted-foreground mt-2">
+              Modifique la información de la parada seleccionada.
+            </p>
           </DialogHeader>
 
-          <FieldGroup className="space-y-4 pb-8">
-            <Field>
-              <Label htmlFor="id_rutas">Ruta:</Label>
-
+          <FieldGroup className="space-y-6 pb-8">
+            <Field className="space-y-2">
+              <Label
+                htmlFor="id_rutas"
+                className="text-sm font-medium flex items-center gap-2"
+              >
+                <span className="w-1 h-4 bg-blue-500 rounded-full"></span>
+                Ruta Asociada
+              </Label>
               <ComboboxGeneral
                 data={dataRutas}
                 placeholder="Seleccione una ruta"
@@ -136,20 +161,33 @@ export function FormularioEditarStopping({
               />
             </Field>
 
-            <Field>
-              <Label htmlFor="nombre_lugar">Nombre del Lugar:</Label>
+            <Field className="space-y-2">
+              <Label
+                htmlFor="nombre_lugar"
+                className="text-sm font-medium flex items-center gap-2"
+              >
+                <span className="w-1 h-4 bg-purple-500 rounded-full"></span>
+                Nombre del Lugar
+              </Label>
               <Input
                 id="nombre_lugar"
                 name="nombre_lugar"
                 placeholder="ejemplo: Parque Central"
                 value={formData.nombre_lugar}
                 onChange={handleInputChange}
+                className="h-11 border-gray-200 focus:border-purple-500 focus:ring-purple-500/20"
                 required
               />
             </Field>
 
-            <Field>
-              <Label htmlFor="cordenadas">Cordenadas:</Label>
+            <Field className="space-y-2">
+              <Label
+                htmlFor="cordenadas"
+                className="text-sm font-medium flex items-center gap-2"
+              >
+                <span className="w-1 h-4 bg-orange-500 rounded-full"></span>
+                Coordenadas GPS
+              </Label>
               <Input
                 id="cordenadas"
                 name="cordenadas"
@@ -157,15 +195,29 @@ export function FormularioEditarStopping({
                 placeholder="ejemplo: 15.551024502999981, -88.01233620944075"
                 value={formData.cordenadas}
                 onChange={handleInputChange}
+                className="h-11 border-gray-200 focus:border-orange-500 focus:ring-orange-500/20"
                 required
               />
+              <p className="text-xs text-muted-foreground mt-1">
+                Ingrese las coordenadas en formato: latitud, longitud
+              </p>
             </Field>
           </FieldGroup>
-          <DialogFooter>
+          <DialogFooter className="pt-6 border-t">
             <DialogClose asChild>
-              <Button variant="outline">Cancelar</Button>
+              <Button
+                variant="outline"
+                className="h-11 px-6 border-gray-200 hover:bg-gray-50"
+              >
+                Cancelar
+              </Button>
             </DialogClose>
-            <Button type="submit">Guardar</Button>
+            <Button
+              type="submit"
+              className="h-11 px-6 bg-amber-600 hover:bg-amber-700 text-white font-medium"
+            >
+              Actualizar Parada
+            </Button>
             <DialogClose ref={closeRef} className="hidden" />
           </DialogFooter>
         </form>

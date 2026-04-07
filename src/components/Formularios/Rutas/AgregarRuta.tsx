@@ -143,127 +143,195 @@ export function AgregarRuta({ refrescarTabla }: Props) {
     <Dialog>
       <Toaster />
       <DialogTrigger asChild>
-        <Button variant="default">
+        <Button className="bg-green-600 hover:bg-green-700 text-white">
           {" "}
           <PlusIcon /> Agregar
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-sm">
+      <DialogContent className="sm:max-w-lg">
         <form onSubmit={handleSubmit}>
-          <DialogHeader className="mb-4">
-            <DialogTitle>Agregar Ruta</DialogTitle>
+          <DialogHeader className="mb-6">
+            <DialogTitle className="flex items-center gap-2 text-xl font-semibold">
+              <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                <PlusIcon className="w-4 h-4 text-blue-600" />
+              </div>
+              Agregar Nueva Ruta
+            </DialogTitle>
+            <p className="text-sm text-muted-foreground mt-2">
+              Complete la información para crear una nueva ruta en el sistema.
+            </p>
           </DialogHeader>
 
-          <FieldGroup className="space-y-4">
-            <Field>
-              <Label htmlFor="nombre">Nombre:</Label>
+          <FieldGroup className="space-y-6">
+            <Field className="space-y-2">
+              <Label
+                htmlFor="nombre"
+                className="text-sm font-medium flex items-center gap-2"
+              >
+                <span className="w-1 h-4 bg-blue-500 rounded-full"></span>
+                Nombre de la Ruta
+              </Label>
               <Input
                 id="nombre"
                 name="nombre"
                 placeholder="ejemplo: El progreso - SPS"
                 value={formData.nombre}
                 onChange={handleInputChange}
+                className="h-11 border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
                 required
               />
             </Field>
-            <Select
-              name="velocidad"
-              value={formData.velocidad.toString()}
-              onValueChange={(value) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  velocidad: parseInt(value),
-                }))
-              }
-            >
-              <SelectTrigger className="w-full max-w-48">
-                <SelectValue placeholder="Velocidad Aproximada" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Velocidad Aproximada</SelectLabel>
-                  <SelectItem value="80">80 km/h</SelectItem>
-                  <SelectItem value="100">100 km/h</SelectItem>
-                  <SelectItem value="120">120 km/h</SelectItem>
-                  <SelectItem value="140">140 km/h</SelectItem>
-                  <SelectItem value="160">160 km/h</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <Field className="space-y-2">
+              <Label className="text-sm font-medium flex items-center gap-2">
+                <span className="w-1 h-4 bg-green-500 rounded-full"></span>
+                Velocidad Aproximada
+              </Label>
+              <Select
+                name="velocidad"
+                value={formData.velocidad.toString()}
+                onValueChange={(value) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    velocidad: parseInt(value),
+                  }))
+                }
+              >
+                <SelectTrigger className="w-full h-11 border-gray-200 focus:border-green-500 focus:ring-green-500/20">
+                  <SelectValue placeholder="Seleccione velocidad" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Velocidad Aproximada</SelectLabel>
+                    <SelectItem value="80">80 km/h</SelectItem>
+                    <SelectItem value="100">100 km/h</SelectItem>
+                    <SelectItem value="120">120 km/h</SelectItem>
+                    <SelectItem value="140">140 km/h</SelectItem>
+                    <SelectItem value="160">160 km/h</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </Field>
 
-            <Field>
-              <Label htmlFor="origen">Origen:</Label>
+            <Field className="space-y-2">
+              <Label
+                htmlFor="origen"
+                className="text-sm font-medium flex items-center gap-2"
+              >
+                <span className="w-1 h-4 bg-orange-500 rounded-full"></span>
+                Origen
+              </Label>
               <Input
                 id="origen"
                 name="origen"
                 placeholder="ejemplo: El progreso"
                 value={formData.origen}
                 onChange={handleInputChange}
+                className="h-11 border-gray-200 focus:border-orange-500 focus:ring-orange-500/20"
                 required
               />
             </Field>
-            <Field>
-              <Label htmlFor="destino">Destino:</Label>
+            <Field className="space-y-2">
+              <Label
+                htmlFor="destino"
+                className="text-sm font-medium flex items-center gap-2"
+              >
+                <span className="w-1 h-4 bg-purple-500 rounded-full"></span>
+                Destino
+              </Label>
               <Input
                 id="destino"
                 name="destino"
                 placeholder="ejemplo: SPS"
                 value={formData.destino}
                 onChange={handleInputChange}
+                className="h-11 border-gray-200 focus:border-purple-500 focus:ring-purple-500/20"
               />
             </Field>
-            <Field>
-              <Label htmlFor="precio">Precio:</Label>
+            <Field className="space-y-2">
+              <Label
+                htmlFor="precio"
+                className="text-sm font-medium flex items-center gap-2"
+              >
+                <span className="w-1 h-4 bg-yellow-500 rounded-full"></span>
+                Precio
+              </Label>
               <Input
                 id="precio"
                 name="precio"
-                placeholder="ejemplo: 100"
+                type="number"
+                step="0.01"
+                min="0"
+                placeholder="ejemplo: 100.00"
                 value={formData.precio}
                 onChange={handleInputChange}
+                className="h-11 border-gray-200 focus:border-yellow-500 focus:ring-yellow-500/20"
               />
             </Field>
 
-            <Field orientation="horizontal">
-              <Checkbox
-                id="ruta-activa"
-                name="ruta-activa"
-                defaultChecked
-                checked={formData.activo === "1"}
-                onCheckedChange={(checked) => {
-                  setFormData((prev) => ({
-                    ...prev,
-                    activo: checked ? "1" : "0",
-                  }));
-                }}
-              />
-              <FieldLabel htmlFor="ruta-activa">Ruta Activa</FieldLabel>
+            <Field className="space-y-3">
+              <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <Checkbox
+                  id="ruta-activa"
+                  name="ruta-activa"
+                  checked={formData.activo === "1"}
+                  onCheckedChange={(checked) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      activo: checked ? "1" : "0",
+                    }));
+                  }}
+                  className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                />
+                <FieldLabel
+                  htmlFor="ruta-activa"
+                  className="text-sm font-medium cursor-pointer"
+                >
+                  Marcar como ruta activa
+                </FieldLabel>
+              </div>
             </Field>
-            <Select
-              name="imagen_bus"
-              value={formData.imagen_bus || ""}
-              onValueChange={(value) =>
-                setFormData((prev) => ({ ...prev, imagen_bus: value }))
-              }
-            >
-              <SelectTrigger className="w-full max-w-48">
-                <SelectValue placeholder="Modelo" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Modelo</SelectLabel>
-                  <SelectItem value="school-bus">School Bus</SelectItem>
-                  <SelectItem value="microbus">Microbus</SelectItem>
-                  <SelectItem value="castor">Castor</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <Field className="space-y-2">
+              <Label className="text-sm font-medium flex items-center gap-2">
+                <span className="w-1 h-4 bg-indigo-500 rounded-full"></span>
+                Modelo de Autobús
+              </Label>
+              <Select
+                name="imagen_bus"
+                value={formData.imagen_bus || ""}
+                onValueChange={(value) =>
+                  setFormData((prev) => ({ ...prev, imagen_bus: value }))
+                }
+              >
+                <SelectTrigger className="w-full h-11 border-gray-200 focus:border-indigo-500 focus:ring-indigo-500/20">
+                  <SelectValue placeholder="Seleccione modelo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Modelo</SelectLabel>
+                    <SelectItem value="school-bus">School Bus</SelectItem>
+                    <SelectItem value="microbus">Microbus</SelectItem>
+                    <SelectItem value="castor">Castor</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </Field>
           </FieldGroup>
-          <DialogFooter>
+          <DialogFooter className="pt-6 border-t">
             <DialogClose asChild>
-              <Button variant="outline">Cancelar</Button>
+              <Button
+                variant="outline"
+                className="h-11 px-6 border-gray-200 hover:bg-gray-50"
+              >
+                Cancelar
+              </Button>
             </DialogClose>
-            <Button type="submit">Guardar</Button>
+            <Button
+              type="submit"
+              className="h-11 px-6 bg-blue-600 hover:bg-blue-700 text-white font-medium"
+            >
+              Guardar Ruta
+            </Button>
             <DialogClose ref={closeRef} className="hidden" />
           </DialogFooter>
         </form>

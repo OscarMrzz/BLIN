@@ -163,15 +163,38 @@ export function EditarHorario({
     <Dialog open={open} onOpenChange={setOpen}>
       <Toaster />
 
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-lg">
         <form onSubmit={handleSubmit}>
-          <DialogHeader className="mb-4">
-            <DialogTitle>Editar Horario</DialogTitle>
+          <DialogHeader className="mb-6">
+            <DialogTitle className="flex items-center gap-2 text-xl font-semibold">
+              <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
+                <svg
+                  className="w-4 h-4 text-amber-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
+                </svg>
+              </div>
+              Editar Horario
+            </DialogTitle>
+            <p className="text-sm text-muted-foreground mt-2">
+              Modifique la información del horario seleccionado.
+            </p>
           </DialogHeader>
 
           <FieldGroup className="space-y-6 pb-8">
-            <Field>
-              <Label>Ruta:</Label>
+            <Field className="space-y-2">
+              <Label className="text-sm font-medium flex items-center gap-2">
+                <span className="w-1 h-4 bg-blue-500 rounded-full"></span>
+                Ruta Asociada
+              </Label>
               <ComboboxGeneral
                 data={dataRutas}
                 placeholder="Seleccione una ruta"
@@ -182,73 +205,101 @@ export function EditarHorario({
               />
             </Field>
 
-            <Field>
-              <Label>Seleccione la Hora:</Label>
+            <Field className="space-y-3">
+              <Label className="text-sm font-medium flex items-center gap-2">
+                <span className="w-1 h-4 bg-purple-500 rounded-full"></span>
+                Seleccione la Hora
+              </Label>
               <div className="flex gap-2 items-center">
                 {/* Selector de Horas */}
-                <Select
-                  value={formData.hora}
-                  onValueChange={(v) =>
-                    setFormData((prev) => ({ ...prev, hora: v }))
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="HH" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
-                      <SelectItem key={h} value={h.toString().padStart(2, "0")}>
-                        {h.toString().padStart(2, "0")}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="flex-1">
+                  <Select
+                    value={formData.hora}
+                    onValueChange={(v) =>
+                      setFormData((prev) => ({ ...prev, hora: v }))
+                    }
+                  >
+                    <SelectTrigger className="w-full h-11 border-gray-200 focus:border-purple-500 focus:ring-purple-500/20">
+                      <SelectValue placeholder="HH" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
+                        <SelectItem
+                          key={h}
+                          value={h.toString().padStart(2, "0")}
+                        >
+                          {h.toString().padStart(2, "0")}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-                <span className="font-bold">:</span>
+                <span className="font-bold text-lg px-2">:</span>
 
                 {/* Selector de Minutos */}
-                <Select
-                  value={formData.minutos}
-                  onValueChange={(v) =>
-                    setFormData((prev) => ({ ...prev, minutos: v }))
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="MM" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {["00", "15", "30", "45"].map((m) => (
-                      <SelectItem key={m} value={m}>
-                        {m}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="flex-1">
+                  <Select
+                    value={formData.minutos}
+                    onValueChange={(v) =>
+                      setFormData((prev) => ({ ...prev, minutos: v }))
+                    }
+                  >
+                    <SelectTrigger className="w-full h-11 border-gray-200 focus:border-purple-500 focus:ring-purple-500/20">
+                      <SelectValue placeholder="MM" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {["00", "15", "30", "45"].map((m) => (
+                        <SelectItem key={m} value={m}>
+                          {m}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
                 {/* Selector AM/PM */}
-                <Select
-                  value={formData.periodo}
-                  onValueChange={(v) =>
-                    setFormData((prev) => ({ ...prev, periodo: v }))
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="AM">AM</SelectItem>
-                    <SelectItem value="PM">PM</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="w-24">
+                  <Select
+                    value={formData.periodo}
+                    onValueChange={(v) =>
+                      setFormData((prev) => ({ ...prev, periodo: v }))
+                    }
+                  >
+                    <SelectTrigger className="w-full h-11 border-gray-200 focus:border-purple-500 focus:ring-purple-500/20">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="AM">AM</SelectItem>
+                      <SelectItem value="PM">PM</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="mt-3 p-3 bg-amber-50 rounded-lg border border-amber-200">
+                <p className="text-sm text-amber-700">
+                  <span className="font-medium">Hora equivalente:</span>{" "}
+                  {calcularMinutosTotales()} minutos del día
+                </p>
               </div>
             </Field>
           </FieldGroup>
 
-          <DialogFooter>
+          <DialogFooter className="pt-6 border-t">
             <DialogClose asChild>
-              <Button variant="outline">Cancelar</Button>
+              <Button
+                variant="outline"
+                className="h-11 px-6 border-gray-200 hover:bg-gray-50"
+              >
+                Cancelar
+              </Button>
             </DialogClose>
-            <Button type="submit">Guardar</Button>
+            <Button
+              type="submit"
+              className="h-11 px-6 bg-amber-600 hover:bg-amber-700 text-white font-medium"
+            >
+              Actualizar Horario
+            </Button>
             <DialogClose ref={closeRef} className="hidden" />
           </DialogFooter>
         </form>

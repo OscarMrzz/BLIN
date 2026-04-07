@@ -96,15 +96,38 @@ export function EditarTarjeta({
     <Dialog open={open} onOpenChange={setOpen}>
       <Toaster />
 
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-lg">
         <form onSubmit={handleSubmit}>
-          <DialogHeader className="mb-4">
-            <DialogTitle>Editar Tarjeta</DialogTitle>
+          <DialogHeader className="mb-6">
+            <DialogTitle className="flex items-center gap-2 text-xl font-semibold">
+              <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
+                <svg
+                  className="w-4 h-4 text-amber-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
+                </svg>
+              </div>
+              Editar Tarjeta
+            </DialogTitle>
+            <p className="text-sm text-muted-foreground mt-2">
+              Modifique la información de la tarjeta seleccionada.
+            </p>
           </DialogHeader>
 
           <FieldGroup className="space-y-6 pb-8">
-            <Field>
-              <Label>Código de Tarjeta:</Label>
+            <Field className="space-y-2">
+              <Label className="text-sm font-medium flex items-center gap-2">
+                <span className="w-1 h-4 bg-blue-500 rounded-full"></span>
+                Código de Tarjeta
+              </Label>
               <Input
                 type="text"
                 placeholder="Ingrese el código de la tarjeta"
@@ -115,11 +138,15 @@ export function EditarTarjeta({
                     codigo_targeta: e.target.value,
                   }))
                 }
+                className="h-11 border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
               />
             </Field>
 
-            <Field>
-              <Label>ID del Perfil:</Label>
+            <Field className="space-y-2">
+              <Label className="text-sm font-medium flex items-center gap-2">
+                <span className="w-1 h-4 bg-purple-500 rounded-full"></span>
+                ID del Perfil
+              </Label>
               <Input
                 type="text"
                 placeholder="Ingrese el ID del perfil (opcional)"
@@ -130,13 +157,21 @@ export function EditarTarjeta({
                     id_perfiles: e.target.value,
                   }))
                 }
+                className="h-11 border-gray-200 focus:border-purple-500 focus:ring-purple-500/20"
               />
+              <p className="text-xs text-muted-foreground mt-1">
+                Campo opcional - Deje vacío si no desea asignar a un perfil
+                específico
+              </p>
             </Field>
 
-            <Field>
-              <Label>Estado:</Label>
+            <Field className="space-y-2">
+              <Label className="text-sm font-medium flex items-center gap-2">
+                <span className="w-1 h-4 bg-green-500 rounded-full"></span>
+                Estado de la Tarjeta
+              </Label>
               <select
-                className="w-full p-2 border rounded-md"
+                className="w-full h-11 px-3 border border-gray-200 rounded-md focus:border-green-500 focus:ring-green-500/20 bg-white text-sm"
                 value={formData.estado}
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, estado: e.target.value }))
@@ -147,14 +182,42 @@ export function EditarTarjeta({
                 <option value="bloqueado">Bloqueado</option>
                 <option value="suspendido">Suspendido</option>
               </select>
+              <div className="mt-2 flex gap-2">
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-xs text-gray-600">Activo</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+                  <span className="text-xs text-gray-600">Inactivo</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                  <span className="text-xs text-gray-600">Bloqueado</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                  <span className="text-xs text-gray-600">Suspendido</span>
+                </div>
+              </div>
             </Field>
           </FieldGroup>
 
-          <DialogFooter>
+          <DialogFooter className="pt-6 border-t">
             <DialogClose asChild>
-              <Button variant="outline">Cancelar</Button>
+              <Button
+                variant="outline"
+                className="h-11 px-6 border-gray-200 hover:bg-gray-50"
+              >
+                Cancelar
+              </Button>
             </DialogClose>
-            <Button type="submit">Guardar</Button>
+            <Button
+              type="submit"
+              className="h-11 px-6 bg-amber-600 hover:bg-amber-700 text-white font-medium"
+            >
+              Actualizar Tarjeta
+            </Button>
             <DialogClose ref={closeRef} className="hidden" />
           </DialogFooter>
         </form>

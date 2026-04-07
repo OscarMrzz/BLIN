@@ -110,22 +110,35 @@ export function AgregarStopping({ refrescarTabla }: Props) {
     <Dialog>
       <Toaster />
       <DialogTrigger asChild>
-        <Button variant="default">
+        <Button className="bg-green-600 hover:bg-green-700 text-white">
           {" "}
           <PlusIcon /> Agregar
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-sm">
+      <DialogContent className="sm:max-w-lg">
         <form onSubmit={handleSubmit}>
-          <DialogHeader className="mb-4">
-            <DialogTitle>Agregar Parada</DialogTitle>
+          <DialogHeader className="mb-6">
+            <DialogTitle className="flex items-center gap-2 text-xl font-semibold">
+              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                <PlusIcon className="w-4 h-4 text-green-600" />
+              </div>
+              Agregar Nueva Parada
+            </DialogTitle>
+            <p className="text-sm text-muted-foreground mt-2">
+              Complete la información para crear una nueva parada en el sistema.
+            </p>
           </DialogHeader>
 
-          <FieldGroup className="space-y-4 pb-8">
-            <Field>
-              <Label htmlFor="id_rutas">Ruta:</Label>
-
+          <FieldGroup className="space-y-6 pb-8">
+            <Field className="space-y-2">
+              <Label
+                htmlFor="id_rutas"
+                className="text-sm font-medium flex items-center gap-2"
+              >
+                <span className="w-1 h-4 bg-blue-500 rounded-full"></span>
+                Ruta Asociada
+              </Label>
               <ComboboxGeneral
                 data={dataRutas}
                 placeholder="Seleccione una ruta"
@@ -136,20 +149,33 @@ export function AgregarStopping({ refrescarTabla }: Props) {
               />
             </Field>
 
-            <Field>
-              <Label htmlFor="nombre_lugar">Nombre del Lugar:</Label>
+            <Field className="space-y-2">
+              <Label
+                htmlFor="nombre_lugar"
+                className="text-sm font-medium flex items-center gap-2"
+              >
+                <span className="w-1 h-4 bg-purple-500 rounded-full"></span>
+                Nombre del Lugar
+              </Label>
               <Input
                 id="nombre_lugar"
                 name="nombre_lugar"
                 placeholder="ejemplo: Parque Central"
                 value={formData.nombre_lugar}
                 onChange={handleInputChange}
+                className="h-11 border-gray-200 focus:border-purple-500 focus:ring-purple-500/20"
                 required
               />
             </Field>
 
-            <Field>
-              <Label htmlFor="cordenadas">Cordenadas:</Label>
+            <Field className="space-y-2">
+              <Label
+                htmlFor="cordenadas"
+                className="text-sm font-medium flex items-center gap-2"
+              >
+                <span className="w-1 h-4 bg-orange-500 rounded-full"></span>
+                Coordenadas GPS
+              </Label>
               <Input
                 id="cordenadas"
                 name="cordenadas"
@@ -157,15 +183,29 @@ export function AgregarStopping({ refrescarTabla }: Props) {
                 placeholder="ejemplo: 15.551024502999981, -88.01233620944075"
                 value={formData.cordenadas}
                 onChange={handleInputChange}
+                className="h-11 border-gray-200 focus:border-orange-500 focus:ring-orange-500/20"
                 required
               />
+              <p className="text-xs text-muted-foreground mt-1">
+                Ingrese las coordenadas en formato: latitud, longitud
+              </p>
             </Field>
           </FieldGroup>
-          <DialogFooter>
+          <DialogFooter className="pt-6 border-t">
             <DialogClose asChild>
-              <Button variant="outline">Cancelar</Button>
+              <Button
+                variant="outline"
+                className="h-11 px-6 border-gray-200 hover:bg-gray-50"
+              >
+                Cancelar
+              </Button>
             </DialogClose>
-            <Button type="submit">Guardar</Button>
+            <Button
+              type="submit"
+              className="h-11 px-6 bg-green-600 hover:bg-green-700 text-white font-medium"
+            >
+              Guardar Parada
+            </Button>
             <DialogClose ref={closeRef} className="hidden" />
           </DialogFooter>
         </form>
