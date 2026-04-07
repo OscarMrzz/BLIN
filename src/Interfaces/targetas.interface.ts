@@ -9,7 +9,7 @@ export interface TargetasInterface {
 export interface SaldoInterface {
   id_saldo: string;
   saldo_total: number;
-  id_perfiles?: string;
+  id_targetas?: string;
 }
 
 export interface PagosInterface {

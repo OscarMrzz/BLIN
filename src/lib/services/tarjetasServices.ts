@@ -2,6 +2,7 @@ import { TargetasInterface } from "@/Interfaces/targetas.interface";
 import { ClienteBrowserSupabase } from "../supabase";
 import { ColumnDef } from "@tanstack/react-table";
 import { tablaInterface } from "@/Interfaces/tabla.interface";
+import { createItemSaldo } from "./saldoServices";
 
 export async function getAllTarjetas() {
     const { data, error } =
@@ -89,10 +90,21 @@ export async function getTarjetasByIdPerfil(id: string) {
 export const createTarjeta = async (tarjeta: TargetasInterface) => {
     try {
         const { data, error } =
-            await ClienteBrowserSupabase.from("targetas").insert(tarjeta);
+            await ClienteBrowserSupabase.from("targetas")
+                .insert(tarjeta)
+                .select();
         if (error) {
             console.error("Error de Supabase:", error);
             throw error;
+        }
+        try {
+            if (data && data.length > 0 && data[0].id_targetas) {
+                await createItemSaldo(data[0].id_targetas);
+            } else {
+                console.warn("No se pudo obtener el ID de la tarjeta creada para inicializar el saldo");
+            }
+        } catch (error) {
+            console.error("Error al crear el saldo:", error);
         }
         return data;
     } catch (err) {
@@ -210,7 +222,7 @@ export const generateUniqueCardCodes = async (cantidad: number): Promise<string[
     }
 };
 
-export const createMultipleTarjetas = async (cantidad: number, id_perfiles?: string): Promise<{ exitosas: TargetasInterface[], errores: string[] }> => {
+export const createMultipleTarjetas = async (cantidad: number, id_targeta?: string): Promise<{ exitosas: TargetasInterface[], errores: string[] }> => {
     try {
         if (cantidad <= 0 || cantidad > 100) {
             throw new Error("La cantidad debe estar entre 1 y 100");
@@ -222,7 +234,8 @@ export const createMultipleTarjetas = async (cantidad: number, id_perfiles?: str
         // Preparar datos para inserción masiva
         const tarjetasParaInsertar = codigos.map(codigo => ({
             codigo_targeta: codigo,
-            id_perfiles: id_perfiles || null,
+            id_perfiles: id_targeta || null,
+            asignada: id_targeta ? true : false,
             estado: "activo"
         }));
 
@@ -245,9 +258,58 @@ export const createMultipleTarjetas = async (cantidad: number, id_perfiles?: str
             errores.push(`Se esperaban ${cantidad} tarjetas pero solo se crearon ${exitosas.length}`);
         }
 
+        // Crear saldos para las tarjetas creadas exitosamente
+        try {
+            for (const tarjeta of exitosas) {
+                if (tarjeta.id_targetas) {
+                    await createItemSaldo(tarjeta.id_targetas);
+                } else {
+                    errores.push(`Tarjeta creada sin ID: ${tarjeta.codigo_targeta}`);
+                }
+            }
+        } catch (error) {
+            console.error("Error al crear saldos para tarjetas múltiples:", error);
+            errores.push("Error al crear algunos saldos");
+        }
+
         return { exitosas, errores };
     } catch (err) {
         console.error("Error en createMultipleTarjetas:", err);
         throw err;
     }
 };
+
+
+export async function asignarQR(id_targeta: string) {
+
+    try {
+        const { data, error } = await ClienteBrowserSupabase.from("targetas")
+            .update({ asignada: true })
+            .eq("id_targetas", id_targeta);
+        if (error) {
+            console.error("Error de Supabase:", error);
+            throw error;
+        }
+        return data;
+    } catch (err) {
+        console.error("Error en updateTarjeta:", err);
+        throw err;
+    }
+};
+
+
+export async function getTarjetasNoAsignadas() {
+    try {
+        const { data, error } = await ClienteBrowserSupabase.from("targetas")
+            .select("*")
+            .eq("asignada", false);
+        if (error) {
+            console.error("Error de Supabase:", error);
+            throw error;
+        }
+        return data;
+    } catch (err) {
+        console.error("Error en gettarjetasNoAsignadas:", err);
+        throw err;
+    }
+}

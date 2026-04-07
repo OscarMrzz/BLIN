@@ -160,6 +160,22 @@ const data = {
       ],
     },
   ],
+  navRecarga: [
+    {
+      title: "Recarga",
+      url: "/recarga",
+      icon: <SettingsIcon />,
+      isActive: true,
+      items: [
+        {
+          title: "Recarga",
+          url: "/recarga/",
+          icon: <UsersIcon />,
+        },
+       
+      ],
+    },
+  ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -210,6 +226,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <NavMain items={data.navMain} />
           {isAuthenticated && <NavMain items={data.navAdmin} />}
           {isAuthenticated && <NavMain items={data.navCobrador} />}
+          {isAuthenticated && <NavMain items={data.navRecarga} />}
         </SidebarContent>
         <SidebarFooter></SidebarFooter>
         <SidebarRail />

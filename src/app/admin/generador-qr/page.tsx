@@ -11,10 +11,15 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { getAllTarjetas } from "@/lib/services/tarjetasServices";
+import {
+  asignarQR,
+  getAllTarjetas,
+  getTarjetasNoAsignadas,
+} from "@/lib/services/tarjetasServices";
 import { tablaInterface } from "@/Interfaces/tabla.interface";
 import { TargetasInterface } from "@/Interfaces/targetas.interface";
 import ComboboxGeneral from "@/components/Comobox/ComboboxGeneral";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Page() {
   const dominio = "https://blin-hn.duckdns.org/";
@@ -26,28 +31,29 @@ export default function Page() {
   const [tarjetaSeleccionada, setTarjetaSeleccionada] =
     useState<TargetasInterface>();
 
-  const [tarjetasList, setTarjetasList] = useState<TargetasInterface[]>([]);
+  const {
+    data: tarjetasList,
+
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["getTarjetasNoAsignadas"],
+    queryFn: getTarjetasNoAsignadas,
+  });
 
   const dataTarjetas = React.useMemo(
     () =>
-      tarjetasList.map((tarjeta) => ({
+      tarjetasList?.map((tarjeta) => ({
         value: tarjeta.id_targetas,
         label: tarjeta.codigo_targeta,
-      })),
+      })) || [],
     [tarjetasList],
   );
 
-  useEffect(() => {
-    const fetch = async () => {
-      const response = await getAllTarjetas();
-      setTarjetasList(response);
-    };
-    fetch();
-  }, []);
-
-  const handleGenerar = () => {
-    if (url.trim() && codigo.trim()) {
+  const handleGenerar = async () => {
+    if (url.trim() && codigo.trim() && idTarjeta) {
       setMostrarQR(true);
+      await asignarQR(idTarjeta);
     }
   };
 
@@ -75,7 +81,7 @@ export default function Page() {
               valor={idTarjeta}
               onValueChange={(value) => {
                 setIdTarjeta(value);
-                const tarjetaSeleccionada = tarjetasList.find(
+                const tarjetaSeleccionada = tarjetasList?.find(
                   (t) => t.id_targetas === value,
                 );
                 if (tarjetaSeleccionada) {

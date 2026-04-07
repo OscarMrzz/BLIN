@@ -45,7 +45,7 @@ export function EditarTarjeta({
     if (tarjetaAEditar) {
       return {
         codigo_targeta: tarjetaAEditar.codigo_targeta || "",
-        id_perfiles: tarjetaAEditar.id_perfiles || "",
+        id_perfiles: tarjetaAEditar.id_targeta || "",
         estado: tarjetaAEditar.estado || "activo",
       };
     }
@@ -73,8 +73,9 @@ export function EditarTarjeta({
       await updateTarjeta(tarjetaAEditar.id_targetas, {
         id_targetas: tarjetaAEditar.id_targetas, // Mantener el ID original
         codigo_targeta: formData.codigo_targeta.trim(),
-        id_perfiles: formData.id_perfiles,
+        id_targeta: formData.id_perfiles,
         estado: formData.estado,
+        asignada: tarjetaAEditar.asignada,
       } as TargetasInterface);
       toast.success("Tarjeta actualizada exitosamente");
 

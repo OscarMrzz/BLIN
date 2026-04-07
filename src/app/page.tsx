@@ -16,10 +16,18 @@ import CargaCell from "@/components/Animaciones/Carga/cargaCell";
 import {
   displaySchemaInfo,
   getSchemaInfo,
+  getSchemaInfoJSON,
 } from "@/lib/services/SchemaServices";
 import HiroComponent from "@/components/Hiro/HiroComponent";
 
 export default function Home() {
+
+/*   useEffect(() => {
+    getSchemaInfoJSON().then((data) => {
+      console.log("✅✅✅✅✅✅✅✅");
+      console.log(data);
+    });
+  }, []); */
   const {
     data: rutasList,
 

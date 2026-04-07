@@ -1,373 +1,100 @@
 {
   "database_schema": {
-    "roles": {
-      "id_roles": {
-        "data_type": "uuid",
-        "is_nullable": "NO",
-        "description": "Primary key for roles table"
-      },
-      "nombre": {
-        "data_type": "character varying",
-        "is_nullable": "NO",
-        "description": "Role name"
-      },
-      "estado": {
-        "data_type": "character varying",
-        "is_nullable": "YES",
-        "description": "Role status"
-      }
-    },
-    "perfiles": {
-      "id_perfiles": {
-        "data_type": "uuid",
-        "is_nullable": "NO",
-        "description": "Primary key for profiles table"
-      },
-      "id_roles": {
-        "data_type": "uuid",
-        "is_nullable": "YES",
-        "description": "Foreign key to roles table"
-      },
-      "nombre": {
-        "data_type": "character varying",
-        "is_nullable": "NO",
-        "description": "First name"
-      },
-      "apellido": {
-        "data_type": "character varying",
-        "is_nullable": "YES",
-        "description": "Last name"
-      },
-      "dni": {
-        "data_type": "bigint",
-        "is_nullable": "YES",
-        "description": "Document number"
-      },
-      "foto": {
-        "data_type": "character varying",
-        "is_nullable": "YES",
-        "description": "Profile photo URL"
-      },
-      "id_user": {
-        "data_type": "uuid",
-        "is_nullable": "YES",
-        "description": "Foreign key to users table"
-      }
-    },
-    "targetas": {
-      "id_targetas": {
-        "data_type": "uuid",
-        "is_nullable": "NO",
-        "description": "Primary key for cards table"
-      },
-      "id_perfiles": {
-        "data_type": "uuid",
-        "is_nullable": "YES",
-        "description": "Foreign key to profiles table"
-      },
-      "codigo_targeta": {
-        "data_type": "character varying",
-        "is_nullable": "NO",
-        "description": "Card code"
-      },
-      "estado": {
-        "data_type": "character varying",
-        "is_nullable": "YES",
-        "description": "Card status"
-      }
-    },
-    "rutas": {
-      "id_rutas": {
-        "data_type": "uuid",
-        "is_nullable": "NO",
-        "description": "Primary key for routes table"
-      },
-      "nombre": {
-        "data_type": "character varying",
-        "is_nullable": "NO",
-        "description": "Route name"
-      },
-      "origen": {
-        "data_type": "character varying",
-        "is_nullable": "YES",
-        "description": "Route origin"
-      },
-      "destino": {
-        "data_type": "character varying",
-        "is_nullable": "YES",
-        "description": "Route destination"
-      },
-      "velocidad": {
-        "data_type": "numeric",
-        "is_nullable": "YES",
-        "description": "Route speed"
-      },
-      "precio": {
-        "data_type": "double precision",
-        "is_nullable": "YES",
-        "description": "Route price"
-      },
-      "tiempo_espera": {
-        "data_type": "numeric",
-        "is_nullable": "YES",
-        "description": "Wait time"
-      },
-      "activo": {
-        "data_type": "character varying",
-        "is_nullable": "YES",
-        "description": "Route active status"
-      },
-      "imagen_bus": {
-        "data_type": "character varying",
-        "is_nullable": "YES",
-        "description": "Bus image URL"
-      }
-    },
-    "paradas": {
-      "id_paradas": {
-        "data_type": "uuid",
-        "is_nullable": "NO",
-        "description": "Primary key for stops table"
-      },
-      "latitud": {
-        "data_type": "double precision",
-        "is_nullable": "NO",
-        "description": "Latitude coordinate"
-      },
-      "longitud": {
-        "data_type": "double precision",
-        "is_nullable": "YES",
-        "description": "Longitude coordinate"
-      },
-      "distancia_desde_origen": {
-        "data_type": "numeric",
-        "is_nullable": "YES",
-        "description": "Distance from origin"
-      },
-      "id_rutas": {
-        "data_type": "uuid",
-        "is_nullable": "YES",
-        "description": "Foreign key to routes table"
-      },
-      "nombre_lugar": {
-        "data_type": "character varying",
-        "is_nullable": "YES",
-        "description": "Place name"
-      }
-    },
-    "buses": {
-      "id_buses": {
-        "data_type": "uuid",
-        "is_nullable": "NO",
-        "description": "Primary key for buses table"
-      },
-      "id_rutas": {
-        "data_type": "uuid",
-        "is_nullable": "YES",
-        "description": "Foreign key to routes table"
-      },
-      "placa": {
-        "data_type": "character varying",
-        "is_nullable": "NO",
-        "description": "License plate"
-      },
-      "estado": {
-        "data_type": "character varying",
-        "is_nullable": "YES",
-        "description": "Bus status"
-      }
-    },
-    "choferes": {
-      "id_choferes": {
-        "data_type": "uuid",
-        "is_nullable": "NO",
-        "description": "Primary key for drivers table"
-      },
-      "id_usuarios": {
-        "data_type": "uuid",
-        "is_nullable": "NO",
-        "description": "Foreign key to users table"
-      },
-      "licencia": {
-        "data_type": "character varying",
-        "is_nullable": "YES",
-        "description": "Driver license"
-      },
-      "estado": {
-        "data_type": "character varying",
-        "is_nullable": "YES",
-        "description": "Driver status"
-      }
-    },
-    "viajes": {
-      "id_viajes": {
-        "data_type": "uuid",
-        "is_nullable": "NO",
-        "description": "Primary key for trips table"
-      },
-      "id_buses": {
-        "data_type": "uuid",
-        "is_nullable": "NO",
-        "description": "Foreign key to buses table"
-      },
-      "id_choferes": {
-        "data_type": "uuid",
-        "is_nullable": "YES",
-        "description": "Foreign key to drivers table"
-      },
-      "fecha_inicio": {
-        "data_type": "date",
-        "is_nullable": "YES",
-        "description": "Trip start date"
-      },
-      "fecha_fin": {
-        "data_type": "date",
-        "is_nullable": "YES",
-        "description": "Trip end date"
-      },
-      "estado": {
-        "data_type": "character varying",
-        "is_nullable": "YES",
-        "description": "Trip status"
-      }
-    },
-    "horarios": {
-      "id_horarios": {
-        "data_type": "uuid",
-        "is_nullable": "NO",
-        "description": "Primary key for schedules table"
-      },
-      "horario": {
-        "data_type": "numeric",
-        "is_nullable": "NO",
-        "description": "Schedule time"
-      },
-      "id_rutas": {
-        "data_type": "uuid",
-        "is_nullable": "YES",
-        "description": "Foreign key to routes table"
-      }
-    },
-    "pagos": {
-      "id_pagos": {
-        "data_type": "uuid",
-        "is_nullable": "NO",
-        "description": "Primary key for payments table"
-      },
-      "id_targeta": {
-        "data_type": "uuid",
-        "is_nullable": "NO",
-        "description": "Foreign key to cards table"
-      },
-      "monto": {
-        "data_type": "bigint",
-        "is_nullable": "YES",
-        "description": "Payment amount"
-      },
-      "fecha": {
-        "data_type": "date",
-        "is_nullable": "YES",
-        "description": "Payment date"
-      },
-      "id_perfiles": {
-        "data_type": "uuid",
-        "is_nullable": "YES",
-        "description": "Foreign key to profiles table"
-      },
-      "metodo": {
-        "data_type": "character varying",
-        "is_nullable": "YES",
-        "description": "Payment method"
-      }
-    },
-    "saldo": {
-      "id_saldo": {
-        "data_type": "uuid",
-        "is_nullable": "NO",
-        "description": "Primary key for balance table"
-      },
-      "saldo_total": {
-        "data_type": "bigint",
-        "is_nullable": "NO",
-        "description": "Total balance"
-      },
-      "id_perfiles": {
-        "data_type": "uuid",
-        "is_nullable": "YES",
-        "description": "Foreign key to profiles table"
-      }
-    },
-    "historial_de_recargas": {
-      "id_historial_de_recargas": {
-        "data_type": "uuid",
-        "is_nullable": "NO",
-        "description": "Primary key for recharge history table"
-      },
-      "fecha": {
-        "data_type": "date",
-        "is_nullable": "YES",
-        "description": "Recharge date"
-      },
-      "id_targetas": {
-        "data_type": "uuid",
-        "is_nullable": "YES",
-        "description": "Foreign key to cards table"
-      },
-      "monto": {
-        "data_type": "bigint",
-        "is_nullable": "YES",
-        "description": "Recharge amount"
-      },
-      "metodo": {
-        "data_type": "character varying",
-        "is_nullable": "YES",
-        "description": "Recharge method"
-      }
-    },
-    "gps": {
-      "id_gps": {
-        "data_type": "uuid",
-        "is_nullable": "NO",
-        "description": "Primary key for GPS table"
-      },
-      "fecha": {
-        "data_type": "date",
-        "is_nullable": "YES",
-        "description": "GPS record date"
-      },
-      "id_buses": {
-        "data_type": "uuid",
-        "is_nullable": "YES",
-        "description": "Foreign key to buses table"
-      }
-    },
-    "permisos": {
-      "id_permisos": {
-        "data_type": "uuid",
-        "is_nullable": "NO",
-        "description": "Primary key for permissions table"
-      },
-      "id_roles": {
-        "data_type": "uuid",
-        "is_nullable": "YES",
-        "description": "Foreign key to roles table"
-      },
-      "tabla": {
-        "data_type": "character varying",
-        "is_nullable": "NO",
-        "description": "Table name"
-      },
-      "accion": {
-        "data_type": "character varying",
-        "is_nullable": "YES",
-        "description": "Action type"
-      }
-    }
-  },
-  "metadata": {
-    "total_tables": 13,
-    "total_columns": 67,
-    "generated_at": "2025-04-04",
-    "description": "Database schema reference for BLIN system"
+    "roles": [
+      { "column": "id_roles", "type": "uuid", "nullable": false },
+      { "column": "nombre", "type": "character varying", "nullable": false },
+      { "column": "estado", "type": "character varying", "nullable": true }
+    ],
+    "historial_de_recargas": [
+      { "column": "id_historial_de_recargas", "type": "uuid", "nullable": false },
+      { "column": "id_targetas", "type": "uuid", "nullable": true },
+      { "column": "monto", "type": "bigint", "nullable": true },
+      { "column": "fecha", "type": "date", "nullable": true },
+      { "column": "metodo", "type": "character varying", "nullable": true }
+    ],
+    "paradas": [
+      { "column": "id_paradas", "type": "uuid", "nullable": false },
+      { "column": "latitud", "type": "double precision", "nullable": false },
+      { "column": "longitud", "type": "double precision", "nullable": true },
+      { "column": "distancia_desde_origen", "type": "numeric", "nullable": true },
+      { "column": "id_rutas", "type": "uuid", "nullable": true },
+      { "column": "nombre_lugar", "type": "character varying", "nullable": true }
+    ],
+    "pagos": [
+      { "column": "id_pagos", "type": "uuid", "nullable": false },
+      { "column": "id_targeta", "type": "uuid", "nullable": false },
+      { "column": "monto", "type": "bigint", "nullable": true },
+      { "column": "fecha", "type": "date", "nullable": true },
+      { "column": "id_perfiles", "type": "uuid", "nullable": true },
+      { "column": "metodo", "type": "character varying", "nullable": true }
+    ],
+    "horarios": [
+      { "column": "id_horarios", "type": "uuid", "nullable": false },
+      { "column": "horario", "type": "numeric", "nullable": false },
+      { "column": "id_rutas", "type": "uuid", "nullable": true }
+    ],
+    "targetas": [
+      { "column": "id_targetas", "type": "uuid", "nullable": false },
+      { "column": "id_perfiles", "type": "uuid", "nullable": true },
+      { "column": "asignada", "type": "boolean", "nullable": true },
+      { "column": "codigo_targeta", "type": "character varying", "nullable": false },
+      { "column": "estado", "type": "character varying", "nullable": true }
+    ],
+    "viajes": [
+      { "column": "id_viajes", "type": "uuid", "nullable": false },
+      { "column": "id_buses", "type": "uuid", "nullable": false },
+      { "column": "id_choferes", "type": "uuid", "nullable": true },
+      { "column": "fecha_inicio", "type": "date", "nullable": true },
+      { "column": "fecha_fin", "type": "date", "nullable": true },
+      { "column": "estado", "type": "character varying", "nullable": true }
+    ],
+    "saldo": [
+      { "column": "id_saldo", "type": "uuid", "nullable": false },
+      { "column": "saldo_total", "type": "bigint", "nullable": false },
+      { "column": "id_targetas", "type": "uuid", "nullable": true }
+    ],
+    "permisos": [
+      { "column": "id_permisos", "type": "uuid", "nullable": false },
+      { "column": "id_roles", "type": "uuid", "nullable": true },
+      { "column": "tabla", "type": "character varying", "nullable": false },
+      { "column": "accion", "type": "character varying", "nullable": true }
+    ],
+    "rutas": [
+      { "column": "id_rutas", "type": "uuid", "nullable": false },
+      { "column": "velocidad", "type": "numeric", "nullable": true },
+      { "column": "precio", "type": "double precision", "nullable": true },
+      { "column": "tiempo_espera", "type": "numeric", "nullable": true },
+      { "column": "nombre", "type": "character varying", "nullable": false },
+      { "column": "origen", "type": "character varying", "nullable": true },
+      { "column": "destino", "type": "character varying", "nullable": true },
+      { "column": "activo", "type": "character varying", "nullable": true },
+      { "column": "imagen_bus", "type": "character varying", "nullable": true }
+    ],
+    "buses": [
+      { "column": "id_buses", "type": "uuid", "nullable": false },
+      { "column": "id_rutas", "type": "uuid", "nullable": true },
+      { "column": "placa", "type": "character varying", "nullable": false },
+      { "column": "estado", "type": "character varying", "nullable": true }
+    ],
+    "choferes": [
+      { "column": "id_choferes", "type": "uuid", "nullable": false },
+      { "column": "id_usuarios", "type": "uuid", "nullable": false },
+      { "column": "licencia", "type": "character varying", "nullable": true },
+      { "column": "estado", "type": "character varying", "nullable": true }
+    ],
+    "perfiles": [
+      { "column": "id_perfiles", "type": "uuid", "nullable": false },
+      { "column": "id_roles", "type": "uuid", "nullable": true },
+      { "column": "dni", "type": "bigint", "nullable": true },
+      { "column": "id_user", "type": "uuid", "nullable": true },
+      { "column": "nombre", "type": "character varying", "nullable": false },
+      { "column": "apellido", "type": "character varying", "nullable": true },
+      { "column": "foto", "type": "character varying", "nullable": true }
+    ],
+    "gps": [
+      { "column": "id_gps", "type": "uuid", "nullable": false },
+      { "column": "fecha", "type": "date", "nullable": true },
+      { "column": "id_buses", "type": "uuid", "nullable": true }
+    ]
   }
 }

@@ -1,0 +1,111 @@
+"use client";
+import ComboboxGeneral from "@/components/Comobox/ComboboxGeneral";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Field, FieldGroup } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { recargarTarjeta } from "@/lib/services/saldoServices";
+import { getAllTarjetas } from "@/lib/services/tarjetasServices";
+import { useQuery } from "@tanstack/react-query";
+import { PlusIcon, CreditCardIcon } from "lucide-react";
+import React, { useState } from "react";
+import { toast, Toaster } from "sonner";
+
+export default function RecargaPage() {
+  const [codigo, setCodigo] = useState("");
+  const [cantidad, setCantidad] = useState("");
+
+  const {
+    data: tarjetasList,
+
+    isError,
+    error,
+  } = useQuery({ queryKey: ["getAllTarjetas"], queryFn: getAllTarjetas });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    toast.success("Recarga procesada exitosamente");
+    if (!codigo || !cantidad) {
+      toast.error("Por favor, complete todos los campos");
+      return;
+    }
+
+    const tarjetaEncontrada = tarjetasList?.find((t) => t.codigo_targeta === codigo);
+    if (!tarjetaEncontrada) {
+      toast.error("Tarjeta no encontrada");
+      return;
+    }
+    try{
+       await recargarTarjeta(tarjetaEncontrada.id_targetas, parseFloat(cantidad));
+       toast.success("Recarga procesada exitosamente");
+    }catch(error){
+      toast.error("Error al recargar la tarjeta");
+    }
+  };
+
+  return (
+    <div className="container mx-auto p-6 space-y-6 justify-center items-center w-full flex flex-col">
+      <div className="flex items-center gap-2">
+        <CreditCardIcon className="h-6 w-6" />
+        <h1 className="text-3xl font-bold">Recarga</h1>
+      </div>
+
+      <Card className=" w-md">
+        <CardHeader>
+          <CardTitle>Recargar Saldo</CardTitle>
+          <CardDescription>
+            Ingresa el código de la tarjeta y la cantidad a recargar
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <FieldGroup>
+              <Field>
+                <Label htmlFor="id_rutas">Ruta:</Label>
+
+                <ComboboxGeneral
+                  data={tarjetasList?.map((tarjeta) => ({
+                    value: tarjeta.id_targetas,
+                    label: tarjeta.codigo_targeta.toString(),
+                  })) || []}
+                  placeholder="Seleccione una ruta"
+                  valor={codigo}
+                  onValueChange={(value) =>
+                    setCodigo(value)
+                  }
+                />
+              </Field>
+
+              <Field className="w-24">
+                <Label htmlFor="cantidad">Cantidad</Label>
+                <Input
+                  id="cantidad"
+                  type="number"
+                  value={cantidad}
+                  onChange={(e) => setCantidad(e.target.value)}
+                  placeholder=""
+                  min="1"
+                  required
+                />
+              </Field>
+            </FieldGroup>
+
+            <Button type="submit" className="w-full">
+              <PlusIcon className="h-4 w-4 mr-2" />
+              Procesar Recarga
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+
+      <Toaster />
+    </div>
+  );
+}
