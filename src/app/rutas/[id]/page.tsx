@@ -2,7 +2,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
 
-import { getRutaById } from "@/lib/services/rutasServices";
+import { vista_completa_rutas_byid } from "@/lib/services/rutasServices";
 import { useQuery } from "@tanstack/react-query";
 
 const MapComponent = dynamic(() => import("@/components/Map/MapComponent"), {
@@ -22,17 +22,23 @@ export default function Page({ params }: Props) {
   console.log("🔍 [ID PAGE] ID recibido:", id);
 
   const {
-    data: ruta,
+    data: rutas,
     isLoading,
     isError,
     error,
   } = useQuery({
-    queryKey: ["rutaBuscada"],
+    queryKey: ["rutaBuscada", id],
     queryFn: () => {
-      console.log("🚀 [QUERY] Ejecutando getRutaById con ID:", id);
-      return getRutaById(id);
+      console.log(
+        "🚀 [QUERY] Ejecutando vista_completa_rutas_byid con ID:",
+        id,
+      );
+      return vista_completa_rutas_byid(id);
     },
   });
+
+  // vista_completa_rutas_byid devuelve un array, tomamos el primer elemento
+  const ruta = rutas?.[0];
 
   console.log(
     "📊 [QUERY] Estado - isLoading:",
@@ -55,7 +61,19 @@ export default function Page({ params }: Props) {
   }
 
   console.log(" [RENDER] Renderizando página con ruta:", ruta);
-  console.log(" [RENDER] Paradas para el mapa:", ruta?.parada_ruta);
+  console.log(" [RENDER] Coordenadas para el mapa:", ruta);
+
+  // Crear un array con el punto de la ruta para el mapa
+  const puntosMapa = ruta
+    ? [
+        {
+          id_paradas: ruta.id_paradas,
+          latitud: ruta.latitud,
+          longitud: ruta.longitud,
+          nombre_lugar: ruta.nombre,
+        },
+      ]
+    : [];
 
   return (
     <div className="p-4 w-full ">
@@ -65,7 +83,7 @@ export default function Page({ params }: Props) {
 
       <div className="rounded-xl overflow-hidden border border-slate-200 shadow-lg w-full">
         {/* 2. Colocación del componente */}
-        <MapComponent puntos={ruta?.parada_ruta || []} />
+        <MapComponent puntos={puntosMapa} />
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { StoppingInterface, ParadasDetalladasInterface } from "@/Interfaces/rutas.interface";
+import { StoppingInterface, RutaCompletaInterface } from "@/Interfaces/rutas.interface";
 
 interface UbicacionInterface {
   latitud: number;
@@ -9,14 +9,9 @@ export const obtenerDistanciaCarretera = async (
   miUbicacion: UbicacionInterface,
   origenRuta: UbicacionInterface
 ): Promise<number> => {
-  // Primero intentar con cálculo local para evitar problemas de red
-  console.log("Calculando distancia entre:", miUbicacion, origenRuta);
-
   try {
     // Intentar OSRM API con configuración mejorada
     const url = `https://router.project-osrm.org/route/v1/driving/${origenRuta.longitud},${origenRuta.latitud};${miUbicacion.longitud},${miUbicacion.latitud}?overview=false`;
-
-    console.log("Intentando OSRM API...");
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000); // Reducido a 5 segundos
@@ -34,12 +29,11 @@ export const obtenerDistanciaCarretera = async (
       const datos = await respuesta.json();
       if (datos.code === 'Ok' && datos.routes && datos.routes[0]) {
         const distanciaKm = datos.routes[0].distance / 1000;
-        console.log("✅ Distancia OSRM:", distanciaKm, "km");
         return distanciaKm;
       }
     }
-  } catch (error) {
-    console.log("❌ OSRM API falló, usando cálculo local:", error);
+  } catch {
+    // Silencioso, usar fallback
   }
 
   // Siempre usar Haversine como fallback principal
@@ -64,32 +58,52 @@ const obtenerDistanciaCarreteraFallback = (
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distancia = R * c;
 
-  console.log("📍 Distancia calculada (Haversine):", distancia.toFixed(2), "km");
   return distancia;
 };
 
 
 export const obtenerMinutosParaLlegada = (
-  miParada: StoppingInterface,
-  ruta: ParadasDetalladasInterface
+  miUbicacion: StoppingInterface,
+  ruta: RutaCompletaInterface
 ): number | null => {
-  const ahora = new Date();
-  const minutosActuales = ahora.getHours() * 60 + ahora.getMinutes();
+  // Validar que tengamos coordenadas válidas
+  if (!miUbicacion.latitud || !miUbicacion.longitud) {
+    return null;
+  }
 
-  // 1. Tiempo que le toma al bus llegar de la terminal a MI parada
+  // Convertir StoppingInterface a UbicacionInterface para el cálculo
+  const ubicacion: UbicacionInterface = {
+    latitud: miUbicacion.latitud,
+    longitud: miUbicacion.longitud
+  };
+
+  // 1. Calcular distancia desde mi ubicación hasta el origen de la ruta
+  // RutaCompletaInterface tiene latitud/longitud directamente
+  const puntoOrigen: UbicacionInterface = {
+    latitud: ruta.latitud,
+    longitud: ruta.longitud
+  };
+
+  const distanciaDesdeOrigen = obtenerDistanciaCarreteraFallback(ubicacion, puntoOrigen);
+
+  // 2. Tiempo que le toma al bus llegar del origen a mi ubicación
   // (Distancia / Velocidad) * 60 para pasar a minutos
-  const distancia = miParada.distancia_desde_origen || 0;
-  const tiempoTransito = (distancia / ruta.velocidad) * 60;
+  const tiempoTransito = (distanciaDesdeOrigen / ruta.velocidad) * 60;
 
-  // 2. Como no tenemos horarios_ruta en ParadasDetalladasInterface, 
-  // devolvemos solo el tiempo de tránsito estimado
-  console.log("⏰ Tiempo de tránsito estimado:", tiempoTransito, "minutos");
+  // 3. Usar tiempo de espera fijo ya que RutaCompletaInterface no tiene esta propiedad
+  const tiempoEspera = 5; // 5 minutos por defecto
 
-  // Para simplificar, asumimos que hay un bus cada 30 minutos
+  // 4. Calcular tiempo total hasta el próximo bus
+  const tiempoTotal = tiempoTransito + tiempoEspera;
+
+  // 5. Para simplificar, asumimos que hay un bus cada 30 minutos
   const intervaloBuses = 30;
-  const proximoBus = Math.ceil((minutosActuales % intervaloBuses) + tiempoTransito);
+  const minutosParaProximoBus = Math.ceil(tiempoTotal);
 
-  return proximoBus;
+  // 6. Ajustar al siguiente intervalo de bus si es necesario
+  const proximoBusDisponible = Math.ceil(minutosParaProximoBus / intervaloBuses) * intervaloBuses;
+
+  return proximoBusDisponible;
 };
 
 export function ObtenerhoraProximoBus(minutos: number) {

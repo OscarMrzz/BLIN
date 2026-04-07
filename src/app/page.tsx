@@ -5,7 +5,10 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { miUbicacionStore } from "@/Store/miUbicacionStore";
 import { useQuery } from "@tanstack/react-query";
-import { getAllRutas } from "@/lib/services/rutasServices";
+import {
+  getAllRutas,
+  vista_completa_rutas,
+} from "@/lib/services/rutasServices";
 import {
   obtenerDistanciaCarretera,
   ObtenerhoraProximoBus,
@@ -21,8 +24,13 @@ import {
 import HiroComponent from "@/components/Hiro/HiroComponent";
 
 export default function Home() {
+  useEffect(() => {
+    (async () => {
+      await vista_completa_rutas();
+    })();
+  }, []);
 
-/*   useEffect(() => {
+  /*   useEffect(() => {
     getSchemaInfoJSON().then((data) => {
       console.log("✅✅✅✅✅✅✅✅");
       console.log(data);
@@ -33,7 +41,10 @@ export default function Home() {
 
     isError,
     error,
-  } = useQuery({ queryKey: ["rutas"], queryFn: getAllRutas });
+  } = useQuery({
+    queryKey: ["vista_completa_rutas"],
+    queryFn: vista_completa_rutas,
+  });
 
   const { setMiUbicacion, miUbicacion } = miUbicacionStore();
   const [tiempoProximoAutoBus, setTiempoProximoAutoBus] = useState<string>("");
@@ -80,18 +91,15 @@ export default function Home() {
     const obtenerUbicacion = async () => {
       try {
         let distancia = 1;
-        console.log("Ditancia Inicial:", distancia);
         const miPosicionDePrueba = {
           latitud: 15.551719134171245,
           longitud: -87.65120082503267,
         };
 
         if (rutasList && rutasList.length >= 2) {
-          console.log("Logro entrar✅✅✅");
-          console.log(rutasList[1]);
           const rutaOrigenDePrueba = {
-            latitud: rutasList[1].punto_origen.latitud,
-            longitud: rutasList[1].punto_origen.longitud,
+            latitud: rutasList[1].latitud,
+            longitud: rutasList[1].longitud,
           };
           distancia = await obtenerDistanciaCarretera(
             miPosicionDePrueba,
@@ -99,7 +107,6 @@ export default function Home() {
           );
         }
 
-        console.log("Ditancia Despues de calculos:", distancia);
         setMiUbicacion({
           id_paradas: "ubicacion-usuario",
           latitud: 15.551719134171245,
@@ -174,9 +181,14 @@ export default function Home() {
           </h2>
         </div>
         <div className="grid grid-cols-1 pt-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full gap-4 pb-48">
-          {rutasList?.map((ruta) => (
-            <RutaItem key={ruta.id_rutas} ruta={ruta} />
-          ))}
+          {rutasList
+            ?.filter(
+              (ruta, index, self) =>
+                index === self.findIndex((r) => r.id_rutas === ruta.id_rutas),
+            )
+            .map((ruta) => (
+              <RutaItem key={ruta.id_rutas} ruta={ruta} />
+            ))}
         </div>
       </section>
     </div>

@@ -73,3 +73,19 @@ export interface GpsInterface {
   fecha?: Date;
   id_buses?: string;
 }
+
+
+
+export interface RutaCompletaInterface {
+  id_horarios: string;     // UUID: "f3297904-6a93-4ce1-b9bf-ae00c28d37d5"
+  id_paradas: string;      // UUID: "dfc21814-c179-40d3-a86d-91c472e6eee4"
+  id_rutas: string;        // UUID: "1dc486ad-8c1b-44e0-b623-0cdf7aea31b5"
+  nombre: string;          // "Azacualpa - San Pedro Sula"
+  origen: string;          // "Azacualpa"
+  destino: string;         // "San Pedro Sula"
+  horario: number;         // 840 (Probablemente minutos del día o formato militar)
+  latitud: number;         // 15.4713
+  longitud: number;        // -88.033705
+  velocidad: number;       // 80
+  activo: string | boolean; // Viene como "1", puedes tiparlo como string o convertirlo
+}
