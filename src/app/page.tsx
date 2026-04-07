@@ -30,12 +30,12 @@ export default function Home() {
     })();
   }, []);
 
-  /*   useEffect(() => {
+    useEffect(() => {
     getSchemaInfoJSON().then((data) => {
       console.log("✅✅✅✅✅✅✅✅");
       console.log(data);
     });
-  }, []); */
+  }, []);
   const {
     data: rutasList,
 

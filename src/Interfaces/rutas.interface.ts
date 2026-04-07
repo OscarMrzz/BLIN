@@ -26,7 +26,7 @@ export interface StoppingInterface {
   nombre_lugar?: string;
 }
 export interface ParadasDetalladasInterface {
-    id_rutas: string;
+  id_rutas: string;
   nombre: string;
   velocidad: number;
   precio: number;
@@ -43,7 +43,7 @@ export interface ParadasDetalladasInterface {
     latitud: number;
     longitud: number;
   };
- 
+
 }
 
 export interface ViajesInterface {

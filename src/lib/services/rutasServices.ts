@@ -217,9 +217,9 @@ export async function vista_completa_rutas() {
     return [];
   }
 
- 
+
   return data as RutaCompletaInterface[];
-  
+
 }
 export async function vista_completa_rutas_byid(id: string) {
 
@@ -229,7 +229,26 @@ export async function vista_completa_rutas_byid(id: string) {
     return [];
   }
 
- 
+
   return data as RutaCompletaInterface[];
-  
+
+}
+
+
+export async function getRutaImagen(idRuta: string): Promise<string> {
+  try {
+    const { data, error } = await ClienteBrowserSupabase.from("rutas").select("imagen_bus").eq("id_rutas", idRuta).single();
+    if (error) {
+      console.error("Error al obtener la imagen de la ruta:", error);
+      return "";
+    }
+    if (!data) {
+      return "";
+    }
+    return data.imagen_bus;
+  } catch (error) {
+    console.error("Error al obtener la imagen de la ruta:", error);
+    return  "";
+  }
+
 }

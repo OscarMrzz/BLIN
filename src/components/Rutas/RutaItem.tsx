@@ -20,12 +20,18 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { miUbicacionStore } from "@/Store/miUbicacionStore";
 import { RutaCompletaInterface } from "@/Interfaces/rutas.interface";
+import { getRutaImagen } from "@/lib/services/rutasServices";
+import { useQuery } from "@tanstack/react-query";
 type Props = {
   ruta: RutaCompletaInterface;
 };
 
 export function RutaItem({ ruta }: Props) {
   const [horaProximoBus, setHoraProximoBus] = useState<string>("");
+  const { data: imagenRuta } = useQuery({
+    queryKey: ["ruta_imagen", ruta.id_rutas],
+    queryFn: () => getRutaImagen(ruta.id_rutas),
+  });
 
   const { miUbicacion } = miUbicacionStore();
 
@@ -52,10 +58,10 @@ export function RutaItem({ ruta }: Props) {
 
   return (
     <Card className="relative mx-auto w-full max-w-sm pt-0">
-      <div className="absolute inset-0 z-30 aspect-video bg-black/35  h-48 " />
+      <div className="absolute inset-0 z-30 aspect-video bg-black/35  h-48 w-full" />
       <div className="bg-linear-to-b from-sky-500/75 to-transparent">
         <Image
-          src="/img/microbus.png"
+          src={`/img/${imagenRuta || "school-bus"}.png`}
           alt="Bus cover"
           className="relative z-20 w-full h-48  p-4 overflow-hidden "
           width={500}
