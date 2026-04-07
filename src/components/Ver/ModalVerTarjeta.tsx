@@ -76,7 +76,7 @@ export default function ModalVerTarjeta({
                 </div>
               </div>
 
-              {tarjetaSeleccionada.id_targeta && (
+              {tarjetaSeleccionada.id_targetas && (
                 <div className="flex items-center justify-between rounded-xl bg-card border border-border p-4 transition-all hover:shadow-md">
                   <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-200 text-muted-foreground">

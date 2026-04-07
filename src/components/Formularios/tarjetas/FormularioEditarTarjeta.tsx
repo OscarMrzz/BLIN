@@ -45,7 +45,7 @@ export function EditarTarjeta({
     if (tarjetaAEditar) {
       return {
         codigo_targeta: tarjetaAEditar.codigo_targeta || "",
-        id_perfiles: tarjetaAEditar.id_targeta || "",
+        id_perfiles: tarjetaAEditar.id_targetas || "",
         estado: tarjetaAEditar.estado || "activo",
       };
     }
