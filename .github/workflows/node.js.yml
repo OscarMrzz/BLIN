@@ -1,31 +1,47 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
-name: Node.js CI
+name: Deploy BLIN
 
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
-  build:
-
+  # Validamos que el código compile antes de tocar el servidor
+  build-check:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x, 22.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install & Build Test
+        env:
+          # Estas variables solo se usan aquí para que el build de GitHub no de error
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          npm install
+          npm run build
+
+  # Despliegue al servidor
+  deploy:
+    needs: build-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.servidor_IP }}
+          username: ${{ secrets.usuario_servidor }}
+          key: ${{ secrets.key_privada_ssh }}
+          script: |
+            # 1. Entrar a la carpeta
+            cd /home/adminuser/BLIN/BLIN/
+            
+            # 2. Actualizar código
+            git pull origin main
+            
+            # 3. Instalar y Construir (Usará el .env que ya tienes en el servidor)
+            npm install
+            npm run build
+            
+            # 4. Reiniciar proceso en PM2 (Corregido)
+            pm2 restart blin-app || pm2 start npm --name "blin-app" -- start
