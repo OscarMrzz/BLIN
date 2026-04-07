@@ -22,6 +22,8 @@ import {
   getSchemaInfoJSON,
 } from "@/lib/services/SchemaServices";
 import HiroComponent from "@/components/Hiro/HiroComponent";
+import { useRutasCercanas } from "@/hooks/useRutasSercanas";
+import SkeletonPrincipal from "@/components/skeleton/EskelentonPrincipal";
 
 export default function Home() {
   useEffect(() => {
@@ -30,21 +32,24 @@ export default function Home() {
     })();
   }, []);
 
-    useEffect(() => {
+  /*   useEffect(() => {
     getSchemaInfoJSON().then((data) => {
       console.log("✅✅✅✅✅✅✅✅");
       console.log(data);
     });
-  }, []);
-  const {
+  }, []); */
+    const {
     data: rutasList,
 
     isError,
     error,
+    isLoading
   } = useQuery({
     queryKey: ["vista_completa_rutas"],
     queryFn: vista_completa_rutas,
   });
+
+
 
   const { setMiUbicacion, miUbicacion } = miUbicacionStore();
   const [tiempoProximoAutoBus, setTiempoProximoAutoBus] = useState<string>("");
@@ -137,9 +142,14 @@ export default function Home() {
     );
   }, [setMiUbicacion, rutasList]);
 
-  if (isError) {
+  /*   if (isError) {
     return <div>Error: {error.message}</div>;
-  }
+  } */
+
+
+    if(isLoading){
+      return <SkeletonPrincipal />;
+    }
 
   if (!rutasList || rutasList.length === 0) {
     return (
@@ -180,7 +190,7 @@ export default function Home() {
             Rutas en tu ubicacion
           </h2>
         </div>
-        <div className="grid grid-cols-1 pt-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full gap-4 pb-48">
+        <div className="grid grid-cols-1 pt-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full gap-4 pb-48">
           {rutasList
             ?.filter(
               (ruta, index, self) =>

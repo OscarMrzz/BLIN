@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
-import { QrCode, CheckCircle, RefreshCw, Camera } from "lucide-react";
+import { QrCode, CheckCircle, RefreshCw } from "lucide-react";
 
 export default function QrScanner() {
   const [scanResult, setScanResult] = useState<string | null>(null);
@@ -9,12 +9,37 @@ export default function QrScanner() {
   const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
+    // Ocultar elementos innecesarios del escáner
+    const style = document.createElement("style");
+    style.textContent = `
+      #reader button[title*="Switch camera"],
+      #reader button[title*="File"],
+      #reader button[title*="Camera"],
+      #reader button[title*="Stop"],
+      #reader .section__descriptions,
+      #reader #dashboard__section__title,
+      #reader #dashboard__section__select_camera,
+      #reader #dashboard__section__camera_selection_header,
+      #reader #dashboard__section__camera_selection_text,
+      #reader select,
+      #reader option {
+        display: none !important;
+      }
+      #reader .qrbox {
+        border: none !important;
+      }
+      #reader .dashboard {
+        display: none !important;
+      }
+    `;
+    document.head.appendChild(style);
+
     // Configuración del escáner
     const scanner = new Html5QrcodeScanner(
       "reader", // ID del elemento HTML
       {
         fps: 10,
-        qrbox: { width: 250, height: 250 },
+        qrbox: { width: 400, height: 400 },
         rememberLastUsedCamera: true,
         supportedScanTypes: [0], // 0 = Cámara, 1 = Archivo
       },
@@ -74,10 +99,10 @@ export default function QrScanner() {
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 to-blue-100">
+      <div className="container mx-auto px-4 py-8 flex flex-col items-center justify-center h-full">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 ">
           <div className="inline-flex items-center gap-3 mb-4">
             <div className="p-3 bg-gradient-to-br from-sky-500 to-orange-500 rounded-2xl shadow-lg">
               <QrCode className="w-8 h-8 text-white" />
@@ -85,13 +110,13 @@ export default function QrScanner() {
             <h1 className="text-4xl font-bold">Escáner QR</h1>
           </div>
           <p className="text-lg text-muted-foreground">
-            Posiciona el código QR frente a la cámara
+            Posiciona el código QR para escanear
           </p>
         </div>
 
         {/* Main Scanner Card */}
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
+        <div className="max-w-2xl mx-auto ">
+          <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 overflow-hidden ">
             {/* Scanner Status */}
             <div className="p-6 border-b border-white/10">
               <div className="flex items-center justify-between">
@@ -116,18 +141,18 @@ export default function QrScanner() {
             </div>
 
             {/* Scanner Container */}
-            <div className="p-8">
+            <div className="p-4">
               {isScanning ? (
-                <div className="relative">
+                <div className="relative ">
                   <div className="absolute inset-0 bg-gradient-to-r from-sky-500 to-orange-500 rounded-2xl opacity-20 blur-xl"></div>
-                  <div className="relative bg-black/30 rounded-2xl p-4 backdrop-blur-sm border border-white/10">
+                  <div className="relative rounded-2xl p-2 backdrop-blur-sm border">
                     <div id="reader" className="w-full"></div>
                   </div>
                   {/* Corner indicators */}
-                  <div className="absolute top-8 left-8 w-8 h-8 border-t-4 border-l-4 border-sky-400 rounded-tl-lg"></div>
-                  <div className="absolute top-8 right-8 w-8 h-8 border-t-4 border-r-4 border-sky-400 rounded-tr-lg"></div>
-                  <div className="absolute bottom-8 left-8 w-8 h-8 border-b-4 border-l-4 border-sky-400 rounded-bl-lg"></div>
-                  <div className="absolute bottom-8 right-8 w-8 h-8 border-b-4 border-r-4 border-sky-400 rounded-br-lg"></div>
+                  <div className="absolute top-4 left-4 w-8 h-8 border-t-4 border-l-4 border-sky-400 rounded-tl-lg"></div>
+                  <div className="absolute top-4 right-4 w-8 h-8 border-t-4 border-r-4 border-sky-400 rounded-tr-lg"></div>
+                  <div className="absolute bottom-4 left-4 w-8 h-8 border-b-4 border-l-4 border-sky-400 rounded-bl-lg"></div>
+                  <div className="absolute bottom-4 right-4 w-8 h-8 border-b-4 border-r-4 border-sky-400 rounded-br-lg"></div>
                 </div>
               ) : (
                 <div className="text-center py-12">
@@ -149,7 +174,7 @@ export default function QrScanner() {
                   showSuccess ? "bg-green-500/20" : "bg-white/5"
                 }`}
               >
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-4 ">
                   <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center">
                     <CheckCircle className="w-6 h-6 text-white" />
                   </div>
@@ -172,7 +197,6 @@ export default function QrScanner() {
           {isScanning && (
             <div className="mt-8 text-center">
               <div className="inline-flex items-center gap-3 px-6 py-3 bg-white/5 backdrop-blur-sm rounded-full border border-white/10">
-                <Camera className="w-5 h-5 text-muted-foreground" />
                 <p className="text-sm text-muted-foreground">
                   Mantén el código QR estable y bien iluminado
                 </p>
