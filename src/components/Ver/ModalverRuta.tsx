@@ -6,8 +6,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+} from "@/components/misUI/dialog";
+import { Button } from "@/components/misUI/button";
 import { RutasInterface } from "@/Interfaces/rutas.interface";
 import Image from "next/image";
 import { MapPin, Clock, DollarSign, Bus } from "lucide-react";

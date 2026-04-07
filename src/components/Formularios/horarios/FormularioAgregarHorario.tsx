@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/misUI/button";
 import {
   Dialog,
   DialogClose,
@@ -8,9 +8,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Field, FieldGroup } from "@/components/ui/field";
-import { Label } from "@/components/ui/label";
+} from "@/components/misUI/dialog";
+import { Field, FieldGroup } from "@/components/misUI/field";
+import { Label } from "@/components/misUI/label";
 import { HorariosInterface } from "@/Interfaces/rutas.interface";
 import { getAllRutas } from "@/lib/services/rutasServices";
 import { useQuery } from "@tanstack/react-query";
@@ -27,7 +27,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/misUI/select";
 
 type FormData = {
   hora: string;

@@ -30,17 +30,17 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/misUI/badge";
+import { Button } from "@/components/misUI/button";
+import { Checkbox } from "@/components/misUI/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+} from "@/components/misUI/dropdown-menu";
+import { Input } from "@/components/misUI/input";
 import {
   Table,
   TableBody,
@@ -48,7 +48,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/misUI/table";
 
 import { cn } from "@/lib/utils";
 

@@ -7,8 +7,8 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+} from "@/components/misUI/dialog";
+import { Button } from "@/components/misUI/button";
 import { HorariosInterface } from "@/Interfaces/rutas.interface";
 import { Clock, Bus } from "lucide-react";
 type Props = {

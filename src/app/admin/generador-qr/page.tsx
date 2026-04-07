@@ -8,9 +8,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+} from "@/components/misUI/card";
+import { Input } from "@/components/misUI/input";
+import { Button } from "@/components/misUI/button";
 import {
   asignarQR,
   getAllTarjetas,

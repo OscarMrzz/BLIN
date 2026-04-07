@@ -4,12 +4,12 @@ import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar";
+} from "@/components/misUI/sidebar";
 
 import DynamicBreadcrumb from "@/components/Breadcrumb/DynamicBreadcrumb";
 
-import { Separator } from "@/components/ui/separator";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { Separator } from "@/components/misUI/separator";
+import { TooltipProvider } from "@/components/misUI/tooltip";
 type Props = {
   children: React.ReactNode;
 };

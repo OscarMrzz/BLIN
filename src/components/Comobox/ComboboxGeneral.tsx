@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/misUI/button";
 import {
   Command,
   CommandEmpty,
@@ -12,12 +12,12 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
+} from "@/components/misUI/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/components/misUI/popover";
 
 import { cn } from "@/lib/utils";
 

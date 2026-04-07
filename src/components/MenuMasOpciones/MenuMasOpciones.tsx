@@ -1,6 +1,6 @@
 import React from "react";
-import { DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+import { DropdownMenuTrigger } from "@/components/misUI/dropdown-menu";
+import { Button } from "@/components/misUI/button";
 import {
   DownloadIcon,
   EyeIcon,
@@ -13,7 +13,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/misUI/dropdown-menu";
 
 export interface MenuMasOpcionesProps<T> {
   row: {

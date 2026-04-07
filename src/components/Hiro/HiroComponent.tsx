@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { CardTitle } from "@/components/ui/card";
+import { CardTitle } from "@/components/misUI/card";
 
 type Props = {
   horaProximoBus: string;

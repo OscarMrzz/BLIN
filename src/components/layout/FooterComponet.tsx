@@ -1,8 +1,8 @@
 import React from "react";
-import BotonFavorito from "@/components/ui/Botones/BotonFavorito";
-import BotonHome from "@/components/ui/Botones/BotonHome";
-import BotonBuscar from "@/components/ui/Botones/BotonBuscar";
-import BotonIrGuardados from "@/components/ui/Botones/BotonIrAGuardados";
+import BotonFavorito from "@/components/misUI/Botones/BotonFavorito";
+import BotonHome from "@/components/misUI/Botones/BotonHome";
+import BotonBuscar from "@/components/misUI/Botones/BotonBuscar";
+import BotonIrGuardados from "@/components/misUI/Botones/BotonIrAGuardados";
 import HomeIcon from "@/Icons/HomeIcon";
 import Link from "next/link";
 

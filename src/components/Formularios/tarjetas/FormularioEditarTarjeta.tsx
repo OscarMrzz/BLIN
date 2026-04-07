@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/misUI/button";
 import {
   Dialog,
   DialogClose,
@@ -8,16 +8,16 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Field, FieldGroup } from "@/components/ui/field";
-import { Label } from "@/components/ui/label";
+} from "@/components/misUI/dialog";
+import { Field, FieldGroup } from "@/components/misUI/field";
+import { Label } from "@/components/misUI/label";
 import { TargetasInterface } from "@/Interfaces/targetas.interface";
 import { PlusIcon } from "lucide-react";
 import React from "react";
 import { toast, Toaster } from "sonner";
 import { useRef } from "react";
 import { updateTarjeta } from "@/lib/services/tarjetasServices";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/misUI/input";
 
 type FormData = {
   codigo_targeta: string;

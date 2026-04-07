@@ -9,7 +9,7 @@ import {
   AlertDialogHeader,
   AlertDialogMedia,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "@/components/misUI/alert-dialog";
 
 interface Props {
   open: boolean;

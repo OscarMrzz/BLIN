@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom"; // Importante para el Portal
-import BotonHamburguesa from "@/components/ui/Botones/BotonHamburguesa";
+import BotonHamburguesa from "@/components/misUI/Botones/BotonHamburguesa";
 import UserDropdown from "./UserDropdown";
 import Link from "next/link";
 import GuardadoIcon from "@/Icons/GuardadoIcon";

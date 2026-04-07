@@ -1,6 +1,6 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/misUI/button";
+import { Checkbox } from "@/components/misUI/checkbox";
 import {
   Dialog,
   DialogClose,
@@ -10,10 +10,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "@/components/misUI/dialog";
+import { Field, FieldGroup, FieldLabel } from "@/components/misUI/field";
+import { Input } from "@/components/misUI/input";
+import { Label } from "@/components/misUI/label";
 import {
   Select,
   SelectContent,
@@ -22,7 +22,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/misUI/select";
 import { RutasInterface } from "@/Interfaces/rutas.interface";
 import { createRuta } from "@/lib/services/rutasServices";
 import { PlusIcon } from "lucide-react";

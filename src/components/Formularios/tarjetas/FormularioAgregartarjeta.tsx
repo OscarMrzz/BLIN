@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/misUI/button";
 import {
   Dialog,
   DialogClose,
@@ -8,16 +8,16 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Label } from "@/components/ui/label";
+} from "@/components/misUI/dialog";
+import { Field, FieldGroup, FieldLabel } from "@/components/misUI/field";
+import { Label } from "@/components/misUI/label";
 import { PlusIcon } from "lucide-react";
 import React from "react";
 import { toast, Toaster } from "sonner";
 import { useRef, useState, useEffect } from "react";
 import { createMultipleTarjetas } from "@/lib/services/tarjetasServices";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/misUI/input";
+import { Checkbox } from "@/components/misUI/checkbox";
 import ComboboxGeneral from "@/components/Comobox/ComboboxGeneral";
 import { getAllPerfiles } from "@/lib/services/perfilesServices";
 import { PerfilesInterface } from "@/Interfaces/roles.interface";

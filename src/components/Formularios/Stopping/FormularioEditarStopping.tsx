@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/misUI/button";
 import {
   Dialog,
   DialogClose,
@@ -7,10 +7,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Field, FieldGroup } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "@/components/misUI/dialog";
+import { Field, FieldGroup } from "@/components/misUI/field";
+import { Input } from "@/components/misUI/input";
+import { Label } from "@/components/misUI/label";
 import { StoppingInterface } from "@/Interfaces/rutas.interface";
 import { createParada, updateParada } from "@/lib/services/ParadasServices";
 import { getAllRutas } from "@/lib/services/rutasServices";

@@ -6,8 +6,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+} from "@/components/misUI/dialog";
+import { Button } from "@/components/misUI/button";
 import { StoppingInterface } from "@/Interfaces/rutas.interface";
 import { MapPin, Bus } from "lucide-react";
 import { getRutaById } from "@/lib/services/rutasServices";

@@ -1,16 +1,16 @@
 "use client";
 import ComboboxGeneral from "@/components/Comobox/ComboboxGeneral";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/misUI/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Field, FieldGroup } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "@/components/misUI/card";
+import { Field, FieldGroup } from "@/components/misUI/field";
+import { Input } from "@/components/misUI/input";
+import { Label } from "@/components/misUI/label";
 import { recargarTarjeta } from "@/lib/services/saldoServices";
 import { getAllTarjetas } from "@/lib/services/tarjetasServices";
 import { useQuery } from "@tanstack/react-query";
@@ -37,15 +37,20 @@ export default function RecargaPage() {
       return;
     }
 
-    const tarjetaEncontrada = tarjetasList?.find((t) => t.codigo_targeta === codigo);
+    const tarjetaEncontrada = tarjetasList?.find(
+      (t) => t.codigo_targeta === codigo,
+    );
     if (!tarjetaEncontrada) {
       toast.error("Tarjeta no encontrada");
       return;
     }
-    try{
-       await recargarTarjeta(tarjetaEncontrada.id_targetas, parseFloat(cantidad));
-       toast.success("Recarga procesada exitosamente");
-    }catch(error){
+    try {
+      await recargarTarjeta(
+        tarjetaEncontrada.id_targetas,
+        parseFloat(cantidad),
+      );
+      toast.success("Recarga procesada exitosamente");
+    } catch (error) {
       toast.error("Error al recargar la tarjeta");
     }
   };
@@ -71,15 +76,15 @@ export default function RecargaPage() {
                 <Label htmlFor="id_rutas">Ruta:</Label>
 
                 <ComboboxGeneral
-                  data={tarjetasList?.map((tarjeta) => ({
-                    value: tarjeta.id_targetas,
-                    label: tarjeta.codigo_targeta.toString(),
-                  })) || []}
+                  data={
+                    tarjetasList?.map((tarjeta) => ({
+                      value: tarjeta.id_targetas,
+                      label: tarjeta.codigo_targeta.toString(),
+                    })) || []
+                  }
                   placeholder="Seleccione una ruta"
                   valor={codigo}
-                  onValueChange={(value) =>
-                    setCodigo(value)
-                  }
+                  onValueChange={(value) => setCodigo(value)}
                 />
               </Field>
 

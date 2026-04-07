@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/misUI/button";
 import { TargetasInterface } from "@/Interfaces/targetas.interface";
 import { getTarjetaById } from "@/lib/services/tarjetasServices";
 import React, { useEffect, useState } from "react";
