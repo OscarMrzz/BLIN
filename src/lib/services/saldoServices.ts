@@ -28,14 +28,14 @@ export async function getAllSaldos() {
 
 
 
-export async function getSaldobyId(id: string) {
+export async function getSaldobyId(id: string): Promise<SaldoInterface | null> {
     const { data, error } = await ClienteBrowserSupabase.from("saldo").select("*").eq("id_saldo", id).single();
 
     if (error) {
         return null;
     }
 
-    return data;
+    return data as SaldoInterface;
 }
 export async function getSaldoForTarjeta(id: string) {
     const { data, error } = await ClienteBrowserSupabase.from("saldo").select("*").eq("id_targetas", id);
@@ -59,9 +59,27 @@ export async function createItemSaldo(idTarjeta: string) {
 }
 
 export async function recargarTarjeta(idTarjeta: string, monto: number) {
-    const { data, error } = await ClienteBrowserSupabase.from("saldo").update({
-        saldo_total: monto
-    }).eq("id_targetas", idTarjeta);
+    // Primero obtener el saldo actual
+    const { data: saldoActual, error: errorSaldo } = await ClienteBrowserSupabase
+        .from("saldo")
+        .select("saldo_total")
+        .eq("id_targetas", idTarjeta)
+        .single();
+
+    if (errorSaldo) {
+        return null;
+    }
+
+    // Sumar el monto al saldo existente
+    const nuevoSaldo = (saldoActual?.saldo_total || 0) + monto;
+
+    const { data, error } = await ClienteBrowserSupabase
+        .from("saldo")
+        .update({
+            saldo_total: nuevoSaldo
+        })
+        .eq("id_targetas", idTarjeta);
+
     if (error) {
         return null;
     }

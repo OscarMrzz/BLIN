@@ -11,7 +11,10 @@ import {
 import { Field, FieldGroup } from "@/components/misUI/field";
 import { Input } from "@/components/misUI/input";
 import { Label } from "@/components/misUI/label";
-import { recargarTarjeta } from "@/lib/services/saldoServices";
+import {
+  getSaldoForTarjeta,
+  recargarTarjeta,
+} from "@/lib/services/saldoServices";
 import { getAllTarjetas } from "@/lib/services/tarjetasServices";
 import { useQuery } from "@tanstack/react-query";
 import { PlusIcon, CreditCardIcon } from "lucide-react";
@@ -21,6 +24,7 @@ import { toast, Toaster } from "sonner";
 export default function RecargaPage() {
   const [codigo, setCodigo] = useState("");
   const [cantidad, setCantidad] = useState("");
+  const [saldoActual, setSaldoActual] = useState(7);
 
   const {
     data: tarjetasList,
@@ -31,15 +35,20 @@ export default function RecargaPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Recarga procesada exitosamente");
     if (!codigo || !cantidad) {
       toast.error("Por favor, complete todos los campos");
       return;
     }
 
+    console.log("ID de tarjeta seleccionada:", codigo);
+    console.log("Tarjetas disponibles:", tarjetasList);
+
     const tarjetaEncontrada = tarjetasList?.find(
-      (t) => t.codigo_targeta === codigo,
+      (t) => t.id_targetas === codigo,
     );
+
+    console.log("Tarjeta encontrada:", tarjetaEncontrada);
+
     if (!tarjetaEncontrada) {
       toast.error("Tarjeta no encontrada");
       return;
@@ -50,8 +59,34 @@ export default function RecargaPage() {
         parseFloat(cantidad),
       );
       toast.success("Recarga procesada exitosamente");
+
+      // Refrescar el saldo después de la recarga
+      await seleccionarTarjeta(codigo);
+      setCantidad(""); // Limpiar el campo de cantidad
     } catch (error) {
       toast.error("Error al recargar la tarjeta");
+    }
+  };
+
+  const seleccionarTarjeta = async (idTarjeta: string) => {
+    console.log("Seleccionando tarjeta con ID:", idTarjeta);
+    setCodigo(idTarjeta);
+    const tarjetaEncontrada = tarjetasList?.find(
+      (t) => t.id_targetas === idTarjeta,
+    );
+
+    console.log("Tarjeta encontrada en selección:", tarjetaEncontrada);
+
+    if (!tarjetaEncontrada) {
+      setSaldoActual(0);
+      return;
+    }
+
+    const saldos = await getSaldoForTarjeta(tarjetaEncontrada.id_targetas);
+    if (saldos && saldos.length > 0) {
+      setSaldoActual(saldos[0].saldo_total);
+    } else {
+      setSaldoActual(0);
     }
   };
 
@@ -84,7 +119,7 @@ export default function RecargaPage() {
                   }
                   placeholder="Seleccione una ruta"
                   valor={codigo}
-                  onValueChange={(value) => setCodigo(value)}
+                  onValueChange={(value) => seleccionarTarjeta(value)}
                 />
               </Field>
 
@@ -111,6 +146,10 @@ export default function RecargaPage() {
       </Card>
 
       <Toaster />
+
+      <div>
+        <span>Saldo Actual: {saldoActual}</span>
+      </div>
     </div>
   );
 }
