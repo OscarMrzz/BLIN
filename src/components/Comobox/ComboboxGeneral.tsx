@@ -62,9 +62,9 @@ export default function ComboboxGeneral({
               {data.map((dato) => (
                 <CommandItem
                   key={dato.value}
-                  value={dato.value}
-                  onSelect={(currentValue) => {
-                    const newValue = currentValue === value ? "" : currentValue;
+                  value={dato.label}
+                  onSelect={() => {
+                    const newValue = dato.value;
                     setValue(newValue);
                     setOpen(false);
                     onValueChange?.(newValue);

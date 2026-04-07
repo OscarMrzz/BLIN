@@ -2,7 +2,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
 
-import { vista_completa_rutas_byid } from "@/lib/services/rutasServices";
+import { getRutaById } from "@/lib/services/rutasServices";
 import { useQuery } from "@tanstack/react-query";
 
 const MapComponent = dynamic(() => import("@/components/Map/MapComponent"), {
@@ -21,17 +21,14 @@ export default function Page({ params }: Props) {
   const { id } = React.use(params);
 
   const {
-    data: rutas,
+    data: ruta,
     isLoading,
     isError,
     error,
   } = useQuery({
     queryKey: ["rutaBuscada", id],
-    queryFn: () => vista_completa_rutas_byid(id),
+    queryFn: () => getRutaById(id),
   });
-
-  // vista_completa_rutas_byid devuelve un array, tomamos el primer elemento
-  const ruta = rutas?.[0];
 
   if (isLoading) {
     return <div>Cargando...</div>;
@@ -46,7 +43,12 @@ export default function Page({ params }: Props) {
   }
 
   // Validar que las coordenadas sean válidas
-  if (!ruta.latitud || !ruta.longitud) {
+  if (
+    !ruta.punto_origen?.latitud ||
+    !ruta.punto_origen?.longitud ||
+    !ruta.punto_destino?.latitud ||
+    !ruta.punto_destino?.longitud
+  ) {
     return (
       <div className="p-4 w-full">
         <h2 className="text-2xl font-black text-slate-600 mb-4">
@@ -61,18 +63,18 @@ export default function Page({ params }: Props) {
     );
   }
 
-  // Crear objeto con punto de inicio y final para el mapa
+  // Crear objeto con punto de inicio y final para el mapa usando coordenadas reales
   const puntosRuta = {
     inicio: {
-      id_paradas: ruta.id_paradas,
-      latitud: Number(ruta.latitud),
-      longitud: Number(ruta.longitud),
+      id_paradas: ruta.id_rutas + "_origen",
+      latitud: Number(ruta.punto_origen.latitud),
+      longitud: Number(ruta.punto_origen.longitud),
       nombre_lugar: ruta.origen,
     },
     final: {
-      id_paradas: `${ruta.id_paradas}_final`,
-      latitud: Number(ruta.latitud) + 0.01, // Pequeño desplazamiento para visualización
-      longitud: Number(ruta.longitud) + 0.01,
+      id_paradas: ruta.id_rutas + "_destino",
+      latitud: Number(ruta.punto_destino.latitud),
+      longitud: Number(ruta.punto_destino.longitud),
       nombre_lugar: ruta.destino,
     },
   };
