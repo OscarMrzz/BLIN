@@ -1,3 +1,9 @@
+export interface PerfilesConDetalles extends PerfilesInterface {
+  nombre_rol?: string;
+  email_usuario?: string;
+  nombre_ruta?: string;
+}
+
 export interface RolesInterface {
   id_roles: string;
   nombre: string;

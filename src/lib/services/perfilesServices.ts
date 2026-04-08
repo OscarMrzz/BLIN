@@ -1,4 +1,4 @@
-import { PerfilesInterface } from "@/Interfaces/roles.interface";
+import { PerfilesInterface, PerfilesConDetalles } from "@/Interfaces/roles.interface";
 import { ClienteBrowserSupabase } from "../supabase";
 import { ColumnDef } from "@tanstack/react-table";
 import { tablaInterface } from "@/Interfaces/tabla.interface";
@@ -15,13 +15,40 @@ export async function getAllPerfiles() {
 }
 
 export async function getAllPerfilesForTable(): Promise<
-    tablaInterface<PerfilesInterface>
+    tablaInterface<PerfilesConDetalles>
 > {
-    const { data, error } = await ClienteBrowserSupabase.from("perfiles")
+    // First get all perfiles
+    const { data: perfilesData, error: perfilesError } = await ClienteBrowserSupabase.from("perfiles")
         .select("*")
         .order("nombre", { ascending: true });
 
-    const columnas: ColumnDef<PerfilesInterface>[] = [
+    if (perfilesError) {
+        console.error("Error al obtener los perfiles:", perfilesError);
+        return {
+            columnas: [],
+            datos: [],
+        };
+    }
+
+    // Get roles data separately
+    const { data: rolesData, error: rolesError } = await ClienteBrowserSupabase.from("roles")
+        .select("id_roles, nombre");
+
+    if (rolesError) {
+        console.error("Error al obtener los roles:", rolesError);
+        // Continue even if roles fail
+    }
+
+    // Get rutas data separately
+    const { data: rutasData, error: rutasError } = await ClienteBrowserSupabase.from("rutas")
+        .select("id_rutas, nombre, origen, destino");
+
+    if (rutasError) {
+        console.error("Error al obtener las rutas:", rutasError);
+        // Continue even if rutas fail
+    }
+
+    const columnas: ColumnDef<PerfilesConDetalles>[] = [
         {
             header: "N°",
             accessorKey: "indice",
@@ -44,28 +71,34 @@ export async function getAllPerfilesForTable(): Promise<
             enableSorting: true,
         },
         {
-            header: "ID Rol",
-            accessorKey: "id_roles",
+            header: "Rol",
+            accessorKey: "nombre_rol",
             enableSorting: true,
         },
         {
-            header: "ID Usuario",
-            accessorKey: "id_user",
+            header: "Ruta",
+            accessorKey: "nombre_ruta",
             enableSorting: true,
         },
+
     ];
 
-    if (error) {
-        console.error("Error al obtener los perfiles:", error);
+    // Transform data to include role name, route name and user email
+    const transformedData = perfilesData?.map((perfil: PerfilesInterface) => {
+        const rol = rolesData?.find(r => r.id_roles === perfil.id_roles);
+        const ruta = rutasData?.find(r => r.id_rutas === perfil.id_rutas);
+
         return {
-            columnas: [],
-            datos: [],
-        };
-    }
+            ...perfil,
+            nombre_rol: rol?.nombre || 'Sin rol',
+            nombre_ruta: ruta ? `${ruta.nombre} (${ruta.origen} - ${ruta.destino})` : 'Sin ruta',
+            email_usuario: 'Sin email' // Por ahora mostramos Sin email hasta que sepamos la tabla correcta
+        } as PerfilesConDetalles;
+    }) || [];
 
     return {
         columnas: columnas,
-        datos: data as PerfilesInterface[],
+        datos: transformedData,
     };
 }
 
@@ -190,8 +223,8 @@ export const deletePerfil = async (id: string) => {
     }
 };
 
-export const createPerfilForUser = async (userId: string, nombre?: string, apellido?: string, id_roles?: string) => {
-    console.log("🔄 Creando perfil para usuario:", { userId, nombre, apellido, id_roles });
+export const createPerfilForUser = async (userId: string, nombre?: string, apellido?: string, id_roles?: string, id_rutas?: string) => {
+    console.log("Creando perfil para usuario:", { userId, nombre, apellido, id_roles, id_rutas });
 
     try {
         const perfilData: Partial<PerfilesInterface> = {
@@ -199,6 +232,7 @@ export const createPerfilForUser = async (userId: string, nombre?: string, apell
             nombre: nombre,
             apellido: apellido,
             id_roles: id_roles,
+            id_rutas: id_rutas,
         };
 
         console.log("📝 Datos del perfil a insertar:", perfilData);
