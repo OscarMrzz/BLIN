@@ -1,6 +1,5 @@
 import { ClienteBrowserSupabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
-import { createPerfilForUser, getPerfilByIdUser } from "./perfilesServices";
 
 
 
@@ -24,28 +23,6 @@ export async function login(email: string, password: string) {
         return { data, error };
     }
 
-    // Si el login es exitoso, verificar si tiene perfil y crearlo si no tiene
-    if (data.user) {
-        console.log("✅ Login exitoso, verificando perfil del usuario:", data.user.id);
-        try {
-            const perfilExistente = await getPerfilByIdUser(data.user.id);
-
-            if (!perfilExistente) {
-                console.log("👤 Usuario no tiene perfil, creando perfil automáticamente");
-                // Extraer nombre y apellido del metadata del usuario si existe
-                const nombre = data.user.user_metadata?.nombre || data.user.user_metadata?.full_name?.split(' ')[0] || '';
-                const apellido = data.user.user_metadata?.apellido || data.user.user_metadata?.full_name?.split(' ')[1] || '';
-
-                await createPerfilForUser(data.user.id, nombre, apellido);
-                console.log("✅ Perfil creado automáticamente para usuario:", data.user.id);
-            } else {
-                console.log("📝 Usuario ya tiene perfil");
-            }
-        } catch (profileError) {
-            console.error("❌ Error al verificar/crear perfil:", profileError);
-            // No fallar el login, solo registrar el error
-        }
-    }
 
     return { data, error };
 }

@@ -159,10 +159,10 @@ export default function FormularioAuth({ open, onClose }: Props) {
 
   return (
     <Modal open={open} onClose={handleClose}>
-      <div className="h-full">
+      <div className="h-full text-slate-700">
         {seVaARegistrar ? (
           <div className="flex flex-col  gap-8 px-2 w-full lg:px-24 py-12    h-full ">
-            <h2 className="text-2xl font-bold ">Registrarse</h2>
+            <h2 className="text-2xl font-bold text-slate-700 ">Registrarse</h2>
             <form className="h-full" onSubmit={handleRegister}>
               {stepRegistro === 1 && (
                 <div className="flex flex-col gap-4 w-full ">
