@@ -76,6 +76,25 @@ export interface GpsInterface {
 
 
 
+export interface VistaCompletaRutaInterface {
+  id_rutas?: string;
+  nombre?: string;
+  origen?: string;
+  destino?: string;
+  velocidad?: number;
+  precio?: number;
+  imagen_bus?: string;
+  activo?: string;
+  tiempo_espera?: number;
+  id_paradas?: string;
+  latitud?: number;
+  longitud?: number;
+  distancia_desde_origen?: number;
+  nombre_lugar?: string;
+  id_horarios?: string;
+  horario?: number;
+}
+
 export interface RutaCompletaInterface {
   id_horarios: string;     // UUID: "f3297904-6a93-4ce1-b9bf-ae00c28d37d5"
   id_paradas: string;      // UUID: "dfc21814-c179-40d3-a86d-91c472e6eee4"

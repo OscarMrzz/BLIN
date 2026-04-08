@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { point, distance } from '@turf/turf';
-import { RutaCompletaInterface } from '@/Interfaces/rutas.interface';
+import { VistaCompletaRutaInterface } from '@/Interfaces/rutas.interface';
 import { vista_completa_rutas } from '@/lib/services/rutasServices';
 
 // Hook personalizado que carga todas las rutas y filtra las cercanas
@@ -30,13 +30,15 @@ export function useRutasCercanas(miUbicacion: { lng: number; lat: number } | nul
         }
 
         // Agrupar puntos por ruta para crear LineStrings
-        const rutasAgrupadas = new Map<string, RutaCompletaInterface[]>();
+        const rutasAgrupadas = new Map<string, VistaCompletaRutaInterface[]>();
 
         rutasList.forEach(ruta => {
-            if (!rutasAgrupadas.has(ruta.id_rutas)) {
+            if (ruta.id_rutas && !rutasAgrupadas.has(ruta.id_rutas)) {
                 rutasAgrupadas.set(ruta.id_rutas, []);
             }
-            rutasAgrupadas.get(ruta.id_rutas)!.push(ruta);
+            if (ruta.id_rutas) {
+                rutasAgrupadas.get(ruta.id_rutas)!.push(ruta);
+            }
         });
 
         // Convertir cada grupo de puntos en una ruta con geometría
@@ -49,10 +51,10 @@ export function useRutasCercanas(miUbicacion: { lng: number; lat: number } | nul
                 }
                 // Si no hay horario, calcular distancia desde un punto de referencia
                 // para ordenarlos de forma más lógica a lo largo de la ruta
-                const refLat = puntos[0].latitud;
-                const refLng = puntos[0].longitud;
-                const distA = Math.abs(a.latitud - refLat) + Math.abs(a.longitud - refLng);
-                const distB = Math.abs(b.latitud - refLat) + Math.abs(b.longitud - refLng);
+                const refLat = puntos[0].latitud || 0;
+                const refLng = puntos[0].longitud || 0;
+                const distA = Math.abs((a.latitud || 0) - refLat) + Math.abs((a.longitud || 0) - refLng);
+                const distB = Math.abs((b.latitud || 0) - refLat) + Math.abs((b.longitud || 0) - refLng);
                 return distA - distB;
             });
 
@@ -72,12 +74,12 @@ export function useRutasCercanas(miUbicacion: { lng: number; lat: number } | nul
             const rutaInfo = puntosOrdenados[0];
 
             return {
-                id_rutas: rutaInfo.id_rutas,
-                nombre: rutaInfo.nombre,
-                origen: rutaInfo.origen,
-                destino: rutaInfo.destino,
-                velocidad: rutaInfo.velocidad,
-                activo: rutaInfo.activo,
+                id_rutas: rutaInfo.id_rutas || '',
+                nombre: rutaInfo.nombre || '',
+                origen: rutaInfo.origen || '',
+                destino: rutaInfo.destino || '',
+                velocidad: rutaInfo.velocidad || 0,
+                activo: rutaInfo.activo || '',
                 puntos: puntosOrdenados,
                 geometry: {
                     type: 'LineString' as const,

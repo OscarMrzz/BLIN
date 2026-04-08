@@ -99,7 +99,12 @@ export default function Home() {
           longitud: -87.65120082503267,
         };
 
-        if (rutasList && rutasList.length >= 2) {
+        if (
+          rutasList &&
+          rutasList.length >= 2 &&
+          rutasList[1].latitud &&
+          rutasList[1].longitud
+        ) {
           const rutaOrigenDePrueba = {
             latitud: rutasList[1].latitud,
             longitud: rutasList[1].longitud,
@@ -144,7 +149,6 @@ export default function Home() {
     return <div>Error: {error.message}</div>;
   } */
 
-
   if (!rutasList || rutasList.length === 0 || isLoading) {
     return (
       <div className=" h-full w-full flex flex-col gap-8  ">
@@ -160,7 +164,6 @@ export default function Home() {
           />
         </div>
         <div className="flex flex-col h-full w-full ">
-        
           <div className="text-cyan-600">
             <p>Cargando rutas..</p>
           </div>

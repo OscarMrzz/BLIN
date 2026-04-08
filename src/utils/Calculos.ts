@@ -1,4 +1,4 @@
-import { StoppingInterface, RutaCompletaInterface } from "@/Interfaces/rutas.interface";
+import { StoppingInterface, VistaCompletaRutaInterface } from "@/Interfaces/rutas.interface";
 
 interface UbicacionInterface {
   latitud: number;
@@ -64,10 +64,15 @@ const obtenerDistanciaCarreteraFallback = (
 
 export const obtenerMinutosParaLlegada = (
   miUbicacion: StoppingInterface,
-  ruta: RutaCompletaInterface
+  ruta: VistaCompletaRutaInterface
 ): number | null => {
   // Validar que tengamos coordenadas válidas
   if (!miUbicacion.latitud || !miUbicacion.longitud) {
+    return null;
+  }
+
+  // Validar que la ruta tenga coordenadas válidas
+  if (!ruta.latitud || !ruta.longitud || !ruta.velocidad) {
     return null;
   }
 
@@ -78,7 +83,7 @@ export const obtenerMinutosParaLlegada = (
   };
 
   // 1. Calcular distancia desde mi ubicación hasta el origen de la ruta
-  // RutaCompletaInterface tiene latitud/longitud directamente
+  // VistaCompletaRutaInterface tiene latitud/longitud directamente
   const puntoOrigen: UbicacionInterface = {
     latitud: ruta.latitud,
     longitud: ruta.longitud
@@ -90,8 +95,8 @@ export const obtenerMinutosParaLlegada = (
   // (Distancia / Velocidad) * 60 para pasar a minutos
   const tiempoTransito = (distanciaDesdeOrigen / ruta.velocidad) * 60;
 
-  // 3. Usar tiempo de espera fijo ya que RutaCompletaInterface no tiene esta propiedad
-  const tiempoEspera = 5; // 5 minutos por defecto
+  // 3. Usar tiempo de espera de la ruta si está disponible, sino 5 minutos por defecto
+  const tiempoEspera = ruta.tiempo_espera || 5;
 
   // 4. Calcular tiempo total hasta el próximo bus
   const tiempoTotal = tiempoTransito + tiempoEspera;

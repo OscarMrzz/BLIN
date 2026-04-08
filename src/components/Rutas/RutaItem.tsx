@@ -12,19 +12,22 @@ import { Card } from "@/components/misUI/card";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { miUbicacionStore } from "@/Store/miUbicacionStore";
-import { RutaCompletaInterface } from "@/Interfaces/rutas.interface";
+import { VistaCompletaRutaInterface } from "@/Interfaces/rutas.interface";
 import { getRutaImagen } from "@/lib/services/rutasServices";
 import { useQuery } from "@tanstack/react-query";
 import { Clock, Zap } from "lucide-react";
 type Props = {
-  ruta: RutaCompletaInterface;
+  ruta: VistaCompletaRutaInterface;
 };
 
 export function RutaItem({ ruta }: Props) {
+  console.log("Datos de ruta en RutaItem:", ruta);
   const [horaProximoBus, setHoraProximoBus] = useState<string>("");
   const { data: imagenRuta } = useQuery({
     queryKey: ["ruta_imagen", ruta.id_rutas],
-    queryFn: () => getRutaImagen(ruta.id_rutas),
+    queryFn: () =>
+      ruta.id_rutas ? getRutaImagen(ruta.id_rutas) : Promise.resolve(""),
+    enabled: !!ruta.id_rutas,
   });
 
   const { miUbicacion } = miUbicacionStore();
@@ -47,7 +50,9 @@ export function RutaItem({ ruta }: Props) {
   }, [proximaHora]);
 
   const handleVerRuta = (rutaId: string) => {
-    window.location.href = `rutas/${rutaId}`;
+    if (rutaId) {
+      window.location.href = `rutas/${rutaId}`;
+    }
   };
 
   return (
@@ -55,7 +60,7 @@ export function RutaItem({ ruta }: Props) {
       {/* Image Section */}
       <div className="relative h-56 overflow-hidden bg-slate-100 dark:bg-slate-800 flex-shrink-0">
         <Image
-          src={`/img/${imagenRuta || "school-bus"}.png`}
+          src={`/img/${ruta.imagen_bus || "school-bus"}.png`}
           alt="Bus cover"
           className="h-full w-full object-contain p-4"
           width={500}
@@ -76,14 +81,14 @@ export function RutaItem({ ruta }: Props) {
         <div className="pt-4 flex-grow">
           {/* Title with Modern Typography */}
           <h3 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-3">
-            {ruta.nombre}
+            {ruta.nombre || "Sin nombre"}
           </h3>
 
           {/* Info Pills */}
           <div className="flex flex-wrap gap-3 mb-6">
             <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
               <Zap className="h-4 w-4" />
-              <span>$15</span>
+              <span>L {ruta.precio || "sin precio"}</span>
             </div>
 
             {horaProximoBus && (
@@ -99,7 +104,7 @@ export function RutaItem({ ruta }: Props) {
         <div className="mt-auto">
           <Button
             className="w-full bg-linear-to-r from-blue-600 to-purple-600 text-white font-semibold shadow-lg transition-all duration-300 hover:from-blue-700 hover:to-purple-700 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
-            onClick={() => handleVerRuta(ruta.id_rutas)}
+            onClick={() => ruta.id_rutas && handleVerRuta(ruta.id_rutas)}
           >
             Ver Ruta
           </Button>

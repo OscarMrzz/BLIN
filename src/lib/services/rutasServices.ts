@@ -1,7 +1,7 @@
 import { tablaInterface } from "@/Interfaces/tabla.interface";
 import type { ColumnDef } from "@tanstack/react-table";
 import { ClienteBrowserSupabase } from "../supabase";
-import { ParadasDetalladasInterface, RutaCompletaInterface, RutasInterface, StoppingInterface } from "@/Interfaces/rutas.interface";
+import { ParadasDetalladasInterface, RutasInterface, StoppingInterface, VistaCompletaRutaInterface } from "@/Interfaces/rutas.interface";
 import { getParadaByIdRuta } from "./ParadasServices";
 
 export async function getAllRutas() {
@@ -224,26 +224,28 @@ export const deleteRuta = async (id: string) => {
 
 export async function vista_completa_rutas() {
 
-  const { data, error } = await ClienteBrowserSupabase.from("vista_completa_rutas").select("*");
+  const { data, error } = await ClienteBrowserSupabase.from("vista_completa_rutas_2").select("*");
   if (error) {
     console.error("Error al obtener la vista completa de rutas:", error);
     return [];
   }
 
+  console.log('Datos crudos de la base de datos:', data);
+  console.log('Muestra del primer registro:', data?.[0]);
 
-  return data as RutaCompletaInterface[];
+  return data as VistaCompletaRutaInterface[];
 
 }
 export async function vista_completa_rutas_byid(id: string) {
 
-  const { data, error } = await ClienteBrowserSupabase.from("vista_completa_rutas").select("*").eq("id_rutas", id);
+  const { data, error } = await ClienteBrowserSupabase.from("vista_completa_rutas_2").select("*").eq("id_rutas", id);
   if (error) {
     console.error("Error al obtener la vista completa de rutas:", error);
     return [];
   }
 
 
-  return data as RutaCompletaInterface[];
+  return data as VistaCompletaRutaInterface[];
 
 }
 
