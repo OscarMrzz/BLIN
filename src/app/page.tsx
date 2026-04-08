@@ -23,7 +23,7 @@ import {
 } from "@/lib/services/SchemaServices";
 import HiroComponent from "@/components/Hiro/HiroComponent";
 import { useRutasCercanas } from "@/hooks/useRutasSercanas";
-import SkeletonPrincipal from "@/components/skeleton/EskelentonPrincipal";
+import { SkeletonPrincipal } from "@/components/skeleton/EskelentonPrincipal";
 
 export default function Home() {
   useEffect(() => {
@@ -38,18 +38,16 @@ export default function Home() {
       console.log(data);
     });
   }, []); */
-    const {
+  const {
     data: rutasList,
 
     isError,
     error,
-    isLoading
+    isLoading,
   } = useQuery({
     queryKey: ["vista_completa_rutas"],
     queryFn: vista_completa_rutas,
   });
-
-
 
   const { setMiUbicacion, miUbicacion } = miUbicacionStore();
   const [tiempoProximoAutoBus, setTiempoProximoAutoBus] = useState<string>("");
@@ -147,14 +145,10 @@ export default function Home() {
   } */
 
 
-    if(isLoading){
-      return <SkeletonPrincipal />;
-    }
-
-  if (!rutasList || rutasList.length === 0) {
+  if (!rutasList || rutasList.length === 0 || isLoading) {
     return (
       <div className=" h-full w-full flex flex-col gap-8  ">
-        <div className="w-full  flex justify-center animate-zoom-in   ">
+        <div className="w-full  flex justify-center    ">
           <Image
             src="/logo2/logoCompleto.png"
             alt="Logo de la aplicación"
@@ -166,12 +160,11 @@ export default function Home() {
           />
         </div>
         <div className="flex flex-col h-full w-full ">
-          <div className="animate-jelly delay-100 h-full w-full">
-            <CargaCell />
-          </div>
+        
           <div className="text-cyan-600">
             <p>Cargando rutas..</p>
           </div>
+          <SkeletonPrincipal />;
         </div>
       </div>
     );

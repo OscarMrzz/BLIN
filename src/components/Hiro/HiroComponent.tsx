@@ -14,7 +14,7 @@ export default function HiroComponent({
   return (
     <section className="w-full flex flex-col gap-4 p-4">
       <div className=" lg:hidden">
-        <div className="w-full h-60 flex justify-center animate-zoom-in delay-150">
+        <div className="w-full h-60 flex justify-center ">
           <Image
             src="/logo2/logoCompleto.png"
             alt="Logo de la aplicación"

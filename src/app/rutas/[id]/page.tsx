@@ -31,7 +31,12 @@ export default function Page({ params }: Props) {
   });
 
   if (isLoading) {
-    return <div>Cargando...</div>;
+    return (
+      <div className="flex flex-col px-2">
+        <h2 className="text-2xl font-black text-slate-600 mb-4">Cargando...</h2>
+        <div className="w-full h-120 rounded-2xl shadow bg-slate-50"></div>
+      </div>
+    );
   }
 
   if (isError) {
