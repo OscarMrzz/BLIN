@@ -4,6 +4,7 @@ import { RutaItem } from "@/components/Rutas/RutaItem";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { miUbicacionStore } from "@/Store/miUbicacionStore";
+import BuscarSimpleIcon from "@/Icons/BuscarSimpleIcon";
 import { useQuery } from "@tanstack/react-query";
 import {
   getAllRutas,
@@ -52,6 +53,7 @@ export default function Home() {
   const { setMiUbicacion, miUbicacion } = miUbicacionStore();
   const [tiempoProximoAutoBus, setTiempoProximoAutoBus] = useState<string>("");
   const [horaProximoBus, setHoraProximoBus] = useState<string>("");
+  const [busqueda, setBusqueda] = useState<string>("");
 
   useEffect(() => {
     if (!rutasList || rutasList.length < 2 || !miUbicacion) return;
@@ -173,6 +175,14 @@ export default function Home() {
     );
   }
 
+  // Filtrar rutas según la búsqueda
+  const rutasFiltradas = rutasList?.filter(
+    (ruta) =>
+      ruta.nombre?.toLowerCase().includes(busqueda.toLowerCase()) ||
+      ruta.origen?.toLowerCase().includes(busqueda.toLowerCase()) ||
+      ruta.destino?.toLowerCase().includes(busqueda.toLowerCase()),
+  );
+
   return (
     <div className="w-full min-h-screen ">
       <HiroComponent
@@ -186,8 +196,24 @@ export default function Home() {
             Rutas en tu ubicacion
           </h2>
         </div>
+
+        {/* Barra de búsqueda */}
+        <div className="w-full mb-6">
+          <div className="relative max-w-md mx-auto">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <BuscarSimpleIcon size={20} Styles="text-gray-400" />
+            </div>
+            <input
+              type="text"
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+              placeholder="Buscar rutas por nombre, origen o destino..."
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
+            />
+          </div>
+        </div>
         <div className="grid grid-cols-1 pt-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full gap-4 pb-48">
-          {rutasList
+          {rutasFiltradas
             ?.filter(
               (ruta, index, self) =>
                 index === self.findIndex((r) => r.id_rutas === ruta.id_rutas),
