@@ -12,7 +12,7 @@ export async function proxy(req: NextRequest) {
     const { rol, rolTienePrmiso } = await rolData(idUser, req)
 
     // Rutas de administrador
-    if (pathname.startsWith('/admin') && (!['administrador'].includes(rol || '') || !rolTienePrmiso)) {
+    if (pathname.startsWith('/admin') && (!['administrador','cobrador'].includes(rol || '') || !rolTienePrmiso)) {
         return NextResponse.redirect(new URL('/', req.url))
     }
 

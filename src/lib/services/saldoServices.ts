@@ -201,11 +201,26 @@ export async function getHistorialRecargas(idTarjeta: string) {
 */
 
 export async function registrarPago(idTarjeta: string, monto: number, metodo: string) {
+    // Obtener el usuario autenticado
+    const usuarioLogiado = await getUserAuth();
+
+    if (!usuarioLogiado || !usuarioLogiado.id) {
+        throw new Error("Usuario no autenticado o sin ID válido");
+    }
+
+    // Obtener el perfil del cobrador
+    const perfilDeCobrador = await getPerfilByIdUser(usuarioLogiado.id);
+
+    if (!perfilDeCobrador) {
+        throw new Error("No se encontró el perfil del cobrador");
+    }
+
     const { data, error } = await ClienteBrowserSupabase.from("pagos").insert({
         id_targeta: idTarjeta,
         monto: monto,
         fecha: new Date(),
-        metodo: metodo
+        metodo: metodo,
+        id_perfiles: perfilDeCobrador.id_perfiles
     });
     if (error) {
         return null;

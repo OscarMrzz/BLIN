@@ -88,8 +88,8 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "Usuarios",
-          url: "#",
+          title: "Perfiles",
+          url: "/admin/perfiles",
           icon: <UsersIcon />,
         },
         {
@@ -236,7 +236,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarHeader>
         <SidebarContent>
           <NavMain items={data.navMain} />
-          {isAuthenticated && userRole === "administrador" && (
+          {isAuthenticated && (userRole === "administrador" || userRole === "cobrador") && (
             <NavMain items={data.navAdmin} />
           )}
           {isAuthenticated && userRole === "cobrador" && (
