@@ -2,6 +2,8 @@ import { PerfilesInterface, PerfilesConDetalles } from "@/Interfaces/roles.inter
 import { ClienteBrowserSupabase } from "../supabase";
 import { ColumnDef } from "@tanstack/react-table";
 import { tablaInterface } from "@/Interfaces/tabla.interface";
+import { getUserAuth } from "./authServices";
+import { getRutaById } from "./rutasServices";
 
 export async function getAllPerfiles() {
     const { data, error } =
@@ -117,17 +119,37 @@ export async function getPerfilById(id: string) {
 }
 
 export async function getPerfilByIdUser(id: string) {
-    const { data, error } = await ClienteBrowserSupabase.from("perfiles")
-        .select("*")
-        .eq("id_user", id)
-        .single();
+    console.log("🔍 [PERFIL] Buscando perfil por ID de usuario:", id);
 
-    if (error) {
-        console.error(" [SERVICE] Error al obtener el perfil por usuario:", error);
+    try {
+        const { data, error } = await ClienteBrowserSupabase.from("perfiles")
+            .select("*")
+            .eq("id_user", id)
+            .single();
+
+        if (error) {
+            console.error("❌ [PERFIL] Error al obtener el perfil por usuario:", {
+                message: error.message,
+                details: error.details,
+                hint: error.hint,
+                code: error.code,
+                id_usuario: id
+            });
+            return null;
+        }
+
+        console.log("✅ [PERFIL] Perfil encontrado:", {
+            id_perfiles: data?.id_perfiles,
+            nombre: data?.nombre,
+            id_user: data?.id_user,
+            id_rutas: data?.id_rutas,
+            id_roles: data?.id_roles
+        });
+        return data;
+    } catch (err) {
+        console.error("❌ [PERFIL] Error inesperado al obtener perfil por usuario:", err);
         return null;
     }
-
-    return data;
 }
 
 export async function getRolByUserId(id: string) {
@@ -292,3 +314,5 @@ export const getAllPerfilesWithUserEmail = async () => {
         return [];
     }
 };
+
+

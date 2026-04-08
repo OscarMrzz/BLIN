@@ -1,10 +1,16 @@
 "use client";
 import { Button } from "@/components/misUI/button";
 import { TargetasInterface } from "@/Interfaces/targetas.interface";
-import { cobrarPasaje } from "@/lib/services/saldoServices";
+import {
+  cobrarPasaje,
+  getMontoACobrarSegunRuta,
+} from "@/lib/services/saldoServices";
 import { getTarjetaById } from "@/lib/services/tarjetasServices";
 import React, { useEffect, useState } from "react";
 import { CreditCard, CheckCircle, AlertCircle, Loader } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { toast, Toaster } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface Props {
   params: Promise<{
@@ -14,11 +20,33 @@ interface Props {
 
 export default function Page({ params }: Props) {
   const { id } = React.use(params);
+  const router = useRouter();
   const [tarjeta, setTarjeta] = useState<TargetasInterface | null>(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  /* getMontoACobrarSegunRuta */
+
+  const {
+    data: montoACobrar,
+    isError: queryIsError,
+    error: queryError,
+    isLoading: queryIsLoading,
+  } = useQuery({
+    queryKey: ["getMontoACobrarSegunRuta"],
+    queryFn: getMontoACobrarSegunRuta,
+    retry: 2,
+  });
+
+  // Handle query errors
+  React.useEffect(() => {
+    if (queryIsError && queryError) {
+      console.error("Error al obtener monto a cobrar:", queryError);
+      setError("No se pudo obtener el monto a cobrar. Intente nuevamente.");
+      setTimeout(() => setError(null), 5000);
+    }
+  }, [queryIsError, queryError]);
 
   useEffect(() => {
     const fetchTarjeta = async () => {
@@ -35,13 +63,13 @@ export default function Page({ params }: Props) {
     fetchTarjeta();
   }, [id]);
 
-  if (loading) {
+  if (loading || queryIsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader className="w-12 h-12 animate-spin text-primary mx-auto mb-4" />
           <p className="text-lg text-muted-foreground">
-            Cargando información de la tarjeta...
+            Cargando información...
           </p>
         </div>
       </div>
@@ -51,20 +79,80 @@ export default function Page({ params }: Props) {
   const cobrar = async () => {
     if (!tarjeta) return;
 
+    if (!montoACobrar || typeof montoACobrar !== "number") {
+      setError("No se pudo determinar el monto a cobrar. Intente nuevamente.");
+      setTimeout(() => setError(null), 5000);
+      return;
+    }
+
     setProcessing(true);
     setError(null);
 
     try {
-      await cobrarPasaje(tarjeta.id_targetas, 5);
+      await cobrarPasaje(tarjeta.id_targetas, montoACobrar);
       setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
-    } catch {
-      setError("Error al procesar el cobro. Intente nuevamente.");
+    } catch (err) {
+      console.error("Error al procesar cobro:", err);
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "Error al procesar el cobro. Intente nuevamente.";
+      setError(errorMessage);
       setTimeout(() => setError(null), 5000);
     } finally {
       setProcessing(false);
     }
   };
+
+  // Si el cobro fue exitoso, mostrar pantalla de éxito
+  if (success) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center">
+        <div className="max-w-md w-full mx-auto px-4">
+          <div className="bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden">
+            {/* Success Header */}
+            <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-8">
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-24 h-24 bg-white/20 rounded-full mb-6 backdrop-blur-sm">
+                  <CheckCircle className="w-16 h-16 text-white" />
+                </div>
+                <h1 className="text-3xl font-bold text-white mb-2">
+                  ¡Cobro Exitoso!
+                </h1>
+                <p className="text-white/80 text-lg">
+                  El pasaje ha sido cobrado correctamente
+                </p>
+              </div>
+            </div>
+
+            {/* Success Body */}
+            <div className="p-8">
+              <div className="text-center mb-8">
+                <div className="inline-flex items-baseline gap-2 mb-4">
+                  <span className="text-3xl font-bold text-gray-900">L</span>
+                  <span className="text-4xl font-bold text-green-600">
+                    {typeof montoACobrar === "number" ? montoACobrar : "--"}
+                  </span>
+                </div>
+                <p className="text-muted-foreground">
+                  Monto descontado de la tarjeta{" "}
+                  {tarjeta?.codigo_targeta || "XXXXXXX"}
+                </p>
+              </div>
+
+              {/* Siguiente Button */}
+              <Button
+                onClick={() => router.push("/cobrador/lectura")}
+                className="w-full h-16 text-xl font-semibold bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-2xl shadow-lg transition-all duration-200 transform hover:scale-105"
+              >
+                <span>Siguiente</span>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 to-blue-100">
@@ -105,17 +193,6 @@ export default function Page({ params }: Props) {
             {/* Card Body */}
             <div className="p-8">
               {/* Status Messages */}
-              {success && (
-                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-600" />
-                    <p className="text-green-800 font-medium">
-                      ¡Cobro procesado exitosamente!
-                    </p>
-                  </div>
-                </div>
-              )}
-
               {error && (
                 <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
                   <div className="flex items-center gap-3">
@@ -132,7 +209,9 @@ export default function Page({ params }: Props) {
                 </p>
                 <div className="inline-flex items-baseline gap-2">
                   <span className="text-4xl font-bold text-gray-900">L</span>
-                  <span className="text-5xl font-bold text-primary">37</span>
+                  <span className="text-5xl font-bold text-primary">
+                    {typeof montoACobrar === "number" ? montoACobrar : "--"}
+                  </span>
                 </div>
               </div>
 

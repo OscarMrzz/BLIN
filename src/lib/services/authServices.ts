@@ -81,27 +81,35 @@ export async function register(email: string, password: string, nombre?: string,
         console.log("✅ Registro completado exitosamente");
         return { data, error };
     } catch (error) {
-        console.error("❌ Error inesperado en register:", error);
+        console.error(" Error inesperado en register:", error);
         return { data: null, error };
     }
 }
 
 export const getUserAuth = async () => {
-    console.log("🔄 Obteniendo usuario autenticado");
+    console.log(" [AUTH] Obteniendo usuario autenticado");
 
     const { data, error } = await ClienteBrowserSupabase.auth.getUser();
 
     if (error) {
-        console.error("❌ Error al obtener usuario:", error);
+        console.error(" [AUTH] Error al obtener usuario:", {
+            message: error.message,
+            status: error.status,
+            code: error.code || 'NO_CODE'
+        });
         return null;
     }
 
-    console.log("📝 Usuario obtenido:", data?.user ? { id: data.user.id, email: data.user.email } : null);
+    console.log(" [AUTH] Usuario obtenido:", data?.user ? {
+        id: data.user.id,
+        email: data.user.email,
+        created_at: data.user.created_at
+    } : null);
     return data.user as User | null;
-}
+};
 
 export async function logout() {
-    console.log("🔄 Cerrando sesión");
+    console.log(" Cerrando sesión");
 
     const { error } = await ClienteBrowserSupabase.auth.signOut();
 

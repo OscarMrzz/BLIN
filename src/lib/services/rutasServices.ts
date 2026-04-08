@@ -111,8 +111,8 @@ export async function getAllRutasForTable(): Promise<tablaInterface<RutasInterfa
 }
 
 export async function getRutaById(id: string) {
-  console.log(" [SERVICE] Buscando ruta con ID:", id);
-  console.log(" [SERVICE] Tipo de ID:", typeof id);
+  console.log("🔍 [RUTA] Buscando ruta con ID:", id);
+  console.log("🔍 [RUTA] Tipo de ID:", typeof id);
 
   // Obtener la ruta básica primero
   const { data: rutaData, error: rutaError } = await ClienteBrowserSupabase
@@ -121,22 +121,28 @@ export async function getRutaById(id: string) {
     .eq("id_rutas", id)
     .single();
 
-  console.log(" [SERVICE] Ruta básica - data:", rutaData);
-  console.log(" [SERVICE] Ruta básica - error:", rutaError);
+  console.log("📝 [RUTA] Ruta básica - data:", rutaData);
+  console.log("📝 [RUTA] Ruta básica - error:", rutaError);
 
   if (rutaError) {
-    console.error(" [SERVICE] Error al obtener la ruta:", rutaError);
+    console.error("❌ [RUTA] Error al obtener la ruta:", {
+      message: rutaError.message,
+      details: rutaError.details,
+      hint: rutaError.hint,
+      code: rutaError.code,
+      id_ruta: id
+    });
     return null;
   }
 
   // Obtener todas las paradas de la ruta usando el servicio de paradas
   const paradas = await getParadaByIdRuta(id);
 
-  console.log(" [SERVICE] Paradas obtenidas de ParadasService:", paradas);
-  console.log(" [SERVICE] Número de paradas:", paradas?.length || 0);
+  console.log("📝 [RUTA] Paradas obtenidas de ParadasService:", paradas);
+  console.log("📝 [RUTA] Número de paradas:", paradas?.length || 0);
 
   if (!paradas || paradas.length === 0) {
-    console.error(" [SERVICE] No se encontraron paradas para la ruta");
+    console.error("❌ [RUTA] No se encontraron paradas para la ruta:", id);
     return null;
   }
 
@@ -145,14 +151,14 @@ export async function getRutaById(id: string) {
     (a.distancia_desde_origen || 0) - (b.distancia_desde_origen || 0)
   );
 
-  console.log(" [SERVICE] Paradas ordenadas:", paradasOrdenadas);
+  console.log("📝 [RUTA] Paradas ordenadas:", paradasOrdenadas);
 
   // Usar la primera parada como origen y la última como destino
   const primeraParada = paradasOrdenadas[0];
   const ultimaParada = paradasOrdenadas[paradasOrdenadas.length - 1];
 
-  console.log(" [SERVICE] Primera parada (origen):", primeraParada);
-  console.log(" [SERVICE] Última parada (destino):", ultimaParada);
+  console.log("📝 [RUTA] Primera parada (origen):", primeraParada);
+  console.log("📝 [RUTA] Última parada (destino):", ultimaParada);
 
   // Transformar los datos para incluir punto_origen y punto_destino
   const rutaConCoordenadas = {
@@ -168,7 +174,14 @@ export async function getRutaById(id: string) {
     paradas: paradasOrdenadas
   };
 
-  console.log(" [SERVICE] Ruta con coordenadas procesadas:", rutaConCoordenadas);
+  console.log("✅ [RUTA] Ruta con coordenadas procesadas:", {
+    id_rutas: rutaConCoordenadas.id_rutas,
+    nombre: rutaConCoordenadas.nombre,
+    monto_a_cobrar: rutaConCoordenadas.monto_a_cobrar,
+    precio: rutaConCoordenadas.precio,
+    origen: rutaConCoordenadas.origen,
+    destino: rutaConCoordenadas.destino
+  });
   return rutaConCoordenadas;
 }
 
@@ -248,7 +261,7 @@ export async function getRutaImagen(idRuta: string): Promise<string> {
     return data.imagen_bus;
   } catch (error) {
     console.error("Error al obtener la imagen de la ruta:", error);
-    return  "";
+    return "";
   }
 
 }

@@ -1,5 +1,8 @@
 import { SaldoInterface } from "@/Interfaces/targetas.interface";
 import { ClienteBrowserSupabase } from "../supabase";
+import { getUserAuth } from "./authServices";
+import { getPerfilByIdUser } from "./perfilesServices";
+import { getRutaById } from "./rutasServices";
 
 /* 
 
@@ -94,21 +97,59 @@ export async function recargarTarjeta(idTarjeta: string, monto: number) {
 }
 
 export async function cobrarPasaje(idTarjeta: string, monto: number) {
-    const { data, error } = await ClienteBrowserSupabase.from("saldo").update({
-        saldo_total: monto
-    }).eq("id_targetas", idTarjeta);
-    if (error) {
-        return null;
-    }
-
     try {
-        await registrarPago(idTarjeta, monto, "pasaje");
+        // Primero obtener el saldo actual
+        const { data: saldoActual, error: errorSaldo } = await ClienteBrowserSupabase
+            .from("saldo")
+            .select("saldo_total")
+            .eq("id_targetas", idTarjeta)
+            .single();
+
+        if (errorSaldo) {
+            console.error("Error al obtener saldo actual:", errorSaldo);
+            throw new Error("No se pudo obtener el saldo actual de la tarjeta");
+        }
+
+        // Validar que exista saldo
+        if (!saldoActual) {
+            throw new Error("No se encontró saldo para esta tarjeta");
+        }
+
+        // Validar que tenga saldo suficiente
+        if (saldoActual.saldo_total < monto) {
+            throw new Error("Saldo insuficiente para realizar el cobro");
+        }
+
+        // Restar el monto del saldo existente
+        const nuevoSaldo = saldoActual.saldo_total - monto;
+
+        const { data, error } = await ClienteBrowserSupabase
+            .from("saldo")
+            .update({
+                saldo_total: nuevoSaldo
+            })
+            .eq("id_targetas", idTarjeta)
+            .select();
+
+        if (error) {
+            console.error("Error al actualizar saldo:", error);
+            throw new Error("No se pudo actualizar el saldo");
+        }
+
+        // Registrar el pago
+        try {
+            await registrarPago(idTarjeta, monto, "pasaje");
+        } catch (error) {
+            console.error("Error al registrar el pago:", error);
+            // No fallar la operación si el registro del pago falla
+        }
+
+        console.log(`Pasaje cobrado exitosamente: L${monto}. Saldo anterior: L${saldoActual.saldo_total}. Nuevo saldo: L${nuevoSaldo}`);
+        return data;
     } catch (error) {
-        console.error("Error al registrar el pago:", error);
+        console.error("Error en cobrarPasaje:", error);
+        throw error;
     }
-
-
-    return data;
 }
 
 
@@ -181,3 +222,67 @@ export async function getHistorialPagos(idTarjeta: string) {
     return data;
 }
 
+export async function getMontoACobrarSegunRuta() {
+    try {
+        // Validar que el usuario esté autenticado
+        const usuarioLogiado = await getUserAuth();
+
+        if (!usuarioLogiado || !usuarioLogiado.id) {
+            throw new Error("Usuario no autenticado o sin ID válido");
+        }
+
+        const idUsuarioLogiado = usuarioLogiado.id;
+
+        // Obtener perfil del cobrador
+        const perfilDeCobrador = await getPerfilByIdUser(idUsuarioLogiado);
+
+        if (!perfilDeCobrador) {
+            throw new Error("No se encontró el perfil del cobrador");
+        }
+
+        if (!perfilDeCobrador.id_rutas) {
+            throw new Error("El cobrador no tiene una ruta asignada");
+        }
+
+        const idRuta = perfilDeCobrador.id_rutas;
+
+        // Obtener información de la ruta
+        const ruta = await getRutaById(idRuta);
+
+        if (!ruta) {
+            throw new Error("No se encontró la ruta asignada");
+        }
+
+        // Validar que el monto a cobrar exista y sea un número válido
+        // Usar precio como fallback si monto_a_cobrar no está configurado
+        let montoACobrar = ruta.monto_a_cobrar;
+
+        if (montoACobrar === undefined || montoACobrar === null) {
+            montoACobrar = ruta.precio;
+        }
+
+        if (montoACobrar === undefined || montoACobrar === null) {
+            throw new Error("La ruta no tiene un monto a cobrar configurado");
+        }
+
+        if (typeof montoACobrar !== 'number' || isNaN(montoACobrar)) {
+            throw new Error("El monto a cobrar no es un número válido");
+        }
+
+        if (montoACobrar < 0) {
+            throw new Error("El monto a cobrar no puede ser negativo");
+        }
+
+        return montoACobrar;
+
+    } catch (error) {
+        console.error("Error al obtener monto a cobrar según ruta:", error);
+
+        // Lanzar el error para que el componente que lo use pueda manejarlo
+        if (error instanceof Error) {
+            throw error;
+        } else {
+            throw new Error("Error desconocido al obtener monto a cobrar");
+        }
+    }
+}

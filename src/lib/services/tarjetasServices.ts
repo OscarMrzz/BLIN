@@ -59,17 +59,37 @@ export async function getAllTarjetasForTable(): Promise<
 }
 
 export async function getTarjetaById(id: string) {
-    const { data, error } = await ClienteBrowserSupabase.from("targetas")
-        .select("*")
-        .eq("id_targetas", id)
-        .single();
+    console.log(" [SERVICE] Buscando tarjeta con ID:", id);
 
-    if (error) {
-        console.error(" [SERVICE] Error al obtener la tarjeta:", error);
+    // Validar que el ID no sea nulo o vacío
+    if (!id || id.trim() === "") {
+        console.error(" [SERVICE] Error: ID de tarjeta es nulo o vacío");
         return null;
     }
 
-    return data;
+    try {
+        const { data, error } = await ClienteBrowserSupabase.from("targetas")
+            .select("*")
+            .eq("id_targetas", id)
+            .single();
+
+        if (error) {
+            console.error(" [SERVICE] Error al obtener la tarjeta:", {
+                message: error.message,
+                details: error.details,
+                hint: error.hint,
+                code: error.code,
+                id: id
+            });
+            return null;
+        }
+
+        console.log(" [SERVICE] Tarjeta encontrada:", data);
+        return data;
+    } catch (err) {
+        console.error(" [SERVICE] Error inesperado al obtener tarjeta:", err);
+        return null;
+    }
 }
 export async function getTarjetasByIdPerfil(id: string) {
     const { data, error } = await ClienteBrowserSupabase.from("targetas")
