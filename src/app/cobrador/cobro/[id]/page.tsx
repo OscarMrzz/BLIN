@@ -7,7 +7,13 @@ import {
 } from "@/lib/services/saldoServices";
 import { getTarjetaById } from "@/lib/services/tarjetasServices";
 import React, { useEffect, useState } from "react";
-import { CreditCard, CheckCircle, AlertCircle, Loader } from "lucide-react";
+import {
+  CreditCard,
+  CheckCircle,
+  AlertCircle,
+  Loader,
+  XCircle,
+} from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { toast, Toaster } from "sonner";
 import { useRouter } from "next/navigation";
@@ -26,6 +32,7 @@ export default function Page({ params }: Props) {
   const [processing, setProcessing] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasError, setHasError] = useState(false);
   /* getMontoACobrarSegunRuta */
 
   const {
@@ -98,7 +105,7 @@ export default function Page({ params }: Props) {
           ? err.message
           : "Error al procesar el cobro. Intente nuevamente.";
       setError(errorMessage);
-      setTimeout(() => setError(null), 5000);
+      setHasError(true);
     } finally {
       setProcessing(false);
     }
@@ -144,6 +151,59 @@ export default function Page({ params }: Props) {
               <Button
                 onClick={() => router.push("/cobrador/lectura")}
                 className="w-full h-16 text-xl font-semibold bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-2xl shadow-lg transition-all duration-200 transform hover:scale-105"
+              >
+                <span>Siguiente</span>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Si hubo error en el cobro, mostrar pantalla de error
+  if (hasError) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-rose-100 flex items-center justify-center">
+        <div className="max-w-md w-full mx-auto px-4">
+          <div className="bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden">
+            {/* Error Header */}
+            <div className="bg-gradient-to-r from-red-500 to-rose-600 p-8">
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-24 h-24 bg-white/20 rounded-full mb-6 backdrop-blur-sm">
+                  <XCircle className="w-16 h-16 text-white" />
+                </div>
+                <h1 className="text-3xl font-bold text-white mb-2">
+                  Error en el Cobro
+                </h1>
+                <p className="text-white/80 text-lg">No se realizó el cobro</p>
+              </div>
+            </div>
+
+            {/* Error Body */}
+            <div className="p-8">
+              <div className="text-center mb-8">
+                <div className="inline-flex items-baseline gap-2 mb-4">
+                  <span className="text-3xl font-bold text-gray-900">L</span>
+                  <span className="text-4xl font-bold text-red-600">
+                    {typeof montoACobrar === "number" ? montoACobrar : "--"}
+                  </span>
+                </div>
+                <p className="text-muted-foreground mb-4">
+                  Monto que no pudo ser cobrado de la tarjeta{" "}
+                  {tarjeta?.codigo_targeta || "XXXXXXX"}
+                </p>
+                {error && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-xl">
+                    <p className="text-red-800 font-medium text-sm">{error}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Siguiente Button */}
+              <Button
+                onClick={() => router.push("/cobrador/lectura")}
+                className="w-full h-16 text-xl font-semibold bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white rounded-2xl shadow-lg transition-all duration-200 transform hover:scale-105"
               >
                 <span>Siguiente</span>
               </Button>
