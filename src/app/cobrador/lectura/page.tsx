@@ -3,26 +3,21 @@ import { useEffect, useState } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { QrCode, CheckCircle, RefreshCw } from "lucide-react";
 
+
 export default function QrScanner() {
   const [scanResult, setScanResult] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
+  
 
   useEffect(() => {
-    // Ocultar elementos innecesarios del escáner
+    // Ocultar elementos innecesarios del escáner pero mantener selección de cámara
     const style = document.createElement("style");
     style.textContent = `
-      #reader button[title*="Switch camera"],
       #reader button[title*="File"],
-      #reader button[title*="Camera"],
       #reader button[title*="Stop"],
       #reader .section__descriptions,
-      #reader #dashboard__section__title,
-      #reader #dashboard__section__select_camera,
-      #reader #dashboard__section__camera_selection_header,
-      #reader #dashboard__section__camera_selection_text,
-      #reader select,
-      #reader option {
+      #reader #dashboard__section__title {
         display: none !important;
       }
       #reader .qrbox {
@@ -30,6 +25,52 @@ export default function QrScanner() {
       }
       #reader .dashboard {
         display: none !important;
+      }
+      /* Estilos para los botones de cámara */
+      #reader button[title*="Switch camera"],
+      #reader button[title*="Camera"] {
+        display: block !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        padding: 8px 16px !important;
+        margin: 4px !important;
+        cursor: pointer !important;
+        font-weight: 500 !important;
+        transition: all 0.2s ease !important;
+      }
+      #reader button[title*="Switch camera"]:hover,
+      #reader button[title*="Camera"]:hover {
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4) !important;
+      }
+      /* Estilos para el selector de cámara */
+      #reader select {
+        display: block !important;
+        background: white !important;
+        border: 2px solid #e2e8f0 !important;
+        border-radius: 8px !important;
+        padding: 8px 12px !important;
+        margin: 4px !important;
+        color: #1a202c !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        width: auto !important;
+        min-width: 200px !important;
+      }
+      #reader select:hover {
+        border-color: #667eea !important;
+      }
+      #reader select:focus {
+        outline: none !important;
+        border-color: #667eea !important;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+      }
+      #reader option {
+        display: block !important;
+        color: #1a202c !important;
+        padding: 8px !important;
       }
     `;
     document.head.appendChild(style);

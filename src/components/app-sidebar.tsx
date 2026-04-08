@@ -38,9 +38,10 @@ const data = {
       plan: "Transporte",
     },
   ],
+
   navMain: [
     {
-      title: "Usuario",
+      title: "Menú Principal",
       url: "#",
       icon: <UserIcon />,
       isActive: true,
@@ -50,36 +51,9 @@ const data = {
           url: "/",
           icon: <Buscaricon />,
         },
-        {
-          title: "Buscar",
-          url: "#",
-          icon: <Buscaricon />,
-        },
-        {
-          title: "Favorito",
-          url: "#",
-          icon: <Favoritosicon />,
-        },
-
-        {
-          title: "Estado de cuenta",
-          url: "#",
-          icon: <CashIcon />,
-        },
-        {
-          title: "Recargar",
-          url: "#",
-          icon: <CreditCardIcon />,
-        },
-        {
-          title: "Historial",
-          url: "#",
-          icon: <HistoryIcon />,
-        },
       ],
     },
   ],
-
   navAdmin: [
     {
       title: "Administrador",
@@ -147,16 +121,6 @@ const data = {
           title: "lectura",
           url: "/cobrador/lectura",
           icon: <UsersIcon />,
-        },
-        {
-          title: "cobro",
-          url: "/cobrador/cobro",
-          icon: <CustomMapIcon />,
-        },
-        {
-          title: "reporte",
-          url: "/cobrador/reporte",
-          icon: <CustomMapIcon />,
         },
       ],
     },
@@ -236,9 +200,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarHeader>
         <SidebarContent>
           <NavMain items={data.navMain} />
-          {isAuthenticated && (userRole === "administrador" ) && (
-            <NavMain items={data.navAdmin} />
-          )}
           {isAuthenticated && userRole === "cobrador" && (
             <NavMain items={data.navCobrador} />
           )}
