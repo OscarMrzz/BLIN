@@ -199,6 +199,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           />
         </SidebarHeader>
         <SidebarContent>
+          {
+            isAuthenticated && userRole === "Administrador" && (
+              <NavMain items={data.navAdmin} />
+            )
+          }
           <NavMain items={data.navMain} />
           {isAuthenticated && userRole === "cobrador" && (
             <NavMain items={data.navCobrador} />
