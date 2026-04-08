@@ -16,9 +16,10 @@ export interface PagosInterface {
   id_pagos: string;
   id_targeta: string;
   monto?: number;
-  fecha?: Date;
-  id_perfiles?: string;
   metodo?: string;
+  fecha?: Date;
+  id_cobrador?: string;
+  id_rutas?: string;
 }
 
 export interface HistorialDeRecargasInterface {

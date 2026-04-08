@@ -193,9 +193,10 @@ export async function getHistorialRecargas(idTarjeta: string) {
       { "column": "id_pagos", "type": "uuid", "nullable": false },
       { "column": "id_targeta", "type": "uuid", "nullable": false },
       { "column": "monto", "type": "bigint", "nullable": true },
+      { "column": "metodo", "type": "character varying", "nullable": true },
       { "column": "fecha", "type": "date", "nullable": true },
-      { "column": "id_perfiles", "type": "uuid", "nullable": true },
-      { "column": "metodo", "type": "character varying", "nullable": true }
+      { "column": "id_cobrador", "type": "uuid", "nullable": true },
+      { "column": "id_rutas", "type": "uuid", "nullable": true }
     ],
 
 */
@@ -220,7 +221,8 @@ export async function registrarPago(idTarjeta: string, monto: number, metodo: st
         monto: monto,
         fecha: new Date(),
         metodo: metodo,
-        id_perfiles: perfilDeCobrador.id_perfiles
+        id_cobrador: usuarioLogiado.id,
+        id_rutas: perfilDeCobrador.id_rutas
     });
     if (error) {
         return null;
