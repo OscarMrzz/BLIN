@@ -26,6 +26,7 @@ type props = {
   placeholder?: string;
   valor?: string;
   onValueChange?: (value: string) => void;
+  className?: string;
 };
 
 export default function ComboboxGeneral({
@@ -33,6 +34,7 @@ export default function ComboboxGeneral({
   placeholder,
   valor,
   onValueChange,
+  className,
 }: props) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(valor || "");
@@ -44,7 +46,7 @@ export default function ComboboxGeneral({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full max-w-xs justify-between"
+          className={cn("w-full max-w-xs justify-between", className)}
           aria-label="Framework combobox"
         >
           {value
