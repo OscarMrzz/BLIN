@@ -159,101 +159,155 @@ export default function FormularioAuth({ open, onClose }: Props) {
 
   return (
     <Modal open={open} onClose={handleClose}>
-      <div className="h-full text-slate-700">
+      <div className="h-full bg-gradient-to-br from-slate-50 to-blue-50">
         {seVaARegistrar ? (
-          <div className="flex flex-col  gap-8 px-2 w-full lg:px-24 py-12    h-full ">
-            <h2 className="text-2xl font-bold text-slate-700 ">Registrarse</h2>
-            <form className="h-full" onSubmit={handleRegister}>
+          <div className="flex flex-col gap-8 px-6 w-full lg:px-16 py-8 h-full">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Crear cuenta
+              </h2>
+              <p className="text-slate-500 mt-2">Únete a BLIN hoy mismo</p>
+            </div>
+
+            <form className="flex-1" onSubmit={handleRegister}>
               {stepRegistro === 1 && (
-                <div className="flex flex-col gap-4 w-full ">
-                  <div className="flex flex-col gap-2 animate-slide-in-right">
-                    <div>
-                      <label className="block text-sm font-medium " htmlFor="">
+                <div className="flex flex-col gap-6 w-full animate-fade-in">
+                  <div className="space-y-4">
+                    <div className="group">
+                      <label
+                        className="block text-sm font-semibold text-slate-700 mb-2"
+                        htmlFor="nombre"
+                      >
                         Nombre
                       </label>
                       <input
                         id="nombre"
                         name="nombre"
-                        className="border border-slate-400 rounded px-2 py-1 w-full "
+                        className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 hover:border-slate-300 text-slate-700 placeholder-slate-400"
                         type="text"
+                        placeholder="Tu nombre"
                         required
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium  " htmlFor="">
+                    <div className="group">
+                      <label
+                        className="block text-sm font-semibold text-slate-700 mb-2"
+                        htmlFor="apellido"
+                      >
                         Apellido
                       </label>
                       <input
                         id="apellido"
                         name="apellido"
-                        className="border border-slate-400 rounded px-2 py-1 w-full "
+                        className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 hover:border-slate-300 text-slate-700 placeholder-slate-400"
                         type="text"
+                        placeholder="Tu apellido"
                         required
                       />
                     </div>
                   </div>
-                  <div className="flex justify-end">
+
+                  <div className="flex justify-end mt-8">
                     <button
                       onClick={siguientePaso}
-                      className="bg-orange-500 text-white px-4 py-2 rounded"
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200"
                     >
-                      siguiente
+                      Siguiente
                     </button>
                   </div>
                 </div>
               )}
+
               {stepRegistro === 2 && (
-                <div className="flex flex-col gap-12">
-                  <div className="animate-slide-in-right flex flex-col gap-2">
-                    <div className="">
-                      <label className="font-medium" htmlFor="">
-                        Correo
+                <div className="flex flex-col gap-8 animate-fade-in">
+                  <div className="space-y-4">
+                    <div className="group">
+                      <label
+                        className="block text-sm font-semibold text-slate-700 mb-2"
+                        htmlFor="email"
+                      >
+                        Correo electrónico
                       </label>
                       <input
                         id="email"
                         name="email"
-                        className="border border-slate-400 rounded px-2 py-1 w-full"
+                        className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 hover:border-slate-300 text-slate-700 placeholder-slate-400"
                         type="email"
+                        placeholder="correo@ejemplo.com"
                         required
                       />
                     </div>
-                    <div>
-                      <label className="font-medium" htmlFor="">
+                    <div className="group">
+                      <label
+                        className="block text-sm font-semibold text-slate-700 mb-2"
+                        htmlFor="password"
+                      >
                         Contraseña
                       </label>
                       <input
                         id="password"
                         name="password"
-                        className="border border-slate-400 rounded px-2 py-1 w-full"
+                        className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 hover:border-slate-300 text-slate-700 placeholder-slate-400"
                         type="password"
+                        placeholder="Mínimo 6 caracteres"
                         required
                       />
                     </div>
-                    <div>
-                      <label className="font-medium" htmlFor="">
+                    <div className="group">
+                      <label
+                        className="block text-sm font-semibold text-slate-700 mb-2"
+                        htmlFor="confirmPassword"
+                      >
                         Confirmar contraseña
                       </label>
                       <input
                         id="confirmPassword"
                         name="confirmPassword"
-                        className="border border-slate-400 rounded px-2 py-1 w-full"
+                        className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 hover:border-slate-300 text-slate-700 placeholder-slate-400"
                         type="password"
+                        placeholder="Repite tu contraseña"
                       />
                     </div>
                   </div>
-                  <div className="flex justify-end gap-4">
+
+                  <div className="flex justify-between gap-4 mt-8">
                     <button
                       onClick={anteriorPaso}
-                      className="bg-gray-500 text-white px-4 py-2 rounded"
+                      className="px-6 py-3 border-2 border-slate-300 text-slate-600 rounded-xl font-semibold hover:bg-slate-100 transition-all duration-200"
                     >
                       Anterior
                     </button>
                     <button
-                      className="bg-sky-800 text-white px-4 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                       type="submit"
                       disabled={isLoading}
                     >
-                      {isLoading ? "Registrando..." : "Registrarse"}
+                      {isLoading ? (
+                        <span className="flex items-center gap-2">
+                          <svg
+                            className="animate-spin h-4 w-4"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                              fill="none"
+                            />
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            />
+                          </svg>
+                          Registrando...
+                        </span>
+                      ) : (
+                        "Completar registro"
+                      )}
                     </button>
                   </div>
                 </div>
@@ -261,57 +315,102 @@ export default function FormularioAuth({ open, onClose }: Props) {
             </form>
           </div>
         ) : (
-          <div className="flex flex-col px-12 py-12">
-            <h2>Iniciar sesion</h2>
+          <div className="flex flex-col px-8 py-8 max-w-md mx-auto w-full">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                Bienvenido de vuelta
+              </h2>
+              <p className="text-slate-500">Inicia sesión para continuar</p>
+            </div>
+
             <form className="flex flex-col gap-6" onSubmit={handleLogin}>
-              <div className="flex flex-col gap-2">
-                <label className="font-semibold " htmlFor="">
-                  correo
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  className="border-2 border-slate-400 p-2 rounded "
-                  required
-                  onInvalid={handleInvalidEmail}
-                  onInput={handleInput}
-                />
+              <div className="space-y-4">
+                <div className="group">
+                  <label
+                    className="block text-sm font-semibold text-slate-700 mb-2"
+                    htmlFor="email"
+                  >
+                    Correo electrónico
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 hover:border-slate-300 text-slate-700 placeholder-slate-400"
+                    placeholder="correo@ejemplo.com"
+                    required
+                    onInvalid={handleInvalidEmail}
+                    onInput={handleInput}
+                  />
+                </div>
+                <div className="group">
+                  <label
+                    className="block text-sm font-semibold text-slate-700 mb-2"
+                    htmlFor="password"
+                  >
+                    Contraseña
+                  </label>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 hover:border-slate-300 text-slate-700 placeholder-slate-400"
+                    placeholder="Tu contraseña"
+                    required
+                    onInvalid={handleInvalidPassword}
+                    onInput={handleInput}
+                  />
+                </div>
               </div>
-              <div className="flex flex-col gap-2">
-                <label className="font-semibold " htmlFor="">
-                  contraseña
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  className="border-2 border-slate-400 p-2 rounded "
-                  required
-                  onInvalid={handleInvalidPassword}
-                  onInput={handleInput}
-                />
-              </div>
+
               <button
-                className="bg-sky-700 rounded p-2 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 type="submit"
                 disabled={isLoading}
               >
-                {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
+                {isLoading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        fill="none"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
+                    </svg>
+                    Iniciando sesión...
+                  </span>
+                ) : (
+                  "Iniciar sesión"
+                )}
               </button>
             </form>
-            <span className="">
-              No tienes cuenta?{" "}
-              <button
-                className="text-blue-400 cursor-pointer font-light"
-                onClick={quiereregistrarse}
-              >
-                Registrate
-              </button>
-            </span>
-            <span className="text-red-500">
-              {isError && (errorMessage || "Correo o contraseña incorrectos")}
-            </span>
+
+            <div className="text-center mt-6 space-y-4">
+              <p className="text-slate-600">
+                ¿No tienes cuenta?{" "}
+                <button
+                  className="text-blue-600 font-semibold hover:text-blue-700 transition-colors duration-200 underline underline-offset-2"
+                  onClick={quiereregistrarse}
+                >
+                  Regístrate gratis
+                </button>
+              </p>
+
+              {isError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm animate-shake">
+                  {errorMessage || "Correo o contraseña incorrectos"}
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>

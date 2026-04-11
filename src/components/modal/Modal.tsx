@@ -32,11 +32,10 @@ export default function Modal({
           <dialog
             ref={modalRef}
             onClose={onClose}
-
             className="m-auto flex items-center justify-center border-0 outline-none bg-transparent backdrop:bg-black/50 backdrop:backdrop-blur-sm animate-zoom-in duration-300"
           >
             <div
-              className={`bg-secondary text-chart-1 rounded-2xl min-h-160 max-h-[90vh] w-[95vw] lg:w-xl flex flex-col shadow-2xl ${style}`}
+              className={`bg-gradient-to-br from-slate-50 to-blue-50 text-slate-700 rounded-2xl min-h-160 max-h-[90vh] w-[95vw] lg:w-xl flex flex-col shadow-2xl ${style}`}
             >
               <div className="h-full overflow-auto scrollbar-estetica p-6">
                 {children}
@@ -44,14 +43,14 @@ export default function Modal({
               <div className="flex justify-end p-4 border-t border-border">
                 <button
                   onClick={onClose}
-                  className="border-2 px-4 py-2 rounded-lg text-chart-1 cursor-pointer hover:bg-gray-100 transition-colors"
+                  className="border-2 border-slate-300 px-4 py-2 rounded-lg text-slate-600 cursor-pointer hover:bg-slate-100 transition-colors"
                 >
                   Cerrar
                 </button>
               </div>
             </div>
           </dialog>,
-          document.body
+          document.body,
         )}
     </>
   );
