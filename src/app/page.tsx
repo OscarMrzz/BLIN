@@ -25,6 +25,7 @@ import {
 import HiroComponent from "@/components/Hiro/HiroComponent";
 import { useRutasCercanas } from "@/hooks/useRutasSercanas";
 import { SkeletonPrincipal } from "@/components/skeleton/EskelentonPrincipal";
+import { useRutasList } from "@/hooks/useRutasList";
 
 export default function Home() {
   useEffect(() => {
@@ -33,41 +34,14 @@ export default function Home() {
     })();
   }, []);
 
-  /*   useEffect(() => {
-    getSchemaInfoJSON().then((data) => {
-      console.log("✅✅✅✅✅✅✅✅");
-      console.log(data);
-    });
-  }, []); */
-  const {
-    data: rutasList,
 
-    isError,
-    error,
-    isLoading,
-  } = useQuery({
-    queryKey: ["vista_completa_rutas"],
-    queryFn: vista_completa_rutas,
-  });
+  const { rutasList , isLoading, isError, error, tiempoProximoAutoBus, horaProximoBus } = useRutasList();
 
   const { setMiUbicacion, miUbicacion } = miUbicacionStore();
-  const [tiempoProximoAutoBus, setTiempoProximoAutoBus] = useState<string>("");
-  const [horaProximoBus, setHoraProximoBus] = useState<string>("");
+
   const [busqueda, setBusqueda] = useState<string>("");
 
-  useEffect(() => {
-    if (!rutasList || rutasList.length < 2 || !miUbicacion) return;
-    const minutosParaProximoViaje = obtenerMinutosParaLlegada(
-      miUbicacion,
-      rutasList[1],
-    );
 
-    if (minutosParaProximoViaje !== null) {
-      setTiempoProximoAutoBus(`${minutosParaProximoViaje} minutos`);
-      const hora = ObtenerhoraProximoBus(minutosParaProximoViaje);
-      setHoraProximoBus(hora);
-    }
-  }, [rutasList, miUbicacion]);
 
   useEffect(() => {
     if (!navigator.geolocation) {
