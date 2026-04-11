@@ -10,7 +10,6 @@ import { Button } from "@/components/misUI/button";
 import { Card } from "@/components/misUI/card";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import { miUbicacionStore } from "@/Store/miUbicacionStore";
 import { VistaCompletaRutaInterface } from "@/Interfaces/rutas.interface";
 import { getRutaImagen } from "@/lib/services/rutasServices";
@@ -22,7 +21,6 @@ type Props = {
 
 export function RutaItem({ ruta }: Props) {
   console.log("Datos de ruta en RutaItem:", ruta);
-  const [horaProximoBus, setHoraProximoBus] = useState<string>("");
   const { data: imagenRuta } = useQuery({
     queryKey: ["ruta_imagen", ruta.id_rutas],
     queryFn: () =>
@@ -32,7 +30,22 @@ export function RutaItem({ ruta }: Props) {
 
   const { miUbicacion } = miUbicacionStore();
 
-  // Calcular la hora del próximo bus cuando cambian las dependencias
+  // Función para formatear el tiempo restante
+  const formatearTiempoRestante = (minutos: number): string => {
+    if (minutos < 60) {
+      return `${minutos} minuto${minutos !== 1 ? "s" : ""}`;
+    } else {
+      const horas = Math.floor(minutos / 60);
+      const minutosRestantes = minutos % 60;
+      if (minutosRestantes === 0) {
+        return `${horas} hora${horas !== 1 ? "s" : ""}`;
+      } else {
+        return `${horas} hora${horas !== 1 ? "s" : ""} ${minutosRestantes} minuto${minutosRestantes !== 1 ? "s" : ""}`;
+      }
+    }
+  };
+
+  // Calcular la hora del próximo bus y tiempo restante cuando cambian las dependencias
   const proximaHora = miUbicacion
     ? (() => {
         const minutosParaProximoViaje = obtenerMinutosParaLlegada(
@@ -45,9 +58,17 @@ export function RutaItem({ ruta }: Props) {
       })()
     : "";
 
-  useEffect(() => {
-    setHoraProximoBus(proximaHora);
-  }, [proximaHora]);
+  const tiempoCalculado = miUbicacion
+    ? (() => {
+        const minutosParaProximoViaje = obtenerMinutosParaLlegada(
+          miUbicacion,
+          ruta,
+        );
+        return minutosParaProximoViaje !== null
+          ? formatearTiempoRestante(minutosParaProximoViaje)
+          : "";
+      })()
+    : "";
 
   const handleVerRuta = (rutaId: string) => {
     if (rutaId) {
@@ -87,14 +108,20 @@ export function RutaItem({ ruta }: Props) {
           {/* Info Pills */}
           <div className="flex flex-wrap gap-3 mb-6">
             <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
-              <Zap className="h-4 w-4" />
               <span>L {ruta.precio || "sin precio"}</span>
             </div>
 
-            {horaProximoBus && (
+            {proximaHora && (
               <div className="inline-flex items-center gap-2 rounded-full bg-green-50 px-3 py-1.5 text-sm font-medium text-green-700 dark:bg-green-900/30 dark:text-green-300">
                 <Clock className="h-4 w-4" />
-                <span>{horaProximoBus}</span>
+                <span>{proximaHora}</span>
+              </div>
+            )}
+
+            {tiempoCalculado && (
+              <div className="inline-flex items-center gap-2 rounded-full bg-purple-50 px-3 py-1.5 text-sm font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
+                <Zap className="h-4 w-4" />
+                <span>{tiempoCalculado}</span>
               </div>
             )}
           </div>
