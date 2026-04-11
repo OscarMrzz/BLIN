@@ -139,4 +139,41 @@
   .maplibregl-popup-tip {
     @apply hidden!;
     }
+  
+  /* Controlar z-index de elementos del mapa Leaflet */
+  .leaflet-container {
+    z-index: 1 !important;
+  }
+  
+  .leaflet-pane {
+    z-index: 1 !important;
+  }
+  
+  .leaflet-tile-pane {
+    z-index: 2 !important;
+  }
+  
+  .leaflet-overlay-pane {
+    z-index: 4 !important;
+  }
+  
+  .leaflet-shadow-pane {
+    z-index: 5 !important;
+  }
+  
+  .leaflet-marker-pane {
+    z-index: 6 !important;
+  }
+  
+  .leaflet-tooltip-pane {
+    z-index: 7 !important;
+  }
+  
+  .leaflet-popup-pane {
+    z-index: 8 !important;
+  }
+  
+  .leaflet-control-container {
+    z-index: 9 !important;
+  }
 }
