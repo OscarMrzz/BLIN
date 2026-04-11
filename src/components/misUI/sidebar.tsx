@@ -258,21 +258,57 @@ function SidebarTrigger({
   const { toggleSidebar } = useSidebar();
 
   return (
-    <Button
+    <button
       data-sidebar="trigger"
       data-slot="sidebar-trigger"
-      variant="ghost"
-      size="icon"
-      className={cn("", className)}
+      className={cn(
+        "relative group rounded-lg",
+        "transition-all duration-200 ease-out",
+        "transform hover:scale-105 active:scale-95",
+        "p-4 min-w-16 min-h-16",
+        "flex items-center justify-center",
+        "hover:bg-gray-100 dark:hover:bg-gray-800",
+        className,
+      )}
       onClick={(event) => {
         onClick?.(event);
         toggleSidebar();
       }}
       {...props}
     >
-      <MenuIcon className="h-60 w-60" />
-      <span className="sr-only">Toggle Sidebar</span>
-    </Button>
+      <div className="absolute inset-0 bg-linear-to-t from-transparent to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+      <div className="relative z-10">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="40"
+          height="40"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="black"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="text-white transition-all duration-300 group-hover:text-purple-200"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path
+            d="M4 6l16 0"
+            className="transition-all duration-300 group-hover:translate-x-1"
+          />
+          <path
+            d="M4 12l16 0"
+            className="transition-all duration-300 group-hover:translate-x-1"
+          />
+          <path
+            d="M4 18l16 0"
+            className="transition-all duration-300 group-hover:translate-x-1"
+          />
+        </svg>
+      </div>
+
+      <div className="absolute inset-0 bg-linear-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+    </button>
   );
 }
 
