@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { updateSession, rolData } from "@/lib/supabaseProxy"
 
-export async function proxy(req: NextRequest) {
+export async function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl
 
     const { supabase } = updateSession(req)
@@ -16,7 +16,9 @@ export async function proxy(req: NextRequest) {
             pathname.startsWith('/dashboard') ||
             pathname.startsWith('/reportes') ||
             pathname.startsWith('/perfil') ||
-            pathname.startsWith('/sistema')) {
+            pathname.startsWith('/sistema') ||
+            pathname.startsWith('/recarga') ||
+            (pathname.startsWith('/rutas') && pathname !== '/rutas')) {
             return NextResponse.redirect(new URL('/', req.url))
         }
         return NextResponse.next()
@@ -71,6 +73,11 @@ export async function proxy(req: NextRequest) {
         return NextResponse.redirect(new URL('/', req.url))
     }
 
+    // Rutas que requieren autenticación (cualquier rol)
+    if ((pathname.startsWith('/recarga') || (pathname.startsWith('/rutas') && pathname !== '/rutas')) && (!rol || !rolTienePrmiso)) {
+        return NextResponse.redirect(new URL('/', req.url))
+    }
+
     return NextResponse.next()
 }
 
@@ -82,6 +89,8 @@ export const config = {
         '/dashboard/:path*',
         '/reportes/:path*',
         '/perfil/:path*',
-        '/sistema/:path*'
+        '/sistema/:path*',
+        '/recarga/:path*',
+        '/rutas/:path*'
     ]
-};
+}
