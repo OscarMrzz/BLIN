@@ -16,7 +16,7 @@ export default function HiroComponent({
       {/* Versión móvil */}
       <div className="lg:hidden">
         <div className="relative w-full h-48 flex justify-center items-center mb-8">
-          <div className="absolute inset-0 bg-orange-200 rounded-full blur-3xl opacity-20 "></div>
+          <div className="absolute inset-0 bg-orange-200 rounded-full blur-3xl opacity-20  "></div>
           <Image
             src="/logo2/logoCompleto.png"
             alt="Logo de la aplicación"
