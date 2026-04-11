@@ -34,14 +34,18 @@ export default function Home() {
     })();
   }, []);
 
-
-  const { rutasList , isLoading, isError, error, tiempoProximoAutoBus, horaProximoBus } = useRutasList();
+  const {
+    rutasList,
+    isLoading,
+    isError,
+    error,
+    tiempoProximoAutoBus,
+    horaProximoBus,
+  } = useRutasList();
 
   const { setMiUbicacion, miUbicacion } = miUbicacionStore();
 
   const [busqueda, setBusqueda] = useState<string>("");
-
-
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -150,11 +154,12 @@ export default function Home() {
   }
 
   // Filtrar rutas según la búsqueda
+  const terminoBusqueda = busqueda.trim() === "" ? "san pedro" : busqueda;
   const rutasFiltradas = rutasList?.filter(
     (ruta) =>
-      ruta.nombre?.toLowerCase().includes(busqueda.toLowerCase()) ||
-      ruta.origen?.toLowerCase().includes(busqueda.toLowerCase()) ||
-      ruta.destino?.toLowerCase().includes(busqueda.toLowerCase()),
+      ruta.nombre?.toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
+      ruta.origen?.toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
+      ruta.destino?.toLowerCase().includes(terminoBusqueda.toLowerCase()),
   );
 
   return (
