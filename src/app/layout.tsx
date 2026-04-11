@@ -19,6 +19,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "BLIN",
   description: "BLIN",
+  icons: {
+    icon: "/faviconBLIN.ico?v=2",
+    shortcut: "/faviconBLIN-16x16.png?v=2",
+    apple: "/apple-touch-iconBLIN.png?v=2",
+  },
 };
 
 export default function RootLayout({
@@ -33,13 +38,10 @@ export default function RootLayout({
       >
         <Provider>
           <SidebarGeneral>
-
-        
-          <main className="h-full w-full p-4 flex flex-col pt-24 lg:pt-0 pb-32">
-            <div className="w-full h-full">{children}</div>
-          </main>
- 
-              </SidebarGeneral>
+            <main className="h-full w-full p-4 flex flex-col pt-24 lg:pt-0 pb-32">
+              <div className="w-full h-full">{children}</div>
+            </main>
+          </SidebarGeneral>
         </Provider>
       </body>
     </html>
