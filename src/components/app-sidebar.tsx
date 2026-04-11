@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
@@ -19,9 +20,8 @@ import {
   UsersIcon,
   BarChartIcon,
   WalletIcon,
+  HomeIcon,
 } from "lucide-react";
-import UserIcon from "@/Icons/UserIcon";
-import Buscaricon from "@/Icons/Buscaricon";
 import Favoritosicon from "@/Icons/Favoritosicon";
 import CashIcon from "@/Icons/CashIcon";
 import CustomMapIcon from "@/Icons/MapIcon";
@@ -39,21 +39,6 @@ const data = {
     },
   ],
 
-  navMain: [
-    {
-      title: "Menú Principal",
-      url: "#",
-      icon: <UserIcon />,
-      isActive: true,
-      items: [
-        {
-          title: "Inicio",
-          url: "/",
-          icon: <Buscaricon />,
-        },
-      ],
-    },
-  ],
   navAdmin: [
     {
       title: "Administrador",
@@ -199,12 +184,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           />
         </SidebarHeader>
         <SidebarContent>
-          {
-            isAuthenticated && (userRole.toLowerCase() === "administrador" || userRole.toLowerCase() === "ADMINISTRADOR" || userRole.toLowerCase() === "cobrador" || userRole.toLowerCase() === "COBRADOR") && (
+          {/* Botón directo de Inicio */}
+          <div className="p-2">
+            <Link
+              href="/"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-primary hover:bg-gray-100"
+            >
+              <HomeIcon className="h-4 w-4" />
+              <span className="font-medium">Inicio</span>
+            </Link>
+          </div>
+
+          {isAuthenticated &&
+            (userRole.toLowerCase() === "administrador" ||
+              userRole.toLowerCase() === "ADMINISTRADOR") && (
               <NavMain items={data.navAdmin} />
-            )
-          }
-          <NavMain items={data.navMain} />
+            )}
           {isAuthenticated && userRole === "cobrador" && (
             <NavMain items={data.navCobrador} />
           )}
