@@ -33,7 +33,7 @@ export default function HiroComponent({
            
          
               <div className="text-orange-600 font-semibold text-sm uppercase tracking-wider mb-2">
-                Próximo Autobús
+              Proximo Autobús
               </div>
               <CardTitle className="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-orange-600 to-orange-400 mb-3">
                 {horaProximoBus}

@@ -62,7 +62,7 @@ const data = {
           icon: <CustomMapIcon />,
         },
         {
-          title: "horarios",
+          title: "Horarios",
           url: "/admin/horarios",
           icon: <CustomMapIcon />,
         },
@@ -103,7 +103,7 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "lectura",
+          title: "Lectura",
           url: "/cobrador/lectura",
           icon: <UsersIcon />,
         },
