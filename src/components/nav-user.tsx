@@ -23,6 +23,7 @@ import {
   CreditCardIcon,
   BellIcon,
   LogOutIcon,
+  LogInIcon,
 } from "lucide-react";
 
 type Props = {
@@ -92,7 +93,7 @@ export function NavUser({ user, onLogin, onLogout }: Props) {
             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             onClick={onLogin}
           >
-            <SparklesIcon className="h-8 w-8 rounded-lg" />
+            <LogInIcon />
             <span>Iniciar sesión</span>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium"></span>
