@@ -48,28 +48,28 @@ export default function HiroComponent({
 
       {/* Versión desktop */}
       <div className="hidden lg:block">
-        <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-orange-100">
+        
           <div className="flex flex-row items-center justify-between">
             <div className="flex items-center gap-6">
               <div className="relative">
                 <div className="absolute inset-0 bg-orange-100 rounded-full blur-2xl opacity-50 animate-pulse"></div>
-                <div className="relative bg-linear-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-full font-semibold shadow-lg">
+                <div className="relative bg-linear-to-r  px-6 py-3 rounded-full font-semibold text-slate-700">
                   Prómino Autobús
                 </div>
               </div>
-              <div className="text-2xl font-bold text-slate-800">
+              <div className="text-xl font-bold text-slate-700">
                 {horaProximoBus || "..."}
               </div>
             </div>
 
             <div className="flex items-center gap-4">
               <div className="text-slate-600 font-medium">Tiempo restante:</div>
-              <div className="bg-linear-to-r from-orange-100 to-orange-200 text-orange-700 px-4 py-2 rounded-xl font-semibold text-lg">
+              <div className="bg-linear-to-r f text-orange-700 px-4 py-2 rounded-xl font-semibold text-lg">
                 {tiempoProximoAutoBus || "Calculando..."}
               </div>
             </div>
           </div>
-        </div>
+       
       </div>
     </section>
   );
